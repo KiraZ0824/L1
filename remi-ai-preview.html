@@ -2398,26 +2398,6 @@ function renderSelectedSkillsBar() {
     const s = skills.find(sk => sk.id === id);
     return `<span style="display:inline-flex;align-items:center;gap:3px;font-size:12px;padding:2px 8px 2px 6px;border-radius:6px;background:var(--primary-light);color:var(--primary);font-weight:500;"><span style="font-size:13px;">${s.icon}</span> ${s.name}<span onclick="event.stopPropagation();toggleChatSkill(${id})" style="cursor:pointer;margin-left:2px;opacity:0.6;">✕</span></span>`;
   }).join('');
-  // Also render list view
-  const listBody = document.getElementById('projectListBody');
-  if (listBody) {
-    listBody.innerHTML = filtered.map(p => {
-      const remaining = p.budget - p.spent - p.frozen;
-      const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
-      const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
-      const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
-      const statusTag = `<span class="tag ${stageTags[p.stage] || 'tag-slate'}">${stageLabels[p.stage] || '未知'}</span>`;
-      return `<tr onclick="alert('项目编号: ${p.id.toUpperCase()}\\n项目名称: ${p.name}\\n描述: ${p.desc}\\n负责人: ${p.lead}\\n预算: ${p.budget.toLocaleString()} RP\\n已使用: ${p.spent.toLocaleString()} RP\\n剩余: ${remaining.toLocaleString()} RP\\n成员: ${p.members}人 | 任务: ${p.tasks}个')" style="cursor:pointer;">
-        <td style="font-weight:600;">${p.name}</td>
-        <td style="font-family:monospace;font-size:12px;color:var(--text-muted);">${p.id.toUpperCase()}</td>
-        <td>${p.lead}</td>
-        <td>${statusTag}</td>
-        <td style="font-weight:500;">${p.budget.toLocaleString()} RP</td>
-        <td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:4px;"><div style="height:6px;border-radius:4px;width:${pct}%;background:${pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)'};"></div></div><span style="font-size:11px;color:var(--text-muted);">${pct}%</span></div></td>
-        <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openBonusModal('${p.id}')">追加奖励</button></td>
-      </tr>`;
-    }).join('');
-  }
 }
 
 function openBonusModal(projectId) {
@@ -2627,6 +2607,26 @@ function renderProjects() {
       <div style="display:flex;gap:4px;margin-top:10px;justify-content:flex-end;"><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openBonusModal('${p.id}')" style="font-size:11px;">+ 追加奖励</button></div>
     </div>`;
   }).join('');
+  // Also render list view
+  const listBody = document.getElementById('projectListBody');
+  if (listBody) {
+    listBody.innerHTML = filtered.map(p => {
+      const remaining = p.budget - p.spent - p.frozen;
+      const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
+      const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
+      const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
+      const statusTag = `<span class="tag ${stageTags[p.stage] || 'tag-slate'}">${stageLabels[p.stage] || '未知'}</span>`;
+      return `<tr onclick="alert('项目编号: ${p.id.toUpperCase()}\\n项目名称: ${p.name}\\n描述: ${p.desc}\\n负责人: ${p.lead}\\n预算: ${p.budget.toLocaleString()} RP\\n已使用: ${p.spent.toLocaleString()} RP\\n剩余: ${remaining.toLocaleString()} RP\\n成员: ${p.members}人 | 任务: ${p.tasks}个')" style="cursor:pointer;">
+        <td style="font-weight:600;">${p.name}</td>
+        <td style="font-family:monospace;font-size:12px;color:var(--text-muted);">${p.id.toUpperCase()}</td>
+        <td>${p.lead}</td>
+        <td>${statusTag}</td>
+        <td style="font-weight:500;">${p.budget.toLocaleString()} RP</td>
+        <td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:4px;"><div style="height:6px;border-radius:4px;width:${pct}%;background:${pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)'};"></div></div><span style="font-size:11px;color:var(--text-muted);">${pct}%</span></div></td>
+        <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openBonusModal('${p.id}')">追加奖励</button></td>
+      </tr>`;
+    }).join('');
+  }
 }
 
 // ===== BACKLOG STAGES (dynamic) =====
