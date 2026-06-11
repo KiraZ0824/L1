@@ -1931,7 +1931,7 @@
           <div id="taskViewList" style="display:none;">
             <div class="table-wrap">
               <table>
-                <thead><tr><th>任务</th><th>项目</th><th>优先级</th><th>状态</th><th>负责人</th><th>所属Backlog</th><th>奖励</th><th>截止日期</th><th>操作</th></tr></thead>
+                <thead><tr><th>任务</th><th>项目</th><th>优先级</th><th>负责人</th><th>所属Backlog</th><th>奖励</th><th>截止日期</th><th>操作</th></tr></thead>
                 <tbody id="taskListBody"></tbody>
               </table>
             </div>
@@ -2644,19 +2644,16 @@ function renderTaskList() {
   tbody.innerHTML = filtered.map(t => {
     const project = projects.find(p => p.id === t.projectId);
     const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
-    const displayLabel = isOverdue ? '⚠️ 已延期' : (statusLabels[t.status] || t.status);
-    const displayTagClass = isOverdue ? 'tag-rose' : (statusTags[t.status] || 'tag-slate');
     return `
     <tr>
-      <td style="font-weight:600;">${t.title}</td>
+      <td style="font-weight:600;">${t.title}${isOverdue ? ' ⚠️' : ''}</td>
       <td>${project ? project.name : '-'}</td>
       <td><span class="task-priority ${t.priority.toLowerCase()}" style="display:inline-block;margin-right:4px;"></span>${t.priority}</td>
-      <td><span class="tag ${displayTagClass}">${displayLabel}</span></td>
       <td>${t.assignee}</td>
       <td style="font-size:12px;color:var(--text-secondary);">${t.backlog || '-'}</td>
       <td style="color:var(--primary);font-weight:600;">${t.reward} RP</td>
       <td style="font-size:12px;color:${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? 'var(--accent-rose)' : 'var(--text-secondary)'};">${t.deadline}${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? ' ⚠️' : ''}</td>
-      <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n状态: ${displayLabel}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n${t.completedAt ? '完成时间: ' + t.completedAt : ''}')">详情</button></td>
+      <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n${t.completedAt ? '完成时间: ' + t.completedAt : ''}')">详情</button></td>
     </tr>`;
   }).join('');
 }
