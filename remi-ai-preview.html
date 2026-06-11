@@ -325,6 +325,7 @@
       overflow: hidden;
     }
     .artifact-panel.open { width: 480px; }
+    #projectDetailPanel.open { width: 640px; }
     .artifact-panel-header {
       padding: 16px 20px;
       border-bottom: 1px solid var(--border-light);
@@ -2587,6 +2588,17 @@ function openProjectDetail(projectId) {
   const projectTasks = tasks.filter(t => t.projectId === projectId);
   const memberSet = [...new Set(projectTasks.map(t => t.assignee))];
   const taskStatusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
+  // Compute per-stage dates from project timeline
+  const startMs = new Date(p.startDate).getTime();
+  const endMs = new Date(p.endDate).getTime();
+  const totalDays = (endMs - startMs) / (1000*60*60*24);
+  const stageDateRanges = {
+    research: { s: p.startDate, e: new Date(startMs + totalDays*0.25*86400000).toISOString().slice(0,10) },
+    initiation: { s: new Date(startMs + totalDays*0.25*86400000).toISOString().slice(0,10), e: new Date(startMs + totalDays*0.4*86400000).toISOString().slice(0,10) },
+    execution: { s: new Date(startMs + totalDays*0.4*86400000).toISOString().slice(0,10), e: new Date(startMs + totalDays*0.85*86400000).toISOString().slice(0,10) },
+    review: { s: new Date(startMs + totalDays*0.85*86400000).toISOString().slice(0,10), e: p.endDate },
+    closed: { s: p.endDate, e: p.endDate },
+  };
   body.innerHTML = `
     <div style="padding:16px;">
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
@@ -2618,13 +2630,17 @@ function openProjectDetail(projectId) {
       <div style="margin-bottom:12px;">
         <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Backlog 阶段</div>
         <div style="display:flex;flex-direction:column;gap:4px;">
-          ${Object.entries(stageLabels).map(([key, label]) => `
-            <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px;background:${p.stage === key ? 'var(--primary-light)' : 'var(--bg)'};font-size:12px;">
-              <span style="width:8px;height:8px;border-radius:50%;background:${p.stage === key ? 'var(--primary)' : 'var(--border)'};flex-shrink:0;"></span>
-              <span style="${p.stage === key ? 'font-weight:600;color:var(--primary)' : ''}">${label}</span>
-              ${p.stage === key ? '<span style="font-size:10px;color:var(--primary);margin-left:auto;">当前阶段</span>' : ''}
-            </div>
-          `).join('')}
+          ${Object.entries(stageLabels).map(([key, label]) => {
+            const dr = stageDateRanges[key] || {};
+            return `
+              <div style="display:flex;align-items:center;gap:8px;padding:5px 8px;border-radius:6px;background:${p.stage === key ? 'var(--primary-light)' : 'var(--bg)'};font-size:12px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:${p.stage === key ? 'var(--primary)' : 'var(--border)'};flex-shrink:0;"></span>
+                <span style="flex:1;${p.stage === key ? 'font-weight:600;color:var(--primary)' : ''}">${label}</span>
+                <span style="font-size:11px;color:var(--text-muted);">${dr.s || ''} ~ ${dr.e || ''}</span>
+                ${p.stage === key ? '<span style="font-size:10px;color:var(--primary);font-weight:500;flex-shrink:0;">当前</span>' : ''}
+              </div>
+            `;
+          }).join('')}
         </div>
       </div>
       <div style="margin-bottom:12px;">
