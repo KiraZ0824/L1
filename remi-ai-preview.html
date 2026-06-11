@@ -1922,7 +1922,19 @@
             <div class="select-wrap"><select id="projectLeadFilter" onchange="renderProjects()"><option value="all">全部负责人</option><option>张明远</option><option>李晓华</option><option>赵明</option><option>王思远</option><option>陈雨桐</option></select></div>
             <div class="select-wrap"><select id="projectSort" onchange="renderProjects()"><option value="created">按创建时间</option><option value="budget">按预算</option><option value="progress">按进度</option></select></div>
           </div>
+          <div class="tab-bar" id="projectViewTabs" style="margin-bottom:12px;">
+            <button class="tab-bar-item active" onclick="switchProjectView(this,'card')">📇 卡片视图</button>
+            <button class="tab-bar-item" onclick="switchProjectView(this,'list')">📋 列表视图</button>
+          </div>
           <div class="project-grid" id="projectGrid"></div>
+          <div id="projectListView" class="card" style="padding:0;overflow:hidden;display:none;">
+            <div class="table-wrap" style="border:none;">
+              <table>
+                <thead><tr><th>项目名称</th><th>编号</th><th>负责人</th><th>状态</th><th>预算</th><th>进度</th><th>操作</th></tr></thead>
+                <tbody id="projectListBody"></tbody>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -2386,6 +2398,26 @@ function renderSelectedSkillsBar() {
     const s = skills.find(sk => sk.id === id);
     return `<span style="display:inline-flex;align-items:center;gap:3px;font-size:12px;padding:2px 8px 2px 6px;border-radius:6px;background:var(--primary-light);color:var(--primary);font-weight:500;"><span style="font-size:13px;">${s.icon}</span> ${s.name}<span onclick="event.stopPropagation();toggleChatSkill(${id})" style="cursor:pointer;margin-left:2px;opacity:0.6;">✕</span></span>`;
   }).join('');
+  // Also render list view
+  const listBody = document.getElementById('projectListBody');
+  if (listBody) {
+    listBody.innerHTML = filtered.map(p => {
+      const remaining = p.budget - p.spent - p.frozen;
+      const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
+      const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
+      const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
+      const statusTag = `<span class="tag ${stageTags[p.stage] || 'tag-slate'}">${stageLabels[p.stage] || '未知'}</span>`;
+      return `<tr onclick="alert('项目编号: ${p.id.toUpperCase()}\\n项目名称: ${p.name}\\n描述: ${p.desc}\\n负责人: ${p.lead}\\n预算: ${p.budget.toLocaleString()} RP\\n已使用: ${p.spent.toLocaleString()} RP\\n剩余: ${remaining.toLocaleString()} RP\\n成员: ${p.members}人 | 任务: ${p.tasks}个')" style="cursor:pointer;">
+        <td style="font-weight:600;">${p.name}</td>
+        <td style="font-family:monospace;font-size:12px;color:var(--text-muted);">${p.id.toUpperCase()}</td>
+        <td>${p.lead}</td>
+        <td>${statusTag}</td>
+        <td style="font-weight:500;">${p.budget.toLocaleString()} RP</td>
+        <td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:4px;"><div style="height:6px;border-radius:4px;width:${pct}%;background:${pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)'};"></div></div><span style="font-size:11px;color:var(--text-muted);">${pct}%</span></div></td>
+        <td><button class="btn btn-xs btn-ghost">详情</button></td>
+      </tr>`;
+    }).join('');
+  }
 }
 
 // 点击外部关闭技能选择下拉框
@@ -2755,6 +2787,13 @@ function switchUcPointsTab(el, tab) {
   document.getElementById('ucPointsTabDetail').style.display = tab === 'detail' ? '' : 'none';
   document.getElementById('ucPointsTabExchange').style.display = tab === 'exchange' ? '' : 'none';
   document.getElementById('ucPointsTabSettlement').style.display = tab === 'settlement' ? '' : 'none';
+}
+
+function switchProjectView(el, view) {
+  document.querySelectorAll('#projectViewTabs .tab-bar-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('projectGrid').style.display = view === 'card' ? '' : 'none';
+  document.getElementById('projectListView').style.display = view === 'list' ? '' : 'none';
 }
 
 function openTaskModal() {
