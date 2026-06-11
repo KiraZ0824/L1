@@ -2589,22 +2589,23 @@ function openProjectDetail(projectId) {
   const taskStatusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
   body.innerHTML = `
     <div style="padding:16px;">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
-        <span class="tag ${stageTags[p.stage] || 'tag-slate'}" style="font-size:11px;">${stageLabels[p.stage] || '未知'}</span>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
         <span style="font-family:monospace;font-size:11px;color:var(--text-muted);">${p.id.toUpperCase()}</span>
+        <span class="tag ${stageTags[p.stage] || 'tag-slate'}" style="font-size:11px;">${stageLabels[p.stage] || '未知'}</span>
       </div>
-      <div style="font-size:16px;font-weight:700;margin-bottom:6px;">${p.name}</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:12px;">${p.desc}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">负责人</div><div style="font-size:13px;font-weight:500;">${p.lead}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">部门</div><div style="font-size:13px;font-weight:500;">${p.dept}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">周期</div><div style="font-size:13px;font-weight:500;">${p.startDate} ~ ${p.endDate}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">成员</div><div style="font-size:13px;font-weight:500;">${p.members} 人</div></div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;">${p.name}</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;padding:10px;background:var(--bg);border-radius:8px;">${p.desc}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">项目负责人</div><div style="font-size:13px;font-weight:500;">${p.lead}</div></div>
+        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">所属部门</div><div style="font-size:13px;font-weight:500;">${p.dept}</div></div>
+        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">总预算</div><div style="font-size:15px;font-weight:700;color:var(--primary);">${p.budget.toLocaleString()} RP</div></div>
+        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">项目状态</div><div><span class="tag ${stageTags[p.stage] || 'tag-slate'}" style="font-size:11px;">${stageLabels[p.stage] || '未知'}</span></div></div>
+        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">开始日期</div><div style="font-size:13px;font-weight:500;">${p.startDate}</div></div>
+        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">结束日期</div><div style="font-size:13px;font-weight:500;">${p.endDate}</div></div>
       </div>
       <div style="margin-bottom:16px;">
-        <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">预算</div>
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">预算使用</div>
         <div style="display:flex;gap:12px;align-items:center;margin-bottom:6px;">
-          <div><span style="font-size:18px;font-weight:800;color:var(--primary);">${p.budget.toLocaleString()}</span><span style="font-size:12px;color:var(--text-muted);"> RP</span></div>
           <div style="flex:1;"><div class="project-budget-bar" style="margin-bottom:0;"><div class="project-budget-fill" style="width:${pct}%;background:${pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)'};"></div></div></div>
           <div style="font-size:12px;font-weight:600;">${pct}%</div>
         </div>
@@ -2615,17 +2616,29 @@ function openProjectDetail(projectId) {
         </div>
       </div>
       <div style="margin-bottom:12px;">
+        <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">Backlog 阶段</div>
+        <div style="display:flex;flex-direction:column;gap:4px;">
+          ${Object.entries(stageLabels).map(([key, label]) => `
+            <div style="display:flex;align-items:center;gap:8px;padding:4px 8px;border-radius:6px;background:${p.stage === key ? 'var(--primary-light)' : 'var(--bg)'};font-size:12px;">
+              <span style="width:8px;height:8px;border-radius:50%;background:${p.stage === key ? 'var(--primary)' : 'var(--border)'};flex-shrink:0;"></span>
+              <span style="${p.stage === key ? 'font-weight:600;color:var(--primary)' : ''}">${label}</span>
+              ${p.stage === key ? '<span style="font-size:10px;color:var(--primary);margin-left:auto;">当前阶段</span>' : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+      <div style="margin-bottom:12px;">
         <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">项目成员</div>
         <div style="display:flex;gap:6px;flex-wrap:wrap;">${memberSet.map(m => `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px 3px 6px;border-radius:20px;background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:500;"><span style="width:20px;height:20px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;">${m[0]}</span>${m}</span>`).join('')}</div>
       </div>
       <div>
         <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">关联任务 (${projectTasks.length})</div>
-        ${projectTasks.map(t => `
+        ${projectTasks.length > 0 ? projectTasks.map(t => `
           <div style="padding:6px 0;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;gap:8px;">
             <span style="font-size:13px;">${t.title}</span>
-            <span style="display:flex;gap:4px;align-items:center;"><span style="font-size:11px;color:var(--text-muted);">${t.assignee}</span><span class="tag ${t.status === 'done' || t.status === 'closed' ? 'tag-green' : t.status === 'in_progress' ? 'tag-amber' : 'tag-slate'}" style="font-size:10px;">${taskStatusLabels[t.status] || t.status}</span></span>
+            <span style="display:flex;gap:4px;align-items:center;flex-shrink:0;"><span style="font-size:11px;color:var(--text-muted);">${t.assignee}</span><span class="tag ${t.status === 'done' || t.status === 'closed' ? 'tag-green' : t.status === 'in_progress' ? 'tag-amber' : 'tag-slate'}" style="font-size:10px;">${taskStatusLabels[t.status] || t.status}</span></span>
           </div>
-        `).join('')}
+        `).join('') : '<div style="font-size:12px;color:var(--text-muted);padding:8px 0;">暂无关联任务</div>'}
       </div>
     </div>
   `;
