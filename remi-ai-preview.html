@@ -1961,7 +1961,7 @@
             </div>
             <div class="select-wrap"><select id="taskProjectFilter" onchange="renderKanban()"><option value="all">全部项目</option></select></div>
             <div class="select-wrap"><select id="taskPriorityFilter" onchange="renderKanban()"><option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div>
-            <div class="select-wrap"><select id="taskStatusFilter" onchange="renderKanban()"><option value="all">全部状态</option><option value="todo">待开始</option><option value="in_progress">进行中</option><option value="pending_review">待审核</option><option value="rejected">驳回中</option><option value="review">待验收</option><option value="done">已完成</option><option value="closed">已关闭</option></select></div>
+            <div class="select-wrap"><select id="taskStatusFilter" onchange="renderKanban()"><option value="all">全部状态</option><option value="draft">草稿</option><option value="todo">待开始</option><option value="in_progress">进行中</option><option value="pending_review">待审核</option><option value="rejected">驳回中</option><option value="review">待验收</option><option value="done">已完成</option><option value="closed">已关闭</option></select></div>
             <div class="select-wrap"><select id="taskAssigneeFilter" onchange="renderKanban()"><option value="all">全部负责人</option><option>张明远</option><option>李晓华</option><option>王思远</option><option>赵明</option><option>陈雨桐</option></select></div>
           </div>
           <div class="tab-bar" id="taskViewTabs">
@@ -2864,7 +2864,7 @@ function renderKanban() {
         const priorityClass = t.priority.toLowerCase();
         const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
         return `
-        <div class="task-card" onclick="alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n当前状态: ${s.label}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n描述: ${t.desc}')">
+        <div class="task-card" onclick="openTaskDetail('${t.id}')" style="cursor:pointer;">
           <div class="task-card-title" style="display:flex;align-items:center;gap:6px;">
             <span class="task-priority ${priorityClass}"></span>
             ${t.title}
@@ -2876,12 +2876,152 @@ function renderKanban() {
             <span style="font-size:11px;font-weight:600;color:var(--primary);">${t.reward} RP</span>
           </div>
           ${t.delivery ? `<div style="font-size:10px;color:var(--text-muted);margin-top:4px;">📎 ${t.delivery}</div>` : ''}
+          <div id="taskActions_${t.id}" style="border-top:1px solid var(--border-light);padding:8px;margin:8px -12px -12px;display:flex;flex-wrap:wrap;gap:4px;"></div>
         </div>`;
       }).join('')}
     </div>`;
   }).join('');
+  // Render action buttons for all visible cards
+  filtered.forEach(t => renderTaskActions(t));
   renderTaskList();
   updateTaskProjectFilter();
+}
+
+// ===== TASK ACTION BUTTONS =====
+function renderTaskActions(t) {
+  const container = document.getElementById(`taskActions_${t.id}`);
+  if (!container) return;
+  const buttons = getTaskButtons(t);
+  container.innerHTML = buttons.map(b => `<button class="btn btn-xs ${b.class}" onclick="event.stopPropagation();${b.action}" style="font-size:10px;padding:2px 8px;white-space:nowrap;">${b.label}</button>`).join('');
+}
+
+function getTaskButtons(t) {
+  const base = [{ label:'查看', action:`openTaskDetail('${t.id}')`, cls:'btn-ghost' }];
+  switch(t.status) {
+    case 'draft': return [
+      ...base,
+      { label:'编辑', action:"editTask('${t.id}')", cls:'btn-outline' },
+      { label:'发布', action:"publishTask('${t.id}')", cls:'btn-primary' },
+    ];
+    case 'todo': return [...base];
+    case 'in_progress': return [
+      ...base,
+      { label:'处理', action:"processTask('${t.id}','in_progress')", cls:'btn-primary' },
+      { label:'编辑', action:"editTask('${t.id}')", cls:'btn-outline' },
+      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+    ];
+    case 'pending_review': return [
+      ...base,
+      { label:'审核', action:"auditTask('${t.id}')", cls:'btn-primary' },
+      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+    ];
+    case 'rejected': return [
+      ...base,
+      { label:'处理', action:"resubmitTask('${t.id}')", cls:'btn-primary' },
+      { label:'编辑', action:"editTask('${t.id}')", cls:'btn-outline' },
+      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+    ];
+    case 'review': return [
+      ...base,
+      { label:'验收', action:"acceptTask('${t.id}')", cls:'btn-primary' },
+      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+    ];
+    case 'done': return [
+      ...base,
+      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+    ];
+    default: return base;
+  }
+}
+
+function openTaskDetail(taskId) {
+  const t = tasks.find(x => x.id === taskId);
+  if (!t) return;
+  const p = projects.find(pr => pr.id === t.projectId);
+  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
+  const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
+  alert(`任务详情\n${'='.repeat(30)}\n编号: ${t.id.toUpperCase()}\n标题: ${t.title}\n项目: ${p ? p.name : '-'}\n所属Backlog: ${t.backlog || '-'}\n优先级: ${t.priority}\n状态: ${statusLabels[t.status]}${isOverdue ? ' ⚠️延期' : ''}\n负责人: ${t.assignee}\n奖励: ${t.reward} RP\n截止日期: ${t.deadline}\n交付形式: ${t.delivery || '-'}\n描述: ${t.desc}${t.completedAt ? '\n完成时间: ' + t.completedAt : ''}`);
+}
+
+function processTask(id, status) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  const next = confirm(`将任务 "${t.title}" 标记为【进行中】并可以提交验收？`);
+  if (next) {
+    t.status = 'in_progress';
+    alert(`已处理：${t.title} → 进行中`);
+    refreshAllTaskViews();
+  }
+}
+
+function publishTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  const ok = confirm(`发布任务「${t.title}」，状态从草稿变更为待开始？`);
+  if (ok) {
+    t.status = 'todo';
+    alert(`已发布：${t.title} → 待开始`);
+    refreshAllTaskViews();
+  }
+}
+
+function resubmitTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  const next = confirm(`将任务 "${t.title}" 重新提交审核？`);
+  if (next) {
+    t.status = 'pending_review';
+    alert(`已重新提交：${t.title} → 待审核`);
+    refreshAllTaskViews();
+  }
+}
+
+function auditTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  const choice = confirm(`对任务 "${t.title}" 进行审核通过？`);
+  if (choice) {
+    t.status = 'review';
+    alert(`已通过审核：${t.title} → 待验收`);
+  } else {
+    t.status = 'rejected';
+    alert(`已驳回：${t.title} → 驳回中，请修改后重新提交`);
+  }
+  refreshAllTaskViews();
+}
+
+function acceptTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  const next = confirm(`对任务 "${t.title}" 进行验收通过？`);
+  if (next) {
+    t.status = 'done';
+    t.completedAt = new Date().toISOString().slice(0,10);
+    alert(`验收通过：${t.title} → 已完成`);
+  }
+  refreshAllTaskViews();
+}
+
+function editTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  alert(`编辑任务：${t.title}\n可修改优先级、截止时间、负责人等字段。`);
+}
+
+function confirmCloseTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  const reason = prompt(`关闭任务「${t.title}」需要填写关闭原因：`);
+  if (reason && reason.trim()) {
+    t.status = 'closed';
+    alert(`已关闭：${t.title}（原因：${reason}）`);
+    refreshAllTaskViews();
+  }
+}
+
+function refreshAllTaskViews() {
+  renderKanban();
+  renderTaskList();
 }
 
 function updateTaskProjectFilter() {
@@ -2920,7 +3060,7 @@ function renderTaskList() {
       <td style="font-size:12px;color:var(--text-secondary);">${t.backlog || '-'}</td>
       <td style="color:var(--primary);font-weight:600;">${t.reward} RP</td>
       <td style="font-size:12px;color:${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? 'var(--accent-rose)' : 'var(--text-secondary)'};">${t.deadline}${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? ' <span style="color:var(--accent-rose);font-weight:600;font-size:12px;">延期</span>' : ''}</td>
-      <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n${t.completedAt ? '完成时间: ' + t.completedAt : ''}')">详情</button></td>
+      <td style="display:flex;gap:3px;">${getTaskButtons(t).map(b => `<button class="btn btn-xs ${b.cls}" onclick="event.stopPropagation();${b.action}" style="font-size:10px;padding:2px 6px;">${b.label}</button>`).join('')}</td>
     </tr>`;
   }).join('');
 }
