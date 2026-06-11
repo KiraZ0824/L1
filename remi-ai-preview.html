@@ -2601,7 +2601,7 @@ function renderKanban() {
           <div class="task-card-title" style="display:flex;align-items:center;gap:6px;">
             <span class="task-priority ${priorityClass}"></span>
             ${t.title}
-            ${isOverdue ? '<span style="font-size:10px;color:var(--accent-rose);font-weight:400;">⚠️</span>' : ''}
+            ${isOverdue ? ' <span style="color:var(--accent-rose);font-weight:600;font-size:12px;">延期</span>' : ''}
           </div>
           <div class="task-card-desc">${t.desc}</div>
           <div class="task-card-footer">
@@ -2646,7 +2646,7 @@ function renderTaskList() {
     const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
     return `
     <tr>
-      <td style="font-weight:600;">${t.title}${isOverdue ? ' ⚠️' : ''}</td>
+      <td style="font-weight:600;">${t.title}${isOverdue ? ' <span style="color:var(--accent-rose);font-weight:600;font-size:12px;">延期</span>' : ''}</td>
       <td>${project ? project.name : '-'}</td>
       <td><span class="task-priority ${t.priority.toLowerCase()}" style="display:inline-block;margin-right:4px;"></span>${t.priority}</td>
       <td>${t.assignee}</td>
