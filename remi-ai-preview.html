@@ -1199,7 +1199,7 @@
                     <div class="chat-input-tools" style="position:relative;">
                       <button class="chat-input-tool" onclick="toggleSkillSelector()">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                        技能 <span id="activeSkillCount" style="font-size:11px;color:var(--primary);font-weight:600;">0/3</span>
+                        技能 <span id="activeSkillCount" style="font-size:11px;color:var(--primary);font-weight:600;">0/1</span>
                       </button>
                       <div id="skillSelectorDropdown" class="skill-selector-dropdown" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px;width:220px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;"></div>
                     </div>
@@ -2268,31 +2268,28 @@ function toggleSkillSelector() {
 function renderSkillDropdown() {
   const dropdown = document.getElementById('skillSelectorDropdown');
   dropdown.innerHTML = `
-    <div style="font-size:12px;font-weight:600;color:var(--text);padding:4px 6px 8px;border-bottom:1px solid var(--border);margin-bottom:6px;">选择技能（最多3个）</div>
+    <div style="font-size:12px;font-weight:600;color:var(--text);padding:4px 6px 8px;border-bottom:1px solid var(--border);margin-bottom:6px;">选择技能</div>
     ${skills.map(s => {
       const selected = installedSkillIds.includes(s.id);
-      const disabled = !selected && installedSkillIds.length >= 3;
       return `
-        <div class="skill-option ${selected?'selected':''} ${disabled?'disabled':''}" onclick="${disabled ? '' : `toggleChatSkill(${s.id})`}" style="display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:8px;cursor:${disabled?'not-allowed':'pointer'};opacity:${disabled?0.4:1};${selected?'background:var(--primary-light);':''}">
+        <div class="skill-option ${selected?'selected':''}" onclick="toggleChatSkill(${s.id})" style="display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:8px;cursor:pointer;${selected?'background:var(--primary-light);':''}">
           <span style="font-size:16px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:${s.color};">${s.icon}</span>
           <span style="flex:1;font-size:13px;font-weight:500;">${s.name}</span>
           <span style="width:16px;height:16px;border-radius:50%;border:2px solid ${selected?'var(--primary)':'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:10px;color:${selected?'var(--primary)':'transparent'};flex-shrink:0;">${selected?'✓':''}</span>
         </div>
       `;
     }).join('')}
-    <div style="padding:6px 6px 2px;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:6px;">已选 ${installedSkillIds.length}/3</div>
+    <div style="padding:6px 6px 2px;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:6px;">已选 ${installedSkillIds.length}/1</div>
   `;
 }
 
 function toggleChatSkill(id) {
-  const idx = installedSkillIds.indexOf(id);
-  if (idx > -1) {
-    installedSkillIds.splice(idx, 1);
+  if (installedSkillIds.includes(id)) {
+    installedSkillIds = [];
   } else {
-    if (installedSkillIds.length >= 3) return;
-    installedSkillIds.push(id);
+    installedSkillIds = [id];
   }
-  document.getElementById('activeSkillCount').textContent = `${installedSkillIds.length}/3`;
+  document.getElementById('activeSkillCount').textContent = `${installedSkillIds.length}/1`;
   renderSkillDropdown();
   renderSelectedSkillsBar();
 }
