@@ -2626,8 +2626,8 @@ function updateTaskProjectFilter() {
 function renderTaskList() {
   const tbody = document.getElementById('taskListBody');
   if (!tbody) return;
-  const statusLabels = { todo:'待开始', in_progress:'进行中', overdue:'已延期', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
-  const statusTags = { todo:'tag-slate', in_progress:'tag-amber', overdue:'tag-rose', pending_review:'tag-violet', rejected:'tag-rose', review:'tag-violet', done:'tag-green', closed:'tag-slate' };
+  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
+  const statusTags = { todo:'tag-slate', in_progress:'tag-amber', pending_review:'tag-violet', rejected:'tag-rose', review:'tag-violet', done:'tag-green', closed:'tag-slate' };
   const filterProject = document.getElementById('taskProjectFilter')?.value || 'all';
   const filterPriority = document.getElementById('taskPriorityFilter')?.value || 'all';
   const filterStatus = document.getElementById('taskStatusFilter')?.value || 'all';
@@ -2643,17 +2643,20 @@ function renderTaskList() {
   });
   tbody.innerHTML = filtered.map(t => {
     const project = projects.find(p => p.id === t.projectId);
+    const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
+    const displayLabel = isOverdue ? '⚠️ 已延期' : (statusLabels[t.status] || t.status);
+    const displayTagClass = isOverdue ? 'tag-rose' : (statusTags[t.status] || 'tag-slate');
     return `
     <tr>
       <td style="font-weight:600;">${t.title}</td>
       <td>${project ? project.name : '-'}</td>
       <td><span class="task-priority ${t.priority.toLowerCase()}" style="display:inline-block;margin-right:4px;"></span>${t.priority}</td>
-      <td><span class="tag ${statusTags[t.status]}">${statusLabels[t.status] || t.status}</span></td>
+      <td><span class="tag ${displayTagClass}">${displayLabel}</span></td>
       <td>${t.assignee}</td>
       <td style="font-size:12px;color:var(--text-secondary);">${t.backlog || '-'}</td>
       <td style="color:var(--primary);font-weight:600;">${t.reward} RP</td>
       <td style="font-size:12px;color:${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? 'var(--accent-rose)' : 'var(--text-secondary)'};">${t.deadline}${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? ' ⚠️' : ''}</td>
-      <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n状态: ${statusLabels[t.status]}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n${t.completedAt ? '完成时间: ' + t.completedAt : ''}')">详情</button></td>
+      <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n状态: ${displayLabel}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n${t.completedAt ? '完成时间: ' + t.completedAt : ''}')">详情</button></td>
     </tr>`;
   }).join('');
 }
