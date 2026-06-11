@@ -2906,7 +2906,7 @@ function getTaskButtons(t) {
     case 'todo': return [...base];
     case 'in_progress': return [
       ...base,
-      { label:'处理', action:"processTask('${t.id}','in_progress')", cls:'btn-primary' },
+      { label:'处理', action:"processTask('${t.id}')", cls:'btn-primary' },
       { label:'编辑', action:"editTask('${t.id}')", cls:'btn-outline' },
       { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
     ];
@@ -2934,89 +2934,258 @@ function getTaskButtons(t) {
   }
 }
 
+// ===== TASK ACTIONS =====
+
 function openTaskDetail(taskId) {
   const t = tasks.find(x => x.id === taskId);
   if (!t) return;
   const p = projects.find(pr => pr.id === t.projectId);
-  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
+  const statusLabels = { draft:'草稿', todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
   const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
-  alert(`任务详情\n${'='.repeat(30)}\n编号: ${t.id.toUpperCase()}\n标题: ${t.title}\n项目: ${p ? p.name : '-'}\n所属Backlog: ${t.backlog || '-'}\n优先级: ${t.priority}\n状态: ${statusLabels[t.status]}${isOverdue ? ' ⚠️延期' : ''}\n负责人: ${t.assignee}\n奖励: ${t.reward} RP\n截止日期: ${t.deadline}\n交付形式: ${t.delivery || '-'}\n描述: ${t.desc}${t.completedAt ? '\n完成时间: ' + t.completedAt : ''}`);
-}
-
-function processTask(id, status) {
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-  const next = confirm(`将任务 "${t.title}" 标记为【进行中】并可以提交验收？`);
-  if (next) {
-    t.status = 'in_progress';
-    alert(`已处理：${t.title} → 进行中`);
-    refreshAllTaskViews();
-  }
-}
-
-function publishTask(id) {
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-  const ok = confirm(`发布任务「${t.title}」，状态从草稿变更为待开始？`);
-  if (ok) {
-    t.status = 'todo';
-    alert(`已发布：${t.title} → 待开始`);
-    refreshAllTaskViews();
-  }
-}
-
-function resubmitTask(id) {
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-  const next = confirm(`将任务 "${t.title}" 重新提交审核？`);
-  if (next) {
-    t.status = 'pending_review';
-    alert(`已重新提交：${t.title} → 待审核`);
-    refreshAllTaskViews();
-  }
-}
-
-function auditTask(id) {
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-  const choice = confirm(`对任务 "${t.title}" 进行审核通过？`);
-  if (choice) {
-    t.status = 'review';
-    alert(`已通过审核：${t.title} → 待验收`);
-  } else {
-    t.status = 'rejected';
-    alert(`已驳回：${t.title} → 驳回中，请修改后重新提交`);
-  }
-  refreshAllTaskViews();
-}
-
-function acceptTask(id) {
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-  const next = confirm(`对任务 "${t.title}" 进行验收通过？`);
-  if (next) {
-    t.status = 'done';
-    t.completedAt = new Date().toISOString().slice(0,10);
-    alert(`验收通过：${t.title} → 已完成`);
-  }
-  refreshAllTaskViews();
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">任务详情 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="padding:20px;">
+      <div style="font-size:17px;font-weight:700;margin-bottom:4px;">${t.title}</div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <span class="task-priority ${t.priority.toLowerCase()}" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span>
+        <span style="font-size:13px;color:var(--text-muted);">${t.priority} · ${statusLabels[t.status]}${isOverdue ? ' ⚠️延期' : ''}</span>
+        <span style="font-size:13px;color:var(--text-muted);margin-left:auto;">${p ? p.name : '-'}</span>
+      </div>
+      <div style="font-size:13px;color:var(--text-muted);padding:10px;background:var(--bg);border-radius:8px;margin-bottom:12px;">${t.desc}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+        <div style="padding:6px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">所属Backlog</div><div style="font-size:12px;font-weight:500;">${t.backlog || '-'}</div></div>
+        <div style="padding:6px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">负责人</div><div style="font-size:12px;font-weight:500;">${t.assignee}</div></div>
+        <div style="padding:6px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">截止日期</div><div style="font-size:12px;font-weight:500;">${t.deadline}</div></div>
+        <div style="padding:6px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">奖励</div><div style="font-size:12px;font-weight:500;color:var(--primary);">${t.reward} RP</div></div>
+        <div style="padding:6px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">交付形式</div><div style="font-size:12px;font-weight:500;">${t.delivery || '无'}</div></div>
+        <div style="padding:6px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">预计工作量</div><div style="font-size:12px;font-weight:500;">${t.effort || '-'} 人天</div></div>
+      </div>
+      ${t.completedAt ? `<div style="font-size:11px;color:var(--accent-emerald);padding:6px;background:rgba(16,185,129,0.1);border-radius:6px;">✅ 完成时间：${t.completedAt}</div>` : ''}
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
 }
 
 function editTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  alert(`编辑任务：${t.title}\n可修改优先级、截止时间、负责人等字段。`);
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">编辑任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="editTaskId" value="${id}">
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务标题 *</label><input id="editTitle" value="${t.title}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务描述</label><textarea id="editDesc" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;">${t.desc}</textarea></div>
+      <div class="form-row">
+        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="editProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;">${projects.map(p => `<option value="${p.id}"${p.id===t.projectId?' selected':''}>${p.name}</option>`).join('')}</select></div>
+        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属Backlog</label><input id="editBacklog" value="${t.backlog||''}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
+      </div>
+      <div class="form-row">
+        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">优先级</label><select id="editPriority" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option${t.priority==='P0'?' selected':''}>P0紧急</option><option${t.priority==='P1'?' selected':''}>P1高</option><option${t.priority==='P2'?' selected':''}>P2中</option><option${t.priority==='P3'?' selected':''}>P3低</option></select></div>
+        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务负责人</label><select id="editAssignee" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option${t.assignee==='张明远'?' selected':''}>张明远</option><option${t.assignee==='李晓华'?' selected':''}>李晓华</option><option${t.assignee==='王思远'?' selected':''}>王思远</option><option${t.assignee==='赵明'?' selected':''}>赵明</option><option${t.assignee==='陈雨桐'?' selected':''}>陈雨桐</option></select></div>
+      </div>
+      <div class="form-row">
+        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">截止日期</label><input id="editDeadline" type="date" value="${t.deadline}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
+        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计奖励 (RP)</label><input id="editReward" type="number" value="${t.reward}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
+      </div>
+      <div class="form-row">
+        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option${!t.delivery?' selected':''}>无需交付</option><option${t.delivery==='附件'?' selected':''}>附件</option><option${t.delivery==='文档链接'?' selected':''}>文档链接</option></select></div>
+        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预期工作量 (人天)</label><input id="editEffort" value="${t.effort||''}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;" placeholder="如 3"></div>
+      </div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">验收标准</label><textarea id="editAcceptance" rows="2" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;"></textarea></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveEditTask()">保存修改</button></div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function saveEditTask() {
+  const t = tasks.find(x => x.id === document.getElementById('editTaskId').value);
+  if (!t) return;
+  t.title = document.getElementById('editTitle').value;
+  t.desc = document.getElementById('editDesc').value;
+  t.projectId = document.getElementById('editProject').value;
+  t.backlog = document.getElementById('editBacklog').value;
+  t.priority = document.getElementById('editPriority').value;
+  t.assignee = document.getElementById('editAssignee').value;
+  t.deadline = document.getElementById('editDeadline').value;
+  t.reward = parseInt(document.getElementById('editReward').value) || t.reward;
+  t.delivery = document.getElementById('editDelivery').value || '';
+  t.effort = document.getElementById('editEffort').value;
+  refreshAllTaskViews();
+  closeModal();
+  alert('修改已保存');
+}
+
+function processTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  // For "进行中", show completion submission modal
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">提交完成说明 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="submitTaskId" value="${id}">
+      <div style="font-size:13px;color:var(--text-muted);">当前状态：<strong>进行中</strong> → 将提交至<strong>待审核</strong></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成说明 *</label><textarea id="submitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="详细描述任务完成情况、完成内容..."></textarea></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付物上传</label><input type="file" id="submitFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成日期</label><input type="date" id="submitDate" value="${new Date().toISOString().slice(0,10)}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitForReview()">提交审核</button></div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function submitForReview() {
+  const t = tasks.find(x => x.id === document.getElementById('submitTaskId').value);
+  if (!t) return;
+  if (!document.getElementById('submitNote').value.trim()) { alert('请填写完成说明'); return; }
+  t.status = 'pending_review';
+  t.completedAt = new Date().toISOString().slice(0,10);
+  alert(`已提交审核：${t.title} → 待审核`);
+  refreshAllTaskViews();
+  closeModal();
+}
+
+function resubmitTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">重新提交审核 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="resubmitTaskId" value="${id}">
+      <div style="font-size:13px;color:var(--text-muted);">当前状态：<strong>驳回中</strong>，请修改后重新提交</div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">修改说明 *</label><textarea id="resubmitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="说明本次修改了什么内容..."></textarea></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="doResubmit()">重新提交</button></div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function doResubmit() {
+  const t = tasks.find(x => x.id === document.getElementById('resubmitTaskId').value);
+  if (!t) return;
+  if (!document.getElementById('resubmitNote').value.trim()) { alert('请填写修改说明'); return; }
+  t.status = 'pending_review';
+  t.completedAt = new Date().toISOString().slice(0,10);
+  alert(`已重新提交：${t.title} → 待审核`);
+  refreshAllTaskViews();
+  closeModal();
+}
+
+function auditTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">审核任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="auditTaskId" value="${id}">
+      <div style="padding:10px;background:var(--bg);border-radius:8px;"><div style="font-size:14px;font-weight:600;margin-bottom:4px;">${t.title}</div><div style="font-size:12px;color:var(--text-muted);">提交完成说明：</div><div style="font-size:13px;margin-top:4px;padding:8px;background:white;border-radius:6px;">${t.completedAt ? '[已完成] ' + t.completedAt : '(暂无完成说明)'}</div></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">
+        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectAudit()">驳回</button>
+        <button class="btn btn-primary" onclick="doApproveAudit()">通过（→待验收）</button>
+      </div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function doApproveAudit() {
+  const t = tasks.find(x => x.id === document.getElementById('auditTaskId').value);
+  if (!t) return;
+  t.status = 'review';
+  alert(`已通过审核：${t.title} → 待验收`);
+  refreshAllTaskViews();
+  closeModal();
+}
+
+function doRejectAudit() {
+  const t = tasks.find(x => x.id === document.getElementById('auditTaskId').value);
+  if (!t) return;
+  if (!document.getElementById('auditNote').value.trim()) { alert('请填写审核意见'); return; }
+  t.status = 'rejected';
+  alert(`已驳回：${t.title} → 驳回中，请修改后重新提交`);
+  refreshAllTaskViews();
+  closeModal();
+}
+
+function acceptTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">验收任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="acceptTaskId" value="${id}">
+      <div style="padding:10px;background:var(--bg);border-radius:8px;"><div style="font-size:14px;font-weight:600;margin-bottom:4px;">${t.title}</div><div style="font-size:12px;color:var(--text-muted);">状态：待验收</div></div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审批备注（如有审批流程需填写）</label><textarea id="acceptNote" rows="2" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="审批意见（选填）"></textarea></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">
+        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+        <button class="btn btn-outline" style="color:var(--accent-rose);" onclick="rejectAcceptTask()">驳回</button>
+        <button class="btn btn-primary" onclick="doAcceptTask()">验收通过</button>
+      </div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function doAcceptTask() {
+  const t = tasks.find(x => x.id === document.getElementById('acceptTaskId').value);
+  if (!t) return;
+  t.status = 'done';
+  t.completedAt = new Date().toISOString().slice(0,10);
+  alert(`验收通过：${t.title} → 已完成`);
+  refreshAllTaskViews();
+  closeModal();
+}
+
+function rejectAcceptTask() {
+  const t = tasks.find(x => x.id === document.getElementById('acceptTaskId').value);
+  if (!t) return;
+  t.status = 'rejected';
+  alert(`已驳回验收：${t.title} → 驳回中`);
+  refreshAllTaskViews();
+  closeModal();
 }
 
 function confirmCloseTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  const reason = prompt(`关闭任务「${t.title}」需要填写关闭原因：`);
-  if (reason && reason.trim()) {
-    t.status = 'closed';
-    alert(`已关闭：${t.title}（原因：${reason}）`);
-    refreshAllTaskViews();
-  }
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">关闭任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="closeTaskId" value="${id}">
+      <div style="font-size:13px;color:var(--text-muted);">即将关闭任务「${t.title}」，请填写关闭原因。</div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关闭原因 *</label><textarea id="closeReason" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="必须填写关闭原因..."></textarea></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" style="color:var(--accent-rose);" onclick="doCloseTask()">确认关闭</button></div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function doCloseTask() {
+  const t = tasks.find(x => x.id === document.getElementById('closeTaskId').value);
+  if (!t) return;
+  if (!document.getElementById('closeReason').value.trim()) { alert('必须填写关闭原因'); return; }
+  t.status = 'closed';
+  alert(`已关闭：${t.title}（原因：${document.getElementById('closeReason').value}）`);
+  refreshAllTaskViews();
+  closeModal();
+}
+
+function publishTask(id) {
+  const t = tasks.find(x => x.id === id);
+  if (!t) return;
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">发布任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
+      <input type="hidden" id="publishTaskId" value="${id}">
+      <div style="font-size:13px;color:var(--text-muted);">当前为草稿状态，发布后将变更为<strong>待开始</strong>，可分配给团队成员。</div>
+      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">发布说明</label><input id="publishNote" placeholder="可选：添加发布说明..." style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="doPublishTask()">确认发布</button></div>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function doPublishTask() {
+  const t = tasks.find(x => x.id === document.getElementById('publishTaskId').value);
+  if (!t) return;
+  t.status = 'todo';
+  alert(`已发布：${t.title} → 待开始`);
+  refreshAllTaskViews();
+  closeModal();
 }
 
 function refreshAllTaskViews() {
