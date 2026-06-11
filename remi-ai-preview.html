@@ -1,0 +1,2983 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Remi L1 - 智能助手</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #f97316;
+      --primary-dark: #ea580c;
+      --primary-light: #fff7ed;
+      --primary-border: #fed7aa;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
+      --accent-rose: #ef4444;
+      --accent-violet: #8b5cf6;
+      --bg: #f5f5f4;
+      --card: #ffffff;
+      --border: #e7e5e4;
+      --border-light: #f0efed;
+      --text: #292524;
+      --text-secondary: #78716c;
+      --text-muted: #a8a29e;
+      --radius-sm: 8px;
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 20px;
+      --radius-full: 9999px;
+      --shadow: 0 1px 2px rgba(0,0,0,0.04);
+      --shadow-md: 0 4px 16px rgba(0,0,0,0.06);
+      --shadow-lg: 0 12px 40px rgba(0,0,0,0.08);
+      --font: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    html { font-size: 14px; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== LAYOUT ===== */
+    .app {
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    /* ===== MAIN AREA ===== */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      background: var(--card);
+    }
+
+    /* ===== TOP BAR ===== */
+    /* ===== CONTENT ===== */
+    .content {
+      flex: 1;
+      overflow-x: hidden;
+      overflow-y: auto;
+      position: relative;
+      background: var(--bg);
+    }
+    .page {
+      display: none;
+      width: 100%;
+      min-height: 100%;
+      overflow-x: auto;
+      overflow-y: auto;
+    }
+    .page.active { display: flex; animation: fadeIn 0.25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } }
+
+    .page-inner {
+      width: 100%;
+      min-width: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      flex-shrink: 0;
+    }
+
+    /* ===== REMI AI PAGE (CHAT) ===== */
+    #page-remi-ai {
+      flex-direction: column;
+      background: var(--card);
+    }
+    #page-remi-ai .page-inner {
+      max-width: 100%;
+      padding: 0;
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+    }
+    #page-dashboard .page-inner {
+      max-width: 100%;
+    }
+    #page-users .page-inner {
+      max-width: 100%;
+    }
+    .chat-header {
+      padding: 14px 24px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .chat-header-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .chat-header-actions { display: flex; align-items: center; gap: 6px; }
+    .chat-maximize-btn {
+      width: 30px; height: 30px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .chat-maximize-btn:hover { background: var(--bg); color: var(--text-secondary); }
+    .chat-maximize-btn svg { width: 16px; height: 16px; }
+    .chat-messages-area {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .chat-messages-area::-webkit-scrollbar { width: 4px; }
+    .chat-messages-area::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+    .chat-scroll-inner {
+      width: 100%;
+      max-width: 720px;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .msg {
+      display: flex;
+      gap: 12px;
+      max-width: 100%;
+    }
+    .msg.user { flex-direction: row-reverse; }
+    .msg-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 13px; color: white;
+    }
+    .msg-body { max-width: 600px; }
+    .msg-bubble {
+      padding: 10px 16px;
+      border-radius: var(--radius-lg);
+      font-size: 14px;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+    .msg.user .msg-bubble {
+      background: var(--primary);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .msg.assistant .msg-bubble {
+      background: var(--bg);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+    .msg-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+    .msg.user .msg-time { text-align: right; }
+    .citation {
+      margin-top: 8px;
+      padding: 10px 14px;
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      border-radius: var(--radius);
+      font-size: 13px;
+    }
+    .citation-doc {
+      font-weight: 600; font-size: 12px; margin-bottom: 3px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .citation-conf {
+      font-size: 10px; font-weight: 600;
+      padding: 1px 6px; border-radius: 4px;
+    }
+    .citation-conf.high { background: #d1fae5; color: #065f46; }
+    .citation-conf.medium { background: #fef3c7; color: #92400e; }
+    .citation-snippet { font-size: 12px; color: var(--text-secondary); }
+
+    .chat-empty {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: var(--text-muted);
+      padding: 40px 24px 60px;
+    }
+    .chat-empty-icon {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px;
+    }
+    .chat-empty h2 { font-size: 18px; font-weight: 700; color: var(--text); }
+    .chat-empty p { font-size: 13px; color: var(--text-muted); max-width: 400px; text-align: center; }
+    .chat-suggestions {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      margin-top: 8px;
+    }
+    .chat-suggestion {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 13px;
+      cursor: pointer;
+      transition: var(--transition);
+      background: var(--card);
+      color: var(--text-secondary);
+    }
+    .chat-suggestion:hover { border-color: var(--primary-border); color: var(--primary); }
+
+    /* Chat Input */
+    .chat-input-container {
+      border-top: 1px solid var(--border-light);
+      padding: 12px 24px 16px;
+      flex-shrink: 0;
+      background: var(--card);
+    }
+    .chat-input-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+    .chat-input-tools {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .chat-input-tool {
+      padding: 4px 12px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font);
+      display: flex; align-items: center; gap: 4px;
+    }
+    .chat-input-tool:hover { border-color: var(--primary-border); color: var(--primary); }
+    .chat-input-tool.active { background: var(--primary-light); border-color: var(--primary-border); color: var(--primary); }
+    .chat-input-tool svg { width: 14px; height: 14px; }
+    .chat-input-wrap {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 10px 14px;
+      transition: var(--transition);
+    }
+    .chat-input-wrap:focus-within {
+      border-color: var(--primary-border);
+      box-shadow: 0 0 0 3px rgba(249,115,22,0.1);
+    }
+    .chat-input-wrap textarea {
+      flex: 1;
+      border: none;
+      background: none;
+      outline: none;
+      font-family: var(--font);
+      font-size: 14px;
+      color: var(--text);
+      resize: none;
+      min-height: 22px;
+      max-height: 120px;
+      line-height: 1.5;
+    }
+    .chat-input-wrap textarea::placeholder { color: var(--text-muted); }
+    .chat-send-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: var(--primary);
+      color: white;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      flex-shrink: 0;
+    }
+    .chat-send-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+    .chat-send-btn:active { transform: scale(0.95); }
+    .chat-send-btn svg { width: 16px; height: 16px; }
+
+    /* ===== ARTIFACT PANEL ===== */
+    .artifact-panel {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: 0;
+      background: var(--card);
+      box-shadow: var(--shadow-lg);
+      z-index: 51;
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .artifact-panel.open { width: 480px; }
+    .artifact-panel-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-shrink: 0;
+    }
+    .artifact-panel-title {
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .artifact-panel-close {
+      width: 30px; height: 30px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      transition: var(--transition);
+    }
+    .artifact-panel-close:hover { background: var(--bg); color: var(--text); }
+    .artifact-panel-close svg { width: 18px; height: 18px; }
+    .artifact-panel-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+    }
+    .artifact-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .artifact-card-title {
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .artifact-card-content {
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+    }
+    .artifact-card-content pre {
+      background: #1c1917;
+      color: #f5f5f4;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 12px;
+      overflow-x: auto;
+      margin: 8px 0;
+    }
+    .artifact-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      background: var(--primary-light);
+      border: 1px solid var(--primary-border);
+      padding: 3px 10px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      transition: var(--transition);
+      font-family: var(--font);
+      margin-top: 6px;
+    }
+    .artifact-btn:hover { background: var(--primary-border); }
+    .artifact-btn svg { width: 13px; height: 13px; }
+
+    /* ===== CHAT LAYOUT WRAPPER (for maximize + artifact) ===== */
+    .chat-content-wrap {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+      position: relative;
+      transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .chat-content-wrap.artifact-open {
+      margin-right: 480px;
+    }
+    .chat-main-col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    /* ===== COMPACT SIDEBAR (ICON NAV) ===== */
+    .sidebar {
+      width: 60px;
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 0 8px 0;
+      transition: var(--transition);
+    }
+    .sidebar-logo {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--primary), #ea580c);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 800; font-size: 16px;
+      margin-bottom: 16px;
+      cursor: default;
+    }
+    .sidebar-nav {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 100%;
+      padding: 0 8px;
+      align-items: center;
+    }
+    .sidebar-btn {
+      width: 40px; height: 40px;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-muted);
+      position: relative;
+    }
+    .sidebar-btn:hover { background: var(--bg); color: var(--text); }
+    .sidebar-btn.active { background: var(--primary-light); color: var(--primary); }
+    .sidebar-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .sidebar-btn .sidebar-tooltip {
+      position: absolute;
+      left: 52px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--text);
+      color: white;
+      font-size: 12px;
+      font-family: var(--font);
+      padding: 4px 10px;
+      border-radius: 6px;
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s;
+      z-index: 100;
+    }
+    .sidebar-btn:hover .sidebar-tooltip { opacity: 1; }
+    .sidebar-btn .badge-dot {
+      position: absolute;
+      top: 4px; right: 4px;
+      width: 8px; height: 8px;
+      background: var(--accent-rose);
+      border-radius: 50%;
+      border: 2px solid var(--card);
+    }
+    .sidebar-divider {
+      width: 28px;
+      height: 1px;
+      background: var(--border-light);
+      margin: 8px 0;
+    }
+    .sidebar-bottom {
+      width: 100%;
+      padding: 0 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+    .sidebar-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #ea580c);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; font-size: 12px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .sidebar-avatar:hover { opacity: 0.85; }
+
+    /* ===== CONV PANEL (inside Remi AI page) ===== */
+    .conv-search {
+      position: relative;
+    }
+    .conv-search input {
+      width: 100%;
+      padding: 7px 12px 7px 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-full);
+      font-size: 12px;
+      font-family: var(--font);
+      background: var(--bg);
+      outline: none;
+    }
+    .conv-search input:focus { border-color: var(--primary-border); }
+    .conv-search svg {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px; height: 14px;
+      color: var(--text-muted);
+    }
+    .conv-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 8px;
+      min-height: 0;
+    }
+    .conv-item {
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: var(--transition);
+      margin-bottom: 2px;
+    }
+    .conv-item:hover { background: var(--bg); }
+    .conv-item.active { background: var(--primary-light); }
+    .conv-item-title {
+      font-size: 13px; font-weight: 600; color: var(--text);
+      display: flex; align-items: center; gap: 6px;
+    }
+    .conv-item-preview {
+      font-size: 12px; color: var(--text-muted);
+      margin-top: 2px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .conv-item-time { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ===== NEW CONV BTN ===== */
+    .new-conv-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: none;
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .new-conv-btn:hover { background: var(--bg); color: var(--text); border-color: var(--primary-border); }
+
+    /* ===== KNOWLEDGE ===== */
+    .kb-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .kb-header h1 { font-size: 20px; font-weight: 700; }
+    .kb-header p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+    .kb-grid { display: grid; grid-template-columns: 220px 1fr; gap: 20px; min-width: 0; }
+    .kb-tree {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+    }
+    .kb-tree-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+    .kb-tree-item:hover { background: var(--bg); }
+    .kb-tree-item.active { background: var(--primary-light); color: var(--primary-dark); font-weight: 600; }
+    .kb-tree-item .count { margin-left: auto; font-size: 11px; color: var(--text-muted); }
+    .kb-main { min-width: 0; }
+    .kb-tree { min-width: 0; }
+    .kb-files {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .kb-files-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border-light);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .kb-files-header h3 { font-size: 14px; font-weight: 600; }
+    .kb-file-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .kb-file-row:last-child { border-bottom: none; }
+    .kb-file-icon {
+      width: 38px; height: 38px;
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0;
+    }
+    .kb-file-info { flex: 1; min-width: 0; }
+    .kb-file-name { font-size: 13px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .kb-file-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 10px; margin-top: 1px; }
+    .kb-tree-section-title {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      padding: 8px 10px 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .kb-tab {
+      padding: 10px 20px;
+      border: none;
+      background: none;
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+    }
+    .kb-tab:hover { color: var(--text); }
+    .kb-tab.active { color: var(--primary); font-weight: 600; }
+    .kb-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px 2px 0 0;
+    }
+    .kb-tab-count {
+      font-size: 11px;
+      background: var(--accent-amber);
+      color: white;
+      padding: 1px 6px;
+      border-radius: 10px;
+      margin-left: 4px;
+    }
+    .kb-review-item {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .kb-review-item:last-child { border-bottom: none; }
+    .kb-upload-area:hover { border-color: var(--primary-border); background: var(--primary-light); }
+
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border-light);
+    }
+    .setting-row:last-child { border-bottom: none; }
+    .setting-label { font-size: 13px; font-weight: 600; }
+    .setting-desc { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+
+    /* ===== USER MANAGEMENT ===== */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab {
+      padding: 8px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      border: none;
+      background: none;
+      cursor: pointer;
+      transition: var(--transition);
+      border-radius: 8px 8px 0 0;
+      position: relative;
+      font-family: var(--font);
+    }
+    .tab:hover { color: var(--text-secondary); background: var(--bg); }
+    .tab.active { color: var(--primary); background: var(--primary-light); }
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0; right: 0;
+      height: 2px;
+      background: var(--primary);
+      border-radius: 2px 2px 0 0;
+    }
+    .org-tree { font-size: 13px; }
+    .org-node { margin-bottom: 4px; }
+    .org-node-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .org-node-header:hover { background: var(--bg); }
+    .org-children {
+      padding-left: 20px;
+      margin-top: 4px;
+      border-left: 2px solid var(--border-light);
+      margin-left: 10px;
+    }
+    .tag-violet { background: #ede9fe; color: #6d28d9; }
+
+    /* ===== PROJECTS ===== */
+    .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .project-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .project-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .project-card-name { font-size: 15px; font-weight: 700; }
+    .project-card-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+    .project-card-meta { display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
+    .project-card-meta span { display: flex; align-items: center; gap: 4px; }
+    .project-budget-bar {
+      height: 6px; background: var(--border-light); border-radius: 3px; overflow: hidden; margin-bottom: 4px;
+    }
+    .project-budget-fill { height: 100%; border-radius: 3px; }
+    .project-budget-label { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; }
+
+    /* ===== TASK KANBAN ===== */
+    .kanban-board { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; overflow-x: auto; }
+    .kanban-col {
+      background: var(--bg); border-radius: var(--radius-lg); padding: 12px; min-width: 220px;
+    }
+    .kanban-col-header {
+      display: flex; align-items: center; justify-content: space-between;
+      font-size: 13px; font-weight: 600; margin-bottom: 12px; padding: 0 4px;
+    }
+    .kanban-col-count { font-size: 11px; color: var(--text-muted); background: var(--card); padding: 2px 8px; border-radius: var(--radius-full); }
+    .task-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px;
+      cursor: pointer; transition: var(--transition);
+    }
+    .task-card:hover { box-shadow: var(--shadow); border-color: var(--primary-border); }
+    .task-card-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
+    .task-card-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.5; }
+    .task-card-footer {
+      display: flex; align-items: center; justify-content: space-between; gap: 6px;
+    }
+    .task-card-footer .avatar-stack { display: flex; }
+    .task-card-footer .avatar-stack > div {
+      width: 22px; height: 22px; border-radius: 50%; font-size: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 700; margin-right: -6px; border: 2px solid var(--card);
+    }
+    .task-priority { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .task-priority.p0 { background: var(--accent-rose); }
+    .task-priority.p1 { background: var(--accent-amber); }
+    .task-priority.p2 { background: #3b82f6; }
+
+    /* ===== POINTS ===== */
+    .points-hero {
+      background: linear-gradient(135deg, var(--primary), #ea580c);
+      border-radius: var(--radius-xl);
+      padding: 32px;
+      color: white;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .points-balance { font-size: 48px; font-weight: 800; line-height: 1; }
+    .points-label { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+    .points-rules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+    .points-rule-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 18px;
+    }
+    .points-rule-icon { font-size: 28px; margin-bottom: 8px; }
+    .points-rule-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+    .points-rule-desc { font-size: 12px; color: var(--text-muted); line-height: 1.5; }
+
+    /* ===== NOTIFICATIONS ===== */
+    .notif-list { }
+    .notif-item {
+      display: flex; gap: 12px; padding: 14px 16px; border-bottom: 1px solid var(--border-light);
+      cursor: pointer; transition: var(--transition);
+    }
+    .notif-item:hover { background: var(--bg); }
+    .notif-item.unread { background: var(--primary-light); }
+    .notif-item.unread:hover { background: #fff7ed; }
+    .notif-dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--primary);
+      flex-shrink: 0; margin-top: 6px;
+    }
+    .notif-dot.read { background: transparent; }
+    .notif-content { flex: 1; min-width: 0; }
+    .notif-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .notif-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+    .notif-time { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+    .notif-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+    /* ===== BADGE COUNTER ===== */
+    .badge-dot {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--accent-rose); color: white;
+      font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      margin-left: auto;
+    }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.3);
+      z-index: 100; display: none; align-items: center; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--card); border-radius: var(--radius-xl);
+      width: 560px; max-height: 80vh; overflow-y: auto;
+      box-shadow: var(--shadow-lg);
+    }
+    .modal-header {
+      padding: 20px 24px; border-bottom: 1px solid var(--border-light);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-title { font-size: 16px; font-weight: 700; }
+    .modal-close { width: 32px; height: 32px; border-radius: var(--radius-sm); border: none; background: none; cursor: pointer; color: var(--text-muted); font-size: 18px; display: flex; align-items: center; justify-content: center; }
+    .modal-close:hover { background: var(--bg); }
+    .modal-body { padding: 24px; }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 8px; }
+
+    /* ===== FORM ===== */
+    .form-group { margin-bottom: 16px; }
+    .form-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 4px; display: block; }
+    .form-input, .form-textarea, .form-select {
+      width: 100%; padding: 8px 12px; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px;
+      outline: none; transition: var(--transition); background: var(--card);
+    }
+    .form-input:focus, .form-textarea:focus { border-color: var(--primary-border); box-shadow: 0 0 0 3px rgba(249,115,22,0.08); }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    /* ===== TABS ALT ===== */
+    .tab-bar {
+      display: flex; gap: 4px; margin-bottom: 16px;
+    }
+    .tab-bar-item {
+      padding: 6px 14px; border-radius: var(--radius-full);
+      font-size: 12px; font-weight: 600; cursor: pointer;
+      border: 1px solid var(--border); background: var(--card);
+      color: var(--text-secondary); transition: var(--transition);
+      font-family: var(--font);
+    }
+    .tab-bar-item:hover { border-color: var(--primary-border); color: var(--primary); }
+    .tab-bar-item.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* ===== COMPONENTS ===== */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .card-title { font-size: 14px; font-weight: 600; }
+    .card-subtitle { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 16px;
+      border-radius: var(--radius-full);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .btn svg { width: 15px; height: 15px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-ghost { background: transparent; color: var(--text-secondary); }
+    .btn-ghost:hover { background: var(--bg); }
+    .btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-sm { padding: 5px 12px; font-size: 11px; }
+    .btn-xs { padding: 3px 10px; font-size: 10px; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 8px;
+      border-radius: var(--radius-full);
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tag-orange { background: var(--primary-light); color: var(--primary-dark); }
+    .tag-green { background: #d1fae5; color: #065f46; }
+    .tag-amber { background: #fef3c7; color: #92400e; }
+    .tag-rose { background: #fee2e2; color: #991b1b; }
+    .tag-slate { background: #f1f5f9; color: #475569; }
+
+    .select-wrap {
+      position: relative;
+      display: inline-block;
+    }
+    .select-wrap select {
+      appearance: none;
+      padding: 5px 28px 5px 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      font-family: var(--font);
+      font-size: 12px;
+      color: var(--text);
+      cursor: pointer;
+      outline: none;
+    }
+    .select-wrap::after {
+      content: '';
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      border-left: 4px solid transparent;
+      border-right: 4px solid transparent;
+      border-top: 4px solid var(--text-muted);
+      pointer-events: none;
+    }
+
+    .toggle {
+      width: 38px; height: 20px;
+      border-radius: 10px;
+      background: #d6d3d1;
+      cursor: pointer;
+      transition: var(--transition);
+      position: relative;
+      border: none;
+      flex-shrink: 0;
+    }
+    .toggle.on { background: var(--primary); }
+    .toggle::after {
+      content: '';
+      position: absolute;
+      top: 2px; left: 2px;
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      background: white;
+      transition: var(--transition);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+    .toggle.on::after { left: 20px; }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background: var(--card);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left;
+      padding: 10px 16px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      background: #fafaf9;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 10px 16px;
+      font-size: 13px;
+      color: var(--text);
+      border-bottom: 1px solid var(--border-light);
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fafaf9; }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 100%;
+      padding-top: 12px;
+    }
+    .chart-bar-group {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      height: 100%;
+      justify-content: flex-end;
+    }
+    .chart-bar {
+      width: 100%;
+      max-width: 32px;
+      border-radius: 3px 3px 0 0;
+      min-height: 6px;
+      transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .chart-bar-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+
+    .stat-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      transition: var(--transition);
+    }
+    .stat-card:hover { box-shadow: var(--shadow-md); }
+    .stat-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+    .stat-icon {
+      width: 40px; height: 40px;
+      border-radius: var(--radius);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .stat-icon svg { width: 20px; height: 20px; }
+    .stat-value { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.2; }
+    .stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; margin-top: 1px; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .page-section-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    /* ===== SCROLLBAR ===== */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 1024px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .kb-grid { grid-template-columns: 1fr; }
+      .kb-tree { display: none; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { width: 50px; }
+      .sidebar-btn { width: 36px; height: 36px; }
+      .sidebar-logo { width: 30px; height: 30px; font-size: 13px; margin-bottom: 10px; }
+      .artifact-panel.open { width: 100vw; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <!-- ===== COMPACT SIDEBAR ===== -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">R</div>
+    <div class="sidebar-nav">
+      <button class="sidebar-btn active" data-page="dashboard" onclick="navigateTo('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <span class="sidebar-tooltip">工作台</span>
+      </button>
+      <button class="sidebar-btn" data-page="remi-ai" onclick="navigateTo('remi-ai')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <span class="sidebar-tooltip">Remi AI</span>
+      </button>
+      <div class="sidebar-divider"></div>
+      <button class="sidebar-btn" data-page="users" onclick="navigateTo('users')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <span class="sidebar-tooltip">用户管理</span>
+      </button>
+      <button class="sidebar-btn" data-page="projects" onclick="navigateTo('projects')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        <span class="sidebar-tooltip">项目管理</span>
+      </button>
+      <button class="sidebar-btn" data-page="tasks" onclick="navigateTo('tasks')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        <span class="sidebar-tooltip">任务管理</span>
+      </button>
+      <button class="sidebar-btn" data-page="knowledge" onclick="navigateTo('knowledge')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.5L10.5 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
+        <span class="sidebar-tooltip">知识库管理</span>
+      </button>
+      <button class="sidebar-btn" data-page="points" onclick="navigateTo('points')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="12" y1="2" x2="12" y2="6"/></svg>
+        <span class="sidebar-tooltip">积分中心</span>
+      </button>
+    </div>
+    <div class="sidebar-divider"></div>
+    <div class="sidebar-bottom">
+      <div class="sidebar-avatar" onclick="navigateTo('usercenter')">张</div>
+    </div>
+  </div>
+
+  <!-- ===== MAIN ===== -->
+  <div class="main">
+    <!-- Content -->
+    <div class="content">
+      <!-- ===== REMI AI (CHAT) ===== -->
+      <div class="page" id="page-remi-ai">
+        <div class="page-inner" style="display:flex;gap:0;padding:0;height:100%;">
+          <!-- Conversation List Panel -->
+          <div style="width:186px;min-width:186px;border-right:1px solid var(--border-light);display:flex;flex-direction:column;background:var(--bg);">
+            <div style="padding:10px 8px;">
+              <div class="conv-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="搜索对话...">
+              </div>
+              <button class="new-conv-btn" onclick="newConversation()" style="margin-top:8px;width:100%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                新建对话
+              </button>
+            </div>
+            <div class="conv-list" id="convList" style="flex:1;overflow-y:auto;padding:0 8px;"></div>
+          </div>
+          <!-- Chat Panel -->
+          <div style="flex:1;display:flex;flex-direction:column;min-width:0;">
+            <div class="chat-header" style="flex-shrink:0;">
+              <div class="chat-header-title" id="activeConvTitle">2026 Q2 财务数据分析</div>
+              <div class="chat-header-actions">
+                <button class="chat-maximize-btn" onclick="toggleMaximize()" title="最大化">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="chat-content-wrap" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+              <div class="chat-main-col" style="flex:1;display:flex;flex-direction:column;min-height:0;">
+                <div class="chat-messages-area" id="chatMessagesArea" style="flex:1;overflow-y:auto;">
+                  <div class="chat-scroll-inner" id="chatMessages"></div>
+                </div>
+                <div class="chat-input-container" style="flex-shrink:0;">
+                  <div class="chat-input-inner">
+                    <div class="chat-input-tools" style="position:relative;">
+                      <button class="chat-input-tool" onclick="toggleSkillSelector()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                        技能 <span id="activeSkillCount" style="font-size:11px;color:var(--primary);font-weight:600;">0/3</span>
+                      </button>
+                      <div id="skillSelectorDropdown" class="skill-selector-dropdown" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px;width:220px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;"></div>
+                    </div>
+                    <div id="selectedSkillsBar" style="padding:4px 8px;display:flex;gap:4px;flex-wrap:wrap;"></div>
+                    <div class="chat-input-wrap">
+                      <textarea rows="1" placeholder="输入消息，Enter 发送..." id="chatInput" onkeydown="handleChatKey(event)"></textarea>
+                      <button class="chat-send-btn" onclick="sendChatMessage()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ===== DASHBOARD ===== -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-inner">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+            <div>
+              <h1 style="font-size:20px;font-weight:700;">工作台</h1>
+              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">你好，张明远 · 今日待办 <strong style="color:var(--primary);">5</strong> 项</p>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-outline btn-sm" onclick="navigateTo('projects');setTimeout(openProjectModal,300);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                创建项目
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="navigateTo('tasks');setTimeout(openTaskModal,300);">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                创建任务
+              </button>
+            </div>
+          </div>
+
+          <!-- Backlog 看板 + 待办中心 -->
+          <div style="display:grid;grid-template-columns:3fr 1fr;gap:16px;margin-bottom:24px;">
+            <!-- Backlog 看板 -->
+            <div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <div style="display:flex;align-items:center;gap:12px;">
+                  <div class="page-section-title" style="margin-bottom:0;">📊 Backlog 看板</div>
+                  <div class="tab-bar" style="margin-bottom:0;" id="backlogTabs">
+                    <button class="tab-bar-item active" onclick="switchBacklogTab(this,'project')">项目</button>
+                    <button class="tab-bar-item" onclick="switchBacklogTab(this,'task')">任务</button>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <span style="font-size:12px;color:var(--text-muted);">筛选项目：</span>
+                  <div class="select-wrap">
+                    <select id="dashboardProjectFilter" onchange="renderBacklogKanban()"></select>
+                  </div>
+                </div>
+              </div>
+              <div id="backlogProjectView"></div>
+              <div id="backlogTaskView" style="display:none;"></div>
+            </div>
+
+            <!-- 待办中心 + 最新消息 -->
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <div class="card" style="padding:12px;">
+                <div class="card-header" style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+                  <div class="card-title" style="font-size:13px;">待办中心 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">（5 项）</span></div>
+                  <div style="display:flex;gap:4px;">
+                    <button class="btn btn-xs btn-outline active" id="todoFilterAll" onclick="filterTodoItems('all')" style="font-size:11px;padding:2px 8px;">全部</button>
+                    <button class="btn btn-xs btn-outline" id="todoFilterReview" onclick="filterTodoItems('review')" style="font-size:11px;padding:2px 8px;">待审核</button>
+                    <button class="btn btn-xs btn-outline" id="todoFilterTask" onclick="filterTodoItems('task')" style="font-size:11px;padding:2px 8px;">待办任务</button>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;" id="todoItemsList">
+                  <div class="todo-item" data-type="review" style="padding:6px 0;border-bottom:1px solid var(--border-light);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:12px;font-weight:600;line-height:1.4;">员工入职培训手册.md</div>
+                        <div style="font-size:11px;color:var(--text-muted);">陈雨桐 · 2小时前</div>
+                      </div>
+                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
+                        <button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 8px;">审核</button>
+                        <button class="btn btn-xs btn-ghost" style="font-size:10px;padding:2px 8px;">查看</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="todo-item" data-type="review" style="padding:6px 0;border-bottom:1px solid var(--border-light);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:12px;font-weight:600;line-height:1.4;">AI对话模块技术方案V2.docx</div>
+                        <div style="font-size:11px;color:var(--text-muted);">王思远 · 昨天</div>
+                      </div>
+                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
+                        <button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 8px;">审核</button>
+                        <button class="btn btn-xs btn-ghost" style="font-size:10px;padding:2px 8px;">查看</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="todo-item" data-type="task" style="padding:6px 0;border-bottom:1px solid var(--border-light);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:12px;font-weight:600;line-height:1.4;">后端架构评审</div>
+                        <div style="font-size:11px;color:var(--text-muted);">技术文档平台 · 截止 06-15 · 500 RP</div>
+                      </div>
+                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
+                        <button class="btn btn-xs btn-outline" style="font-size:10px;padding:2px 8px;">处理</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="todo-item" data-type="task" style="padding:6px 0;border-bottom:1px solid var(--border-light);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:12px;font-weight:600;line-height:1.4;">用户权限模块测试</div>
+                        <div style="font-size:11px;color:var(--text-muted);">技术文档平台 · 截止 06-25 · 400 RP</div>
+                      </div>
+                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
+                        <button class="btn btn-xs btn-outline" style="font-size:10px;padding:2px 8px;">处理</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="todo-item" data-type="task" style="padding:6px 0;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;">
+                      <div style="flex:1;min-width:0;">
+                        <div style="font-size:12px;font-weight:600;line-height:1.4;">预算管理模块开发</div>
+                        <div style="font-size:11px;color:var(--text-muted);">技术文档平台 · 截止 07-10 · 600 RP</div>
+                      </div>
+                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
+                        <button class="btn btn-xs btn-outline" style="font-size:10px;padding:2px 8px;">处理</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 最新消息 -->
+              <div class="card" style="padding:12px;flex:1;">
+                <div class="card-header" style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+                  <div class="card-title" style="font-size:13px;">最新消息</div>
+                  <div style="display:flex;gap:4px;background:var(--bg);border-radius:var(--radius-sm);padding:2px;">
+                    <button class="btn btn-xs btn-outline active" id="msgTabUnread" onclick="switchMsgTab('unread')" style="font-size:11px;padding:2px 10px;border:none;background:transparent;">未读 <span style="font-size:10px;color:var(--primary);font-weight:600;">3</span></button>
+                    <button class="btn btn-xs btn-outline" id="msgTabRead" onclick="switchMsgTab('read')" style="font-size:11px;padding:2px 10px;border:none;background:transparent;">已读</button>
+                  </div>
+                </div>
+                <div id="unreadMessages" style="display:flex;flex-direction:column;">
+                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:5px;"></span>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:12px;font-weight:600;">任务验收通过</div>
+                      <div style="font-size:11px;color:var(--text-muted);">你的任务「API接口文档编写」已通过验收，800 RP 已到账</div>
+                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">10分钟前</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:5px;"></span>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:12px;font-weight:600;">新任务分配</div>
+                      <div style="font-size:11px;color:var(--text-muted);">张明远 给你分配了新任务「后端架构评审」</div>
+                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">30分钟前</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:5px;"></span>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:12px;font-weight:600;">知识审核通过</div>
+                      <div style="font-size:11px;color:var(--text-muted);">你上传的文档「Remi 平台 API 接口规范 V2.1.docx」已通过审核</div>
+                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">2小时前</div>
+                    </div>
+                  </div>
+                </div>
+                <div id="readMessages" style="display:none;flex-direction:column;">
+                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:5px;"></span>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:12px;font-weight:600;">项目预算预警</div>
+                      <div style="font-size:11px;color:var(--text-muted);">「技术文档平台」项目预算已使用 50%，剩余 5,000 RP</div>
+                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">昨天</div>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;">
+                    <span style="width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:5px;"></span>
+                    <div style="flex:1;min-width:0;">
+                      <div style="font-size:12px;font-weight:600;">额外奖励到账</div>
+                      <div style="font-size:11px;color:var(--text-muted);">李晓华 给你发放了额外奖励 500 RP（Q2财报分析优秀贡献）</div>
+                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">昨天</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 积分概况 -->
+          <div class="page-section-title" style="margin-bottom:14px;">💰 积分概况</div>
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:24px;">
+            <div class="card" style="padding:24px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">我的总积分</div>
+              <div style="font-size:42px;font-weight:800;color:var(--primary);line-height:1;">12,580</div>
+              <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Remi 积分 (RP)</div>
+              <div style="display:flex;gap:12px;margin-top:12px;">
+                <div style="text-align:center;"><div style="font-size:14px;font-weight:700;color:var(--accent-emerald);">+3,200</div><div style="font-size:10px;color:var(--text-muted);">本月获得</div></div>
+                <div style="width:1px;background:var(--border-light);"></div>
+                <div style="text-align:center;"><div style="font-size:14px;font-weight:700;">47</div><div style="font-size:10px;color:var(--text-muted);">累计任务</div></div>
+              </div>
+            </div>
+            <div class="card" style="padding:16px;">
+              <div class="card-header" style="margin-bottom:10px;">
+                <div class="card-title">近期积分变动</div>
+                <button class="btn btn-xs btn-ghost" onclick="navigateTo('points')">查看全部 →</button>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);">
+                  <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;">API接口文档编写</div><div style="font-size:11px;color:var(--text-muted);">任务奖励 · 2026-06-08</div></div>
+                  <span style="font-size:14px;font-weight:700;color:var(--accent-emerald);flex-shrink:0;">+800</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);">
+                  <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;">Q2财报分析优秀贡献</div><div style="font-size:11px;color:var(--text-muted);">额外奖励 · 2026-06-07</div></div>
+                  <span style="font-size:14px;font-weight:700;color:var(--accent-emerald);flex-shrink:0;">+500</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);">
+                  <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;">前端页面优化</div><div style="font-size:11px;color:var(--text-muted);">任务奖励 · 2026-06-06</div></div>
+                  <span style="font-size:14px;font-weight:700;color:var(--accent-emerald);flex-shrink:0;">+600</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--bg);border-radius:var(--radius-sm);">
+                  <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:600;">数据安全合规审查</div><div style="font-size:11px;color:var(--text-muted);">任务奖励 · 2026-06-05</div></div>
+                  <span style="font-size:14px;font-weight:700;color:var(--accent-emerald);flex-shrink:0;">+1,000</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 积分变动折线图 -->
+          <div class="card" style="padding:16px;margin-bottom:8px;">
+            <div class="card-header" style="margin-bottom:12px;">
+              <div class="card-title">积分变动趋势（近 14 天）</div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <span style="font-size:11px;color:var(--text-muted);">累计 <strong style="color:var(--primary);">+3,200</strong></span>
+              </div>
+            </div>
+            <div id="pointsLineChart" style="width:100%;height:180px;position:relative;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== KNOWLEDGE ===== -->
+      <div class="page" id="page-knowledge">
+  <div class="page-inner">
+    <div class="kb-header">
+      <div>
+        <h1>知识库管理</h1>
+        <p>文档上传、解析、分类、审核、版本管理 · 共 47 个文档</p>
+      </div>
+      <button class="btn btn-primary" onclick="alert('打开文件选择器')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        上传文档
+      </button>
+    </div>
+    <div class="kb-grid">
+      <div class="kb-tree">
+        <div class="kb-tree-section-title">知识分类</div>
+        <div class="kb-tree-item active" onclick="filterKbTree(this,'all')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          全部文档 <span class="count">47</span>
+        </div>
+        <div style="padding-left:8px;margin-top:4px;">
+          <div class="kb-tree-item" onclick="filterKbTree(this,'tech')">📁 技术文档 <span class="count">15</span></div>
+          <div style="padding-left:18px;">
+            <div class="kb-tree-item" style="font-size:12px;" onclick="filterKbTree(this,'api')">📄 API 规范 <span class="count">5</span></div>
+            <div class="kb-tree-item" style="font-size:12px;" onclick="filterKbTree(this,'arch')">📄 架构文档 <span class="count">7</span></div>
+            <div class="kb-tree-item" style="font-size:12px;" onclick="filterKbTree(this,'dev')">📄 开发指南 <span class="count">3</span></div>
+          </div>
+          <div class="kb-tree-item" onclick="filterKbTree(this,'product')">📁 产品设计 <span class="count">12</span></div>
+          <div class="kb-tree-item" onclick="filterKbTree(this,'market')">📁 市场运营 <span class="count">8</span></div>
+          <div class="kb-tree-item" onclick="filterKbTree(this,'compliance')">📁 合规风控 <span class="count">6</span></div>
+          <div class="kb-tree-item" onclick="filterKbTree(this,'other')">📁 未分类 <span class="count">6</span></div>
+        </div>
+        <div class="kb-tree-section-title" style="margin-top:16px;">审核状态</div>
+        <div class="kb-tree-item" onclick="filterKbTree(this,'pending_review')">
+          <span style="color:var(--accent-amber);">⏳</span> 待审核 <span class="count">3</span>
+        </div>
+        <div class="kb-tree-item" onclick="filterKbTree(this,'in_review')">
+          <span style="color:var(--accent-violet);">🔍</span> 审核中 <span class="count">2</span>
+        </div>
+        <div class="kb-tree-item" onclick="filterKbTree(this,'approved')">
+          <span style="color:var(--accent-emerald);">✅</span> 已入库 <span class="count">38</span>
+        </div>
+        <div class="kb-tree-item" onclick="filterKbTree(this,'archived')">
+          <span style="color:var(--text-muted);">📦</span> 已归档 <span class="count">4</span>
+        </div>
+      </div>
+      <div class="kb-main">
+        <div class="kb-files">
+          <div class="kb-files-header">
+            <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <div class="conv-search" style="margin-top:0;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                <input type="text" placeholder="搜索知识名称...">
+              </div>
+              <div class="select-wrap"><select><option value="all">全部状态</option><option value="approved">已入库</option><option value="pending_review">待审核</option><option value="in_review">审核中</option><option value="archived">已归档</option></select></div>
+              <div class="select-wrap"><select><option value="all">全部类型</option><option>技术文档</option><option>案例分析</option><option>模板</option><option>产品文档</option><option>需求文档</option><option>会议纪要</option><option>其他</option></select></div>
+              <div class="select-wrap"><select><option value="all">全部项目</option><option>技术文档平台</option><option>Q2 财务分析</option><option>合规风控升级</option></select></div>
+              <div class="select-wrap"><select><option value="all">AI调用</option><option>可调用</option><option>不可调用</option></select></div>
+            </div>
+            <div style="display:flex;gap:6px;">
+              <button class="btn btn-sm btn-outline">批量权限</button>
+              <button class="btn btn-sm btn-outline">导出</button>
+            </div>
+          </div>
+          <div id="kbListContent">
+            <!-- 待审核行 -->
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:#fef3c7;">📝</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">员工入职培训手册.md</div>
+                <div class="kb-file-meta"><span>V1</span><span>128 KB</span><span>Markdown</span><span>未分类</span><span>上传者：张明远</span><span style="color:var(--text-muted);">被引用 3 次</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-amber">审核中</span><span class="tag tag-slate">F3P003</span>
+                <button class="btn btn-sm btn-primary" onclick="alert('审核通过')">通过</button>
+                <button class="btn btn-sm btn-outline" style="color:var(--accent-rose);border-color:var(--accent-rose);" onclick="alert('驳回')">驳回</button>
+              </div>
+            </div>
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:#fef3c7;">📋</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">Q2 项目验收报告模板.docx</div>
+                <div class="kb-file-meta"><span>V1</span><span>245 KB</span><span>DOCX</span><span>模板</span><span>上传者：李婷</span><span style="color:var(--text-muted);">被引用 0 次</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-amber">待审核</span><span class="tag tag-slate">F1P006</span>
+                <button class="btn btn-sm btn-primary" onclick="alert('审核通过')">通过</button>
+                <button class="btn btn-sm btn-outline" style="color:var(--accent-rose);border-color:var(--accent-rose);" onclick="alert('驳回')">驳回</button>
+              </div>
+            </div>
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:#ede9fe;">📑</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">前端组件设计规范 V1.0.pdf</div>
+                <div class="kb-file-meta"><span>V1</span><span>2.6 MB</span><span>PDF</span><span>技术文档</span><span>上传者：陈雨</span><span style="color:var(--text-muted);">被引用 0 次</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-violet">审核中</span><span class="tag tag-slate">F1P008</span>
+                <button class="btn btn-sm btn-primary" onclick="alert('审核通过')">通过</button>
+                <button class="btn btn-sm btn-outline" style="color:var(--accent-rose);border-color:var(--accent-rose);" onclick="alert('驳回')">驳回</button>
+              </div>
+            </div>
+            <!-- 已入库行 -->
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:var(--primary-light);">📄</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">Remi 平台 API 接口规范 V2.1.docx</div>
+                <div class="kb-file-meta"><span>V2</span><span>2.4 MB</span><span>DOCX</span><span>技术文档</span><span style="color:var(--primary);">被引用 23 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-green">已入库</span><span class="tag tag-slate">F2P001</span>
+              </div>
+            </div>
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:#d1fae5;">📊</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">2026 Q2 财务分析报告.xlsx</div>
+                <div class="kb-file-meta"><span>V1</span><span>5.8 MB</span><span>XLSX</span><span>产品设计</span><span style="color:var(--primary);">被引用 15 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-green">已入库</span><span class="tag tag-slate">F1P002</span>
+              </div>
+            </div>
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:#ede9fe;">📕</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">PRD - 智能对话模块.pdf</div>
+                <div class="kb-file-meta"><span>V1</span><span>3.2 MB</span><span>PDF</span><span>产品设计</span><span style="color:var(--primary);">被引用 41 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-green">已入库</span><span class="tag tag-slate">F1P004</span>
+              </div>
+            </div>
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:#fce7f3;">📄</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">数据安全合规政策 V3.0.docx</div>
+                <div class="kb-file-meta"><span>V3</span><span>856 KB</span><span>DOCX</span><span>合规风控</span><span style="color:var(--primary);">被引用 8 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-green">已入库</span><span class="tag tag-slate">F1P005</span>
+              </div>
+            </div>
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:#d1fae5;">📗</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">敏捷开发最佳实践案例集.pdf</div>
+                <div class="kb-file-meta"><span>V2</span><span>4.1 MB</span><span>PDF</span><span>案例分析</span><span style="color:var(--primary);">被引用 12 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-green">已入库</span><span class="tag tag-slate">F2P007</span>
+              </div>
+            </div>
+            <div class="kb-file-row">
+              <div class="kb-file-icon" style="background:#fef3c7;">📊</div>
+              <div class="kb-file-info">
+                <div class="kb-file-name">市场调研方法论.pdf</div>
+                <div class="kb-file-meta"><span>V1</span><span>1.8 MB</span><span>PDF</span><span>市场运营</span><span style="color:var(--text-muted);">被引用 5 次</span><span style="color:var(--text-muted);">✗ AI不可调用</span></div>
+              </div>
+              <div style="display:flex;gap:4px;align-items:center;">
+                <span class="tag tag-green">已入库</span><span class="tag tag-slate">F1P009</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <!-- ===== SKILLS ===== -->
+      <!-- ===== USER MANAGEMENT ===== -->
+      <div class="page" id="page-users">
+        <div class="page-inner">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+              <h1 style="font-size:20px;font-weight:700;">用户管理</h1>
+              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">组织架构 · 用户列表 · 角色权限</p>
+            </div>
+            <button class="btn btn-primary">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              添加用户
+            </button>
+          </div>
+          <div class="tabs" style="margin-bottom:20px;">
+            <button class="tab active" onclick="switchUserTab(this,'org')">组织架构</button>
+            <button class="tab" onclick="switchUserTab(this,'users-list')">用户列表</button>
+            <button class="tab" onclick="switchUserTab(this,'roles')">角色权限</button>
+          </div>
+          <div class="user-tab-content" id="user-org">
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-header">
+                <div class="card-title">组织架构</div>
+                <button class="btn btn-sm btn-outline">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  添加部门
+                </button>
+              </div>
+              <div class="org-tree">
+                <div class="org-node"><div class="org-node-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--primary);"><polyline points="7 17 2 12 7 7"/><polyline points="12 7 17 12 12 17"/></svg><span style="font-weight:600;">Remi L1 科技有限公司</span><span class="tag tag-slate" style="margin-left:8px;">总部</span><span style="margin-left:auto;font-size:12px;color:var(--text-muted);">28 人</span></div>
+                  <div class="org-children">
+                    <div class="org-node"><div class="org-node-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--accent-emerald);"><polyline points="7 17 2 12 7 7"/><polyline points="12 7 17 12 12 17"/></svg><span>技术部</span><span class="tag tag-green" style="margin-left:8px;">8 人</span></div>
+                      <div class="org-children"><div class="org-node" style="padding-left:36px;"><div class="org-node-header"><span style="width:16px;"></span><span>前端组</span><span class="tag tag-slate" style="margin-left:8px;">3 人</span></div></div><div class="org-node" style="padding-left:36px;"><div class="org-node-header"><span style="width:16px;"></span><span>后端组</span><span class="tag tag-slate" style="margin-left:8px;">3 人</span></div></div><div class="org-node" style="padding-left:36px;"><div class="org-node-header"><span style="width:16px;"></span><span>AI 组</span><span class="tag tag-slate" style="margin-left:8px;">2 人</span></div></div></div>
+                    </div>
+                    <div class="org-node"><div class="org-node-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--accent-amber);"><polyline points="7 17 2 12 7 7"/><polyline points="12 7 17 12 12 17"/></svg><span>产品部</span><span class="tag tag-amber" style="margin-left:8px;">6 人</span></div></div>
+                    <div class="org-node"><div class="org-node-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--accent-violet);"><polyline points="7 17 2 12 7 7"/><polyline points="12 7 17 12 12 17"/></svg><span>市场部</span><span class="tag tag-violet" style="margin-left:8px;">5 人</span></div></div>
+                    <div class="org-node"><div class="org-node-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--accent-rose);"><polyline points="7 17 2 12 7 7"/><polyline points="12 7 17 12 12 17"/></svg><span>合规部</span><span class="tag tag-rose" style="margin-left:8px;">4 人</span></div></div>
+                    <div class="org-node"><div class="org-node-header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;color:var(--text-muted);"><polyline points="7 17 2 12 7 7"/><polyline points="12 7 17 12 12 17"/></svg><span>财务部</span><span class="tag tag-slate" style="margin-left:8px;">3 人</span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header"><div class="card-title">部门信息</div></div>
+              <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;">
+                <div><div style="font-size:11px;color:var(--text-muted);">部门总数</div><div style="font-size:20px;font-weight:700;margin-top:2px;">8</div></div>
+                <div><div style="font-size:11px;color:var(--text-muted);">总人数</div><div style="font-size:20px;font-weight:700;margin-top:2px;">28</div></div>
+                <div><div style="font-size:11px;color:var(--text-muted);">管理员</div><div style="font-size:20px;font-weight:700;margin-top:2px;">2</div></div>
+                <div><div style="font-size:11px;color:var(--text-muted);">审核员</div><div style="font-size:20px;font-weight:700;margin-top:2px;">1</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="user-tab-content" id="user-users-list" style="display:none;">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>用户</th><th>部门</th><th>角色</th><th>邮箱</th><th>状态</th><th>最后活跃</th><th>操作</th></tr></thead>
+                <tbody>
+                  <tr><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;">张</div>张明远</div></td><td>技术部</td><td><span class="tag tag-orange">管理员</span></td><td>zhang@remi.ai</td><td><span class="tag tag-green">在线</span></td><td>刚刚</td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+                  <tr><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#10b981;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;">李</div>李晓华</div></td><td>产品部</td><td><span class="tag tag-slate">普通用户</span></td><td>li@remi.ai</td><td><span class="tag tag-green">在线</span></td><td>5分钟前</td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+                  <tr><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#f59e0b;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;">王</div>王思远</div></td><td>技术部</td><td><span class="tag tag-amber">审核员</span></td><td>wang@remi.ai</td><td><span class="tag tag-green">在线</span></td><td>15分钟前</td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+                  <tr><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#8b5cf6;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;">陈</div>陈雨桐</div></td><td>市场部</td><td><span class="tag tag-slate">普通用户</span></td><td>chen@remi.ai</td><td><span class="tag tag-slate">离线</span></td><td>2小时前</td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+                  <tr><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#ef4444;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;">赵</div>赵明</div></td><td>合规部</td><td><span class="tag tag-slate">普通用户</span></td><td>zhao@remi.ai</td><td><span class="tag tag-slate">离线</span></td><td>1天前</td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+                  <tr><td><div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#3b82f6;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;">刘</div>刘思琪</div></td><td>财务部</td><td><span class="tag tag-slate">普通用户</span></td><td>liu@remi.ai</td><td><span class="tag tag-green">在线</span></td><td>30分钟前</td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:16px;">
+              <span style="font-size:12px;color:var(--text-muted);">共 28 人，当前显示 6 人</span>
+              <div style="display:flex;gap:4px;">
+                <button class="btn btn-sm btn-outline" disabled>上一页</button>
+                <button class="btn btn-sm btn-primary" style="padding:5px 10px;">1</button>
+                <button class="btn btn-sm btn-outline">2</button>
+                <button class="btn btn-sm btn-outline">3</button>
+                <span style="display:flex;align-items:center;color:var(--text-muted);font-size:12px;">...</span>
+                <button class="btn btn-sm btn-outline">5</button>
+                <button class="btn btn-sm btn-outline">下一页</button>
+              </div>
+            </div>
+          </div>
+          <div class="user-tab-content" id="user-roles" style="display:none;">
+            <!-- 角色列表 -->
+            <div class="card" style="padding:0;overflow:hidden;margin-bottom:16px;">
+              <div style="padding:8px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light);">
+                <span style="font-size:13px;font-weight:500;">角色管理</span>
+                <button class="btn btn-xs btn-primary" onclick="openNewRoleModal()">+ 新建角色</button>
+              </div>
+              <table style="line-height:1.6;">
+                <thead><tr><th style="width:150px;text-align:left;padding:5px 14px;">角色名称</th><th style="width:55px;text-align:center;padding:5px 4px;">用户数</th><th style="padding:5px 14px;">描述</th><th style="width:90px;text-align:center;padding:5px 4px;">操作</th></tr></thead>
+                <tbody>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">超级管理员</td><td style="text-align:center;padding:4px 4px;">1</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">拥有所有功能访问权限，可管理配置与用户</td><td style="text-align:center;padding:4px 4px;"><span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">不可编辑</span></td></tr>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">运营团队</td><td style="text-align:center;padding:4px 4px;">5</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">项目中心全生命周期管理，含特邀管理与运营配置</td><td style="text-align:center;padding:4px 4px;"><span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">不可编辑</span></td></tr>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">发布者</td><td style="text-align:center;padding:4px 4px;">12</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">可以创建与管理项目特邀，但无法调整系统配置</td><td style="text-align:center;padding:4px 4px;"><span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">不可编辑</span></td></tr>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">普通终端用户</td><td style="text-align:center;padding:4px 4px;">128</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">外部注册用户默认角色，仅可参与被分配的特邀任务</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('普通终端用户')">编辑权限</button></td></tr>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">内容审核员</td><td style="text-align:center;padding:4px 4px;">3</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">负责内容质量审核与合规检查</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('内容审核员')">编辑权限</button></td></tr>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">技术支持</td><td style="text-align:center;padding:4px 4px;">4</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">负责系统运维与技术问题处理</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('技术支持')">编辑权限</button></td></tr>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">财务专员</td><td style="text-align:center;padding:4px 4px;">2</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">负责费用结算与财务对账</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('财务专员')">编辑权限</button></td></tr>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">访客</td><td style="text-align:center;padding:4px 4px;">0</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">无特殊权限的只读角色</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('访客')">编辑权限</button></td></tr>
+                </tbody>
+              </table>
+              <!-- 分页 -->
+              <div style="padding:6px 16px;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--border-light);font-size:12px;color:var(--text-muted);">
+                <div style="display:flex;gap:12px;align-items:center;">
+                  <span>共 8 个角色</span>
+                  <div class="select-wrap"><select style="font-size:12px;padding:2px 6px;"><option>每页 8 条</option></select></div>
+                </div>
+                <div style="display:flex;gap:4px;">
+                  <button class="btn btn-xs btn-outline" disabled>&lt;</button>
+                  <button class="btn btn-xs btn-primary" style="padding:2px 8px;">1</button>
+                  <button class="btn btn-xs btn-outline">&gt;</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 权限面板（默认隐藏） -->
+            <div class="card" id="permissionPanelCard" style="padding:0;overflow:hidden;display:none;margin-top:16px;">
+              <div style="padding:14px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border-light);">
+                <span style="font-size:13px;font-weight:600;">模块权限分配 — <span id="currentPermRoleName"></span></span>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn btn-xs btn-outline" onclick="hidePermissionPanel()">取消</button>
+                  <button class="btn btn-xs btn-primary" onclick="savePermissions()">保存</button>
+                </div>
+              </div>
+              <div id="permissionModules" style="padding:16px;display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
+                <!-- Home -->
+                <div class="perm-module">
+                  <div style="margin-bottom:10px;">
+                    <span style="font-size:13px;font-weight:600;">Home</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> 查看仪表盘</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> 查看个人特邀</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> 查看智慧值</label>
+                  </div>
+                </div>
+                <!-- 特邀中心 -->
+                <div class="perm-module">
+                  <div style="margin-bottom:10px;">
+                    <span style="font-size:13px;font-weight:600;">特邀中心</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 创建项目</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 编辑项目</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 删除项目</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 查看项目</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 创建特邀</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 管理特邀</label>
+                  </div>
+                </div>
+                <!-- 学习中心 -->
+                <div class="perm-module">
+                  <div style="margin-bottom:10px;">
+                    <span style="font-size:13px;font-weight:600;">学习中心</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> 浏览资源</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> 学习课程</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 上传资源</label>
+                  </div>
+                </div>
+                <!-- 项目管理 -->
+                <div class="perm-module">
+                  <div style="margin-bottom:10px;">
+                    <span style="font-size:13px;font-weight:600;">项目管理</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> 项目 CRUD</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> 预算管理</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> Backlog 规划</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" checked> 验收操作</label>
+                  </div>
+                </div>
+                <!-- 用户管理 -->
+                <div class="perm-module">
+                  <div style="margin-bottom:10px;">
+                    <span style="font-size:13px;font-weight:600;">用户管理</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 用户 CRUD</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 角色分配</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 封禁/解封</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> KYC 审核</label>
+                  </div>
+                </div>
+                <!-- 系统设置 -->
+                <div class="perm-module">
+                  <div style="margin-bottom:10px;">
+                    <span style="font-size:13px;font-weight:600;">系统设置</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 模型路由配置</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 内容安全配置</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> ABAC/EBAC规则</label>
+                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 枚举多语言维护</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== USER CENTER ===== -->
+      <div class="page" id="page-usercenter">
+        <div class="page-inner">
+          <div style="margin-bottom:24px;">
+            <h1 style="font-size:20px;font-weight:700;">用户中心</h1>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">个人资料 · 账户偏好 · 安全设置</p>
+          </div>
+          <div style="display:grid;grid-template-columns:280px 1fr;gap:20px;">
+            <!-- 左侧：个人资料卡 -->
+            <div>
+              <div class="card" style="padding:24px;text-align:center;">
+                <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--primary),#ea580c);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:28px;margin:0 auto 12px;">张</div>
+                <div style="font-size:16px;font-weight:700;">张明远</div>
+                <div style="font-size:13px;color:var(--text-muted);margin-top:2px;">技术部 · AI 组</div>
+                <div style="font-size:12px;color:var(--text-muted);">zhang@remi.ai</div>
+                <div style="display:flex;justify-content:center;gap:16px;margin-top:16px;padding-top:16px;border-top:1px solid var(--border-light);">
+                  <div><div style="font-size:18px;font-weight:700;">12</div><div style="font-size:11px;color:var(--text-muted);">项目</div></div>
+                  <div><div style="font-size:18px;font-weight:700;">46</div><div style="font-size:11px;color:var(--text-muted);">任务</div></div>
+                  <div><div style="font-size:18px;font-weight:700;">8.6k</div><div style="font-size:11px;color:var(--text-muted);">积分</div></div>
+                </div>
+              </div>
+              <div class="card" style="padding:16px;margin-top:12px;">
+                <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">偏好设置</div>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                  <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">语言</div><div class="select-wrap"><select style="font-size:11px;padding:2px 6px;"><option>中文</option><option>English</option></select></div></div>
+                  <div><div style="font-size:11px;color:var(--text-muted);margin-bottom:2px;">主题</div><div style="display:flex;gap:2px;"><button class="btn btn-xs btn-primary" style="font-size:10px;padding:1px 6px;">浅色</button><button class="btn btn-xs btn-outline" style="font-size:10px;padding:1px 6px;">深色</button></div></div>
+                </div>
+              </div>
+              <div class="card" style="padding:16px;margin-top:12px;">
+                <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:8px;">快捷操作</div>
+                <div style="display:flex;flex-direction:column;gap:4px;">
+                  <button class="btn btn-sm btn-ghost" style="justify-content:flex-start;font-size:12px;color:var(--accent-rose);">🚪 退出登录</button>
+                </div>
+              </div>
+            </div>
+            <!-- 右侧：详细信息 -->
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div class="card" style="padding:16px;">
+                <div class="card-header" style="margin-bottom:8px;"><div class="card-title">账户信息</div></div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                  <div><div style="font-size:11px;color:var(--text-muted);">姓名</div><div style="font-size:13px;font-weight:500;margin-top:2px;">张明远</div></div>
+                  <div><div style="font-size:11px;color:var(--text-muted);">邮箱</div><div style="font-size:13px;font-weight:500;margin-top:2px;">zhang@remi.ai</div></div>
+                  <div><div style="font-size:11px;color:var(--text-muted);">部门</div><div style="font-size:13px;font-weight:500;margin-top:2px;">技术部</div></div>
+                  <div><div style="font-size:11px;color:var(--text-muted);">角色</div><div><span class="tag tag-orange" style="margin-top:2px;">管理员</span></div></div>
+                  <div><div style="font-size:11px;color:var(--text-muted);">手机号</div><div style="font-size:13px;font-weight:500;margin-top:2px;">138****8888</div></div>
+                  <div><div style="font-size:11px;color:var(--text-muted);">入职时间</div><div style="font-size:13px;font-weight:500;margin-top:2px;">2025-09-01</div></div>
+                </div>
+              </div>
+              <div class="card" style="padding:16px;">
+                <div class="card-header" style="margin-bottom:8px;"><div class="card-title">账户安全</div></div>
+                <div class="setting-row" style="border-bottom:1px solid var(--border-light);padding:8px 0;"><div><div class="setting-label" style="font-size:13px;">登录密码</div><div class="setting-desc" style="font-size:12px;">上次修改 2026-03-15</div></div><button class="btn btn-sm btn-outline">修改</button></div>
+                <div class="setting-row" style="padding:8px 0;"><div><div class="setting-label" style="font-size:13px;">KYC 实名认证</div><div class="setting-desc" style="font-size:12px;">未认证 · 需提交身份信息完成实名</div></div><button class="btn btn-sm btn-primary" style="font-size:12px;">去认证</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PROJECT MANAGEMENT ===== -->
+      <div class="page" id="page-projects">
+        <div class="page-inner">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+              <h1 style="font-size:20px;font-weight:700;">项目管理</h1>
+              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">项目列表 · 预算管控 · Backlog 规划 · 共 ${projects.length} 个项目</p>
+            </div>
+            <button class="btn btn-primary" onclick="openProjectModal()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              创建项目
+            </button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+            <div class="conv-search" style="margin-top:0;flex:1;max-width:280px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="projectSearch" placeholder="搜索项目名称/编号..." oninput="renderProjects()">
+            </div>
+            <div class="select-wrap"><select id="projectStatusFilter" onchange="renderProjects()"><option value="all">全部状态</option><option value="research">调研阶段</option><option value="initiation">立项阶段</option><option value="execution">项目执行</option><option value="review">项目验收</option><option value="closed">项目结项</option></select></div>
+            <div class="select-wrap"><select id="projectLeadFilter" onchange="renderProjects()"><option value="all">全部负责人</option><option>张明远</option><option>李晓华</option><option>赵明</option><option>王思远</option><option>陈雨桐</option></select></div>
+            <div class="select-wrap"><select id="projectSort" onchange="renderProjects()"><option value="created">按创建时间</option><option value="budget">按预算</option><option value="progress">按进度</option></select></div>
+          </div>
+          <div class="project-grid" id="projectGrid"></div>
+        </div>
+      </div>
+
+      <!-- ===== TASK MANAGEMENT ===== -->
+      <div class="page" id="page-tasks">
+        <div class="page-inner">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+            <div>
+              <h1 style="font-size:20px;font-weight:700;">任务管理</h1>
+              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">看板视图 · 任务分配 · 验收闭环 · 奖励发放 · 共 ${tasks.length} 个任务</p>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-primary" onclick="openTaskModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                创建任务
+              </button>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
+            <div class="conv-search" style="margin-top:0;flex:1;max-width:240px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="taskSearch" placeholder="搜索任务..." oninput="renderKanban()">
+            </div>
+            <div class="select-wrap"><select id="taskProjectFilter" onchange="renderKanban()"><option value="all">全部项目</option></select></div>
+            <div class="select-wrap"><select id="taskPriorityFilter" onchange="renderKanban()"><option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div>
+            <div class="select-wrap"><select id="taskStatusFilter" onchange="renderKanban()"><option value="all">全部状态</option><option value="todo">待开始</option><option value="in_progress">进行中</option><option value="overdue">已延期</option><option value="pending_review">待审核</option><option value="rejected">驳回中</option><option value="review">待验收</option><option value="done">已完成</option><option value="closed">已关闭</option></select></div>
+            <div class="select-wrap"><select id="taskAssigneeFilter" onchange="renderKanban()"><option value="all">全部负责人</option><option>张明远</option><option>李晓华</option><option>王思远</option><option>赵明</option><option>陈雨桐</option></select></div>
+          </div>
+          <div class="tab-bar" id="taskViewTabs">
+            <button class="tab-bar-item active" onclick="switchTaskView(this,'kanban')">看板视图</button>
+            <button class="tab-bar-item" onclick="switchTaskView(this,'list')">列表视图</button>
+          </div>
+          <div id="taskViewKanban">
+            <div class="kanban-board" id="kanbanBoard"></div>
+          </div>
+          <div id="taskViewList" style="display:none;">
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>任务</th><th>项目</th><th>优先级</th><th>状态</th><th>负责人</th><th>所属Backlog</th><th>奖励</th><th>截止日期</th><th>操作</th></tr></thead>
+                <tbody id="taskListBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== POINTS CENTER ===== -->
+      <div class="page" id="page-points">
+        <div class="page-inner">
+          <div class="points-hero">
+            <div>
+              <div class="points-balance" id="pointsBalance">12,580</div>
+              <div class="points-label">Remi 积分 (RP) · 1 RP ≈ 1 元</div>
+            </div>
+            <div style="text-align:right;font-size:13px;opacity:0.9;">
+              <div>本月获得 <strong style="font-size:18px;">+3,200</strong></div>
+              <div style="margin-top:4px;">累计任务 <strong>47</strong> 个</div>
+            </div>
+          </div>
+          <div class="points-rules-grid">
+            <div class="points-rule-card">
+              <div class="points-rule-icon">✅</div>
+              <div class="points-rule-title">任务完成奖励</div>
+              <div class="points-rule-desc">完成任务并验收通过后，由发布人设定的奖励积分自动到账</div>
+            </div>
+            <div class="points-rule-card">
+              <div class="points-rule-icon">🎁</div>
+              <div class="points-rule-title">额外奖励</div>
+              <div class="points-rule-desc">项目负责人可对优秀贡献发放额外奖励，需上级审批后发放</div>
+            </div>
+            <div class="points-rule-card">
+              <div class="points-rule-icon">📤</div>
+              <div class="points-rule-title">知识贡献</div>
+              <div class="points-rule-desc">上传知识文档可通过额外奖励获得积分（一期暂不支持自动奖励）</div>
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-header"><div class="card-title">积分流水</div><div class="select-wrap"><select><option>全部类型</option><option>任务奖励</option><option>额外奖励</option></select></div></div>
+            <div class="table-wrap" style="border:none;">
+              <table>
+                <thead><tr><th>时间</th><th>类型</th><th>来源</th><th>金额</th><th>余额</th></tr></thead>
+                <tbody>
+                  <tr><td>2026-06-08 14:30</td><td><span class="tag tag-green">任务奖励</span></td><td>API接口文档编写 · 技术文档项目</td><td style="color:var(--accent-emerald);font-weight:700;">+800</td><td>12,580</td></tr>
+                  <tr><td>2026-06-07 10:15</td><td><span class="tag tag-amber">额外奖励</span></td><td>Q2财报分析优秀贡献 · 财务分析项目</td><td style="color:var(--accent-emerald);font-weight:700;">+500</td><td>11,780</td></tr>
+                  <tr><td>2026-06-06 16:00</td><td><span class="tag tag-green">任务奖励</span></td><td>前端页面优化 · 技术文档项目</td><td style="color:var(--accent-emerald);font-weight:700;">+600</td><td>11,280</td></tr>
+                  <tr><td>2026-06-05 09:45</td><td><span class="tag tag-green">任务奖励</span></td><td>数据安全合规审查 · 合规风控项目</td><td style="color:var(--accent-emerald);font-weight:700;">+1,000</td><td>10,680</td></tr>
+                  <tr><td>2026-06-03 11:20</td><td><span class="tag tag-green">任务奖励</span></td><td>多语言翻译模块开发 · 产品设计项目</td><td style="color:var(--accent-emerald);font-weight:700;">+300</td><td>9,680</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header"><div class="card-title">项目预算概览</div></div>
+            <div class="table-wrap" style="border:none;">
+              <table>
+                <thead><tr><th>项目</th><th>总预算</th><th>已发放</th><th>冻结中</th><th>剩余</th><th>使用率</th></tr></thead>
+                <tbody id="projectBudgetTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ===== ARTIFACT PANEL ===== -->
+  <div class="artifact-panel" id="artifactPanel">
+    <div class="artifact-panel-header">
+      <div class="artifact-panel-title">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        AI 产出内容
+      </div>
+      <button class="artifact-panel-close" onclick="closeArtifact()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="artifact-panel-body" id="artifactBody">
+      <div class="artifact-card">
+        <div class="artifact-card-title">📊 销售数据分析报告</div>
+        <div class="artifact-card-content">
+          <p><strong>Q1 关键数据总览</strong></p>
+          <ul style="padding-left:16px;margin:8px 0;">
+            <li>总销售额：¥12,847,000（同比增长 23.5%）</li>
+            <li>环比增长：8.2%</li>
+            <li>华东地区贡献 38% 销售额</li>
+            <li>新产品线 C 增长 312%</li>
+          </ul>
+          <pre>{
+  "period": "2026-Q1",
+  "revenue": 12847000,
+  "yoy_growth": 23.5,
+  "top_region": "华东",
+  "top_product": "产品线C",
+  "product_growth": 312
+}</pre>
+        </div>
+      </div>
+      <div class="artifact-card">
+        <div class="artifact-card-title">📈 趋势可视化</div>
+        <div class="artifact-card-content" style="text-align:center;padding:12px 0;">
+          <div style="font-size:48px;margin-bottom:8px;">📊</div>
+          <p>Q1 销售额趋势图表已生成<br><span style="font-size:11px;color:var(--text-muted);">包含月度同比、环比数据对比</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- ===== MODAL OVERLAY ===== -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
+  <div class="modal" id="modalContent" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- ===== NEW ROLE MODAL ===== -->
+<div class="modal-overlay" id="newRoleModalOverlay" style="display:none;" onclick="closeNewRoleModal()">
+  <div class="modal" style="width:480px;background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.15);position:relative;" onclick="event.stopPropagation()">
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:20px;">新建角色</h3>
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">角色名称 *</label>
+        <input type="text" placeholder="请输入角色名称" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">类型</label>
+        <select style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;outline:none;background:#fff;box-sizing:border-box;">
+          <option>自定义</option>
+          <option>系统内置</option>
+          <option>外部注册</option>
+        </select>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">描述</label>
+        <textarea rows="2" placeholder="请输入角色描述" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">模块权限</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> Home</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 特邀中心</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 学习中心</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 项目管理</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 用户管理</label>
+          <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 系统设置</label>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px;">
+      <button class="btn btn-sm btn-outline" onclick="closeNewRoleModal()">取消</button>
+      <button class="btn btn-sm btn-primary" onclick="alert('角色已创建');closeNewRoleModal()">创建</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== DATA =====
+
+// Projects
+const projects = [
+  { id:'p1', name:'技术文档平台', desc:'构建企业级技术文档管理与知识沉淀平台', stage:'execution', budget:10000, spent:4200, frozen:800, members:8, tasks:12, lead:'张明远', dept:'技术部', startDate:'2026-04-01', endDate:'2026-09-30' },
+  { id:'p2', name:'Q2 财务分析', desc:'2026年第二季度财务数据深度分析与可视化报告', stage:'execution', budget:5000, spent:2800, frozen:500, members:4, tasks:6, lead:'李晓华', dept:'产品部', startDate:'2026-05-01', endDate:'2026-07-15' },
+  { id:'p3', name:'合规风控升级', desc:'数据安全合规政策V3.0升级与企业风险管理体系建设', stage:'review', budget:8000, spent:3500, frozen:1200, members:5, tasks:8, lead:'赵明', dept:'合规部', startDate:'2026-03-15', endDate:'2026-08-30' },
+  { id:'p4', name:'多语言翻译模块', desc:'基于AI的多语言翻译引擎开发与产品化落地', stage:'research', budget:15000, spent:0, frozen:0, members:6, tasks:3, lead:'王思远', dept:'技术部', startDate:'2026-07-01', endDate:'2026-12-31' },
+  { id:'p5', name:'市场调研报告', desc:'2026年H1市场竞品调研与用户需求分析', stage:'closed', budget:3000, spent:3000, frozen:0, members:3, tasks:5, lead:'陈雨桐', dept:'市场部', startDate:'2026-02-01', endDate:'2026-05-30' },
+];
+
+// Tasks
+const tasks = [
+  { id:'t1', title:'API接口文档编写', desc:'编写Remi平台V2.1版本全部API接口文档', projectId:'p1', stage:'execution', status:'done', priority:'P0', assignee:'张明远', reward:800, deadline:'2026-06-10', completedAt:'2026-06-08', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t2', title:'前端页面优化', desc:'优化知识库管理页面加载性能与交互体验', projectId:'p1', stage:'execution', status:'done', priority:'P1', assignee:'王思远', reward:600, deadline:'2026-06-08', completedAt:'2026-06-06', backlog:'项目执行', delivery:'无需交付' },
+  { id:'t3', title:'后端架构评审', desc:'对AI对话模块后端架构进行技术评审', projectId:'p1', stage:'execution', status:'review', priority:'P0', assignee:'张明远', reward:500, deadline:'2026-06-15', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t4', title:'数据安全合规审查', desc:'审查知识库数据安全合规性并出具报告', projectId:'p3', stage:'execution', status:'done', priority:'P0', assignee:'赵明', reward:1000, deadline:'2026-06-05', completedAt:'2026-06-05', backlog:'项目执行', delivery:'附件' },
+  { id:'t5', title:'Q2财报数据分析', desc:'对Q2财务数据进行多维度分析并生成可视化报告', projectId:'p2', stage:'execution', status:'in_progress', priority:'P1', assignee:'李晓华', reward:1200, deadline:'2026-06-20', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t6', title:'多语言翻译引擎选型', desc:'调研对比主流翻译引擎并进行POC验证', projectId:'p4', stage:'research', status:'todo', priority:'P0', assignee:'王思远', reward:900, deadline:'2026-07-15', backlog:'调研阶段', delivery:'无需交付' },
+  { id:'t7', title:'用户权限模块测试', desc:'对RBAC+ABAC权限模块进行全量测试', projectId:'p1', stage:'execution', status:'todo', priority:'P1', assignee:'张明远', reward:400, deadline:'2026-06-25', backlog:'项目执行', delivery:'附件' },
+  { id:'t8', title:'竞品分析报告', desc:'完成H1市场竞品分析报告并提交', projectId:'p5', stage:'closed', status:'done', priority:'P2', assignee:'陈雨桐', reward:500, deadline:'2026-05-20', completedAt:'2026-05-18', backlog:'项目结项', delivery:'文档链接' },
+  { id:'t9', title:'知识审核流程优化', desc:'优化知识审核SLA，将审核时间从48h缩短至24h', projectId:'p3', stage:'execution', status:'in_progress', priority:'P1', assignee:'赵明', reward:700, deadline:'2026-06-30', backlog:'项目执行', delivery:'无需交付' },
+  { id:'t10', title:'预算管理模块开发', desc:'开发项目预算管理功能，支持预算设定/追加/冻结', projectId:'p1', stage:'execution', status:'todo', priority:'P2', assignee:'王思远', reward:600, deadline:'2026-07-10', backlog:'项目执行', delivery:'附件' },
+  { id:'t11', title:'知识库搜索性能优化', desc:'优化Elasticsearch索引策略，目标P95延迟<200ms', projectId:'p1', stage:'execution', status:'in_progress', priority:'P0', assignee:'张明远', reward:1000, deadline:'2026-06-18', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t12', title:'文档版本管理功能', desc:'实现知识文档的版本对比与回滚功能', projectId:'p1', stage:'initiation', status:'todo', priority:'P1', assignee:'王思远', reward:700, deadline:'2026-06-22', backlog:'立项阶段', delivery:'附件' },
+  { id:'t13', title:'对话历史导出', desc:'支持导出对话为PDF/Word格式并保存到知识库', projectId:'p1', stage:'execution', status:'in_progress', priority:'P2', assignee:'张明远', reward:350, deadline:'2026-06-20', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t14', title:'RAG引用溯源优化', desc:'优化引用溯源展示，支持点击跳转到原文位置', projectId:'p1', stage:'execution', status:'review', priority:'P1', assignee:'王思远', reward:550, deadline:'2026-06-12', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t15', title:'Q2财报数据清洗', desc:'对Q2原始财务数据进行清洗与标准化处理', projectId:'p2', stage:'execution', status:'done', priority:'P1', assignee:'李晓华', reward:600, deadline:'2026-06-05', completedAt:'2026-06-04', backlog:'项目执行', delivery:'附件' },
+  { id:'t16', title:'可视化报表模板设计', desc:'设计Q2财报可视化报表的图表模板与配色方案', projectId:'p2', stage:'execution', status:'in_progress', priority:'P1', assignee:'李晓华', reward:450, deadline:'2026-06-16', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t17', title:'数据隐私合规清单', desc:'整理数据隐私合规检查清单并与法务对齐', projectId:'p3', stage:'initiation', status:'todo', priority:'P0', assignee:'赵明', reward:800, deadline:'2026-06-28', backlog:'立项阶段', delivery:'无需交付' },
+  { id:'t18', title:'安全漏洞扫描报告', desc:'对平台进行全量安全漏洞扫描并出具修复方案', projectId:'p3', stage:'review', status:'review', priority:'P1', assignee:'赵明', reward:900, deadline:'2026-06-14', backlog:'项目验收', delivery:'附件' },
+  { id:'t19', title:'翻译引擎性能对比', desc:'完成3款翻译引擎的性能基准测试对比', projectId:'p4', stage:'research', status:'in_progress', priority:'P0', assignee:'王思远', reward:750, deadline:'2026-07-20', backlog:'调研阶段', delivery:'文档链接' },
+  { id:'t20', title:'多语言UI适配方案', desc:'设计前端多语言UI适配的技术方案', projectId:'p4', stage:'research', status:'todo', priority:'P2', assignee:'王思远', reward:500, deadline:'2026-07-25', backlog:'调研阶段', delivery:'无需交付' },
+  { id:'t21', title:'审批流程设计文档', desc:'设计任务验收审批流程的完整文档', projectId:'p1', stage:'execution', status:'pending_review', priority:'P1', assignee:'张明远', reward:450, deadline:'2026-06-22', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t22', title:'结算模块代码审查', desc:'审查结算模块的代码质量和安全漏洞', projectId:'p2', stage:'execution', status:'rejected', priority:'P0', assignee:'李晓华', reward:600, deadline:'2026-06-18', backlog:'项目执行', delivery:'附件' },
+];
+
+const conversations = [
+  { id:'c1', title:'2026 Q2 财务数据分析', preview:'根据最新的财务报表...', time:'10分钟前', star:true },
+  { id:'c2', title:'API 接口设计方案讨论', preview:'我们需要设计一个高效的...', time:'2小时前', star:false },
+  { id:'c3', title:'产品需求文档翻译', preview:'请将以下 PRD 翻译成英文...', time:'昨天', star:false },
+  { id:'c4', title:'代码审查: payment模块', preview:'reviewPaymentProcessor...', time:'3天前', star:false },
+  { id:'c5', title:'市场调研报告摘要', preview:'2026年Q1市场调研报告...', time:'5天前', star:true },
+];
+let chatMessages = [
+  { role:'assistant', content:'你好！我是 Remi L1 助手。我可以帮你回答问题、分析数据、翻译文档等。请问有什么可以帮你的？', time:'10:30' },
+  { role:'user', content:'请帮我分析一下最近一个季度的销售数据趋势', time:'10:31' },
+  { role:'assistant', content:'好的，我来查看知识库中的相关文档。根据已上传的《2026年Q1销售数据分析报告》，我整理了几个关键发现：\n\n**1. 整体趋势**\nQ1 总销售额为 ¥12,847,000，同比增长 23.5%\n\n**2. 区域分布**\n华东地区贡献 38% 的销售额，华南地区增速最快（+41%）\n\n**3. 产品线表现**\n核心产品线 A 增长 18%，新产品线 C 增长 312%\n\n需要我进一步分析具体数据或生成可视化报表吗？', time:'10:32', citations:[{doc:'2026年Q1销售数据分析报告.pdf', snippet:'Q1总销售额同比增长23.5%，华东地区贡献38%...', confidence:0.95}] },
+  { role:'user', content:'生成一个Q1销售趋势的可视化图表', time:'10:33' },
+];
+let activeConversation = 'c1';
+
+// Skills data
+const skills = [
+  { id:0, name:'数据分析助手', icon:'📊', desc:'基于数据生成可视化报表与分析洞察', color:'var(--primary-light)', cat:'data', installs:128, rating:4.7 },
+  { id:1, name:'多语言翻译', icon:'🌐', desc:'支持 50+ 语言的实时互译与文档翻译', color:'#d1fae5', cat:'translation', installs:95, rating:4.5 },
+  { id:2, name:'文档摘要', icon:'📝', desc:'自动生成文档摘要、关键词与要点提炼', color:'#fef3c7', cat:'summary', installs:210, rating:4.8 },
+  { id:3, name:'代码审查', icon:'💻', desc:'静态代码分析与安全漏洞检测', color:'#e0e7ff', cat:'code', installs:76, rating:4.6 },
+  { id:4, name:'邮件助手', icon:'✉️', desc:'智能生成及回复商务邮件', color:'#fce7f3', cat:'communication', installs:156, rating:4.4 },
+  { id:5, name:'合同审查', icon:'⚖️', desc:'自动审查合同条款与风险点识别', color:'#d1fae5', cat:'legal', installs:63, rating:4.3 },
+];
+let installedSkillIds = [];
+
+// ===== NAVIGATION =====
+document.querySelectorAll('.sidebar-btn[data-page]').forEach(item => {
+  item.addEventListener('click', () => {
+    navigateTo(item.dataset.page);
+  });
+});
+
+function navigateTo(page) {
+  document.querySelectorAll('.sidebar-btn[data-page]').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector(`.sidebar-btn[data-page="${page}"]`);
+  if (navItem) navItem.classList.add('active');
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById(`page-${page}`);
+  if (target) target.classList.add('active');
+  if (page === 'remi-ai') renderChat();
+}
+
+// ===== CHAT =====
+function renderChat() {
+  renderMessages();
+  updateActiveConversationTitle();
+}
+
+function updateActiveConversationTitle() {
+  const conv = conversations.find(c => c.id === activeConversation);
+  if (conv) document.getElementById('activeConvTitle').textContent = conv.title;
+}
+
+function renderMessages() {
+  const container = document.getElementById('chatMessages');
+  if (chatMessages.length === 0) {
+    container.innerHTML = `
+      <div class="chat-empty">
+        <div class="chat-empty-icon">💬</div>
+        <h2>有什么我可以帮你的？</h2>
+        <p>我可以回答问题、分析文档、翻译内容、生成代码...</p>
+        <div class="chat-suggestions">
+          <div class="chat-suggestion" onclick="quickSend('帮我总结一下最近的销售数据')">📊 分析销售数据</div>
+          <div class="chat-suggestion" onclick="quickSend('请将这份文档翻译成英文')">🌐 翻译文档</div>
+          <div class="chat-suggestion" onclick="quickSend('帮我写一封商务邮件')">✉️ 写邮件</div>
+          <div class="chat-suggestion" onclick="quickSend('检查这段代码的安全性')">💻 审查代码</div>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  container.innerHTML = chatMessages.map((m, idx) => `
+    <div class="msg ${m.role}">
+      ${m.role === 'assistant' ? '<div class="msg-avatar" style="background:linear-gradient(135deg,var(--primary),#ea580c);">R</div>' : ''}
+      <div class="msg-body">
+        <div class="msg-bubble">${m.content.replace(/\n/g,'<br>')}</div>
+        ${m.citations ? m.citations.map(c => `
+          <div class="citation">
+            <div class="citation-doc">📄 ${c.doc} <span class="citation-conf ${c.confidence >= 0.9 ? 'high' : 'medium'}">${c.confidence >= 0.9 ? '高度相关' : '相关'} ${Math.round(c.confidence*100)}%</span></div>
+            <div class="citation-snippet">"${c.snippet}"</div>
+          </div>
+        `).join('') : ''}
+        ${m.role === 'assistant' && m.citations ? `
+          <button class="artifact-btn" onclick="openArtifact(${idx})">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            查看产出
+          </button>
+        ` : ''}
+        <div class="msg-time">${m.time}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('chatMessagesArea').scrollTop = document.getElementById('chatMessagesArea').scrollHeight;
+}
+
+function handleChatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendChatMessage();
+  }
+}
+
+function sendChatMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  chatMessages.push({ role:'user', content:text, time:new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}) });
+  chatMessages.push({ role:'assistant', content:'收到您的消息！在实际平台中，消息会经过审核 → 知识库检索 → 技能调用 → 模型生成 → 输出审核等完整流程。\n\n这是 Remi L1 平台的交互预览版本，展示了对话界面的完整交互体验。', time:new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}) });
+  input.value = '';
+  renderMessages();
+}
+
+function quickSend(text) {
+  document.getElementById('chatInput').value = text;
+  sendChatMessage();
+}
+
+function newConversation() {
+  const id = `c${Date.now()}`;
+  conversations.unshift({ id, title:'新对话', preview:'开始新的对话...', time:'刚刚', star:false });
+  activeConversation = id;
+  chatMessages = [];
+  renderConversations();
+  updateActiveConversationTitle();
+  renderMessages();
+  navigateTo('remi-ai');
+}
+
+function renderConversations() {
+  const list = document.getElementById('convList');
+  list.innerHTML = conversations.map(c => `
+    <div class="conv-item ${c.id === activeConversation ? 'active' : ''}" onclick="selectConversation('${c.id}')">
+      <div class="conv-item-title">${c.star ? '⭐ ' : ''}${c.title}</div>
+      <div class="conv-item-preview">${c.preview}</div>
+      <div class="conv-item-time">${c.time}</div>
+    </div>
+  `).join('');
+}
+
+function selectConversation(id) {
+  activeConversation = id;
+  renderConversations();
+  updateActiveConversationTitle();
+  navigateTo('chat');
+}
+
+function toggleSkillSelector() {
+  const dropdown = document.getElementById('skillSelectorDropdown');
+  if (dropdown.style.display === 'block') {
+    dropdown.style.display = 'none';
+    return;
+  }
+  renderSkillDropdown();
+  dropdown.style.display = 'block';
+}
+
+function renderSkillDropdown() {
+  const dropdown = document.getElementById('skillSelectorDropdown');
+  dropdown.innerHTML = `
+    <div style="font-size:12px;font-weight:600;color:var(--text);padding:4px 6px 8px;border-bottom:1px solid var(--border);margin-bottom:6px;">选择技能（最多3个）</div>
+    ${skills.map(s => {
+      const selected = installedSkillIds.includes(s.id);
+      const disabled = !selected && installedSkillIds.length >= 3;
+      return `
+        <div class="skill-option ${selected?'selected':''} ${disabled?'disabled':''}" onclick="${disabled ? '' : `toggleChatSkill(${s.id})`}" style="display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:8px;cursor:${disabled?'not-allowed':'pointer'};opacity:${disabled?0.4:1};${selected?'background:var(--primary-light);':''}">
+          <span style="font-size:16px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;background:${s.color};">${s.icon}</span>
+          <span style="flex:1;font-size:13px;font-weight:500;">${s.name}</span>
+          <span style="width:16px;height:16px;border-radius:50%;border:2px solid ${selected?'var(--primary)':'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:10px;color:${selected?'var(--primary)':'transparent'};flex-shrink:0;">${selected?'✓':''}</span>
+        </div>
+      `;
+    }).join('')}
+    <div style="padding:6px 6px 2px;font-size:11px;color:var(--text-muted);border-top:1px solid var(--border);margin-top:6px;">已选 ${installedSkillIds.length}/3</div>
+  `;
+}
+
+function toggleChatSkill(id) {
+  const idx = installedSkillIds.indexOf(id);
+  if (idx > -1) {
+    installedSkillIds.splice(idx, 1);
+  } else {
+    if (installedSkillIds.length >= 3) return;
+    installedSkillIds.push(id);
+  }
+  document.getElementById('activeSkillCount').textContent = `${installedSkillIds.length}/3`;
+  renderSkillDropdown();
+  renderSelectedSkillsBar();
+}
+
+function renderSelectedSkillsBar() {
+  const bar = document.getElementById('selectedSkillsBar');
+  if (installedSkillIds.length === 0) {
+    bar.style.display = 'none';
+    return;
+  }
+  bar.style.display = 'flex';
+  bar.innerHTML = installedSkillIds.map(id => {
+    const s = skills.find(sk => sk.id === id);
+    return `<span style="display:inline-flex;align-items:center;gap:3px;font-size:12px;padding:2px 8px 2px 6px;border-radius:6px;background:var(--primary-light);color:var(--primary);font-weight:500;"><span style="font-size:13px;">${s.icon}</span> ${s.name}<span onclick="event.stopPropagation();toggleChatSkill(${id})" style="cursor:pointer;margin-left:2px;opacity:0.6;">✕</span></span>`;
+  }).join('');
+}
+
+// 点击外部关闭技能选择下拉框
+document.addEventListener('click', function(e) {
+  const dropdown = document.getElementById('skillSelectorDropdown');
+  const btn = document.querySelector('.chat-input-tool[onclick*="toggleSkillSelector"]');
+  if (dropdown && btn && !btn.contains(e.target) && !dropdown.contains(e.target)) {
+    dropdown.style.display = 'none';
+  }
+});
+
+// ===== KNOWLEDGE TAB =====
+function switchKbTab(tab) {
+  document.querySelectorAll('.kb-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.kb-tab[data-tab="${tab}"]`).classList.add('active');
+  document.querySelectorAll('.kb-tab-content').forEach(c => c.style.display = 'none');
+  document.getElementById('kbTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).style.display = 'block';
+}
+
+// ===== SKILLS =====
+let currentSkillFilter = 'all';
+
+function renderSkills() {
+  const grid = document.getElementById('skillGrid');
+  const filtered = currentSkillFilter === 'all' ? skills : skills.filter(s => s.cat === currentSkillFilter);
+  grid.innerHTML = filtered.map(s => `
+    <div class="skill-card" onclick="alert('查看技能详情: ${s.name}')">
+      <div class="skill-card-icon" style="background:${s.color};">${s.icon}</div>
+      <h4>${s.name} ${installedSkillIds.includes(s.id) ? '<span class="tag tag-green" style="font-size:10px;">已安装</span>' : ''}</h4>
+      <p>${s.desc}</p>
+      <div class="skill-card-footer">
+        <div class="skill-stats"><span>⬇️ ${s.installs}</span><span>⭐ ${s.rating}</span></div>
+        <button class="btn btn-sm ${installedSkillIds.includes(s.id) ? 'btn-ghost' : 'btn-primary'}" onclick="event.stopPropagation();toggleInstall(${s.id})">${installedSkillIds.includes(s.id) ? '已安装' : '安装'}</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleInstall(id) {
+  const idx = installedSkillIds.indexOf(id);
+  idx > -1 ? installedSkillIds.splice(idx,1) : installedSkillIds.push(id);
+  renderSkills();
+}
+
+function filterSkills(btn, cat) {
+  currentSkillFilter = cat;
+  document.querySelectorAll('#skillTags .skill-tag').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  renderSkills();
+}
+
+function filterSkillsBySelect(cat) {
+  currentSkillFilter = cat;
+  document.querySelectorAll('#skillTags .skill-tag').forEach(c => c.classList.remove('active'));
+  document.querySelector(`#skillTags .skill-tag[onclick*="'${cat}'"]`)?.classList.add('active');
+  renderSkills();
+}
+
+// ===== USER MANAGEMENT =====
+function switchUserTab(el, tabId) {
+  document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.user-tab-content').forEach(c => c.style.display = 'none');
+  const target = document.getElementById(`user-${tabId}`);
+  if (target) target.style.display = 'block';
+}
+
+function showPermissionPanel(roleName) {
+  document.getElementById('permissionPanelCard').style.display = 'block';
+  document.getElementById('currentPermRoleName').textContent = roleName;
+}
+function hidePermissionPanel() {
+  document.getElementById('permissionPanelCard').style.display = 'none';
+}
+function savePermissions() {
+  alert('权限已保存');
+  hidePermissionPanel();
+}
+function openNewRoleModal() {
+  document.getElementById('newRoleModalOverlay').style.display = 'flex';
+}
+function closeNewRoleModal() {
+  document.getElementById('newRoleModalOverlay').style.display = 'none';
+}
+
+// ===== DASHBOARD CHARTS =====
+function renderTrendChart() {
+  const data = [{l:'周一',v:420},{l:'周二',v:680},{l:'周三',v:520},{l:'周四',v:890},{l:'周五',v:740},{l:'周六',v:380},{l:'周日',v:610}];
+  const max = Math.max(...data.map(d=>d.v));
+  document.getElementById('trendChart').innerHTML = data.map(d => `
+    <div class="chart-bar-group">
+      <div class="chart-bar" style="height:${(d.v/max)*100}%;background:linear-gradient(180deg,var(--primary),#ea580c);"></div>
+      <div class="chart-bar-label">${d.l}</div>
+    </div>
+  `).join('');
+}
+
+// ===== MAXIMIZE =====
+function toggleMaximize() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+}
+
+// ===== ARTIFACT PANEL =====
+function openArtifact(idx) {
+  document.getElementById('artifactPanel').classList.add('open');
+  document.querySelector('.chat-content-wrap')?.classList.add('artifact-open');
+}
+
+function closeArtifact() {
+  document.getElementById('artifactPanel').classList.remove('open');
+  document.querySelector('.chat-content-wrap')?.classList.remove('artifact-open');
+}
+
+// ===== PROJECTS =====
+function renderProjects() {
+  const grid = document.getElementById('projectGrid');
+  if (!grid) return;
+  const search = (document.getElementById('projectSearch')?.value || '').toLowerCase();
+  const statusFilter = document.getElementById('projectStatusFilter')?.value || 'all';
+  const leadFilter = document.getElementById('projectLeadFilter')?.value || 'all';
+  const sortBy = document.getElementById('projectSort')?.value || 'created';
+
+  let filtered = projects.filter(p => {
+    if (statusFilter !== 'all' && p.stage !== statusFilter) return false;
+    if (leadFilter !== 'all' && p.lead !== leadFilter) return false;
+    if (search && !p.name.toLowerCase().includes(search) && !p.id.toLowerCase().includes(search)) return false;
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    if (sortBy === 'budget') return b.budget - a.budget;
+    if (sortBy === 'progress') return (b.spent + b.frozen) / b.budget - (a.spent + a.frozen) / a.budget;
+    return b.id.localeCompare(a.id);
+  });
+
+  grid.innerHTML = filtered.map(p => {
+    const remaining = p.budget - p.spent - p.frozen;
+    const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
+    const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
+    const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
+    const statusTag = `<span class="tag ${stageTags[p.stage] || 'tag-slate'}">${stageLabels[p.stage] || '未知'}</span>`;
+    return `
+    <div class="project-card" onclick="alert('项目编号: ${p.id.toUpperCase()}\\n项目名称: ${p.name}\\n描述: ${p.desc}\\n负责人: ${p.lead} | 部门: ${p.dept}\\n周期: ${p.startDate} ~ ${p.endDate}\\n预算: ${p.budget.toLocaleString()} RP\\n已使用: ${p.spent.toLocaleString()} RP\\n冻结: ${p.frozen.toLocaleString()} RP\\n剩余: ${remaining.toLocaleString()} RP\\n成员: ${p.members}人 | 任务: ${p.tasks}个')">
+      <div class="project-card-header">
+        <div class="project-card-name">${p.name}</div>
+        ${statusTag}
+      </div>
+      <div class="project-card-desc">${p.desc}</div>
+      <div class="project-card-meta">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${p.members}人</span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M9 11l3 3L22 4"/></svg>${p.tasks}个任务</span>
+        <span>👤 ${p.lead}</span>
+        <span style="color:var(--text-muted);font-size:11px;">${p.id.toUpperCase()}</span>
+      </div>
+      <div class="project-budget-bar"><div class="project-budget-fill" style="width:${pct}%;background:${pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)'};"></div></div>
+      <div class="project-budget-label"><span>预算使用 ${pct}%</span><span>剩余 ${remaining.toLocaleString()} RP</span></div>
+    </div>`;
+  }).join('');
+}
+
+// ===== BACKLOG STAGES (dynamic) =====
+let backlogStages = [
+  { name:'调研阶段', start:'', end:'' },
+  { name:'立项阶段', start:'', end:'' },
+  { name:'项目执行', start:'', end:'' },
+  { name:'项目验收', start:'', end:'' },
+  { name:'项目结项', start:'', end:'' },
+];
+
+function renderBacklogStages() {
+  const container = document.getElementById('backlogStagesContainer');
+  if (!container) return;
+  container.innerHTML = backlogStages.map((s, i) => `
+    <div class="backlog-stage-row" style="display:flex;gap:6px;align-items:center;padding:6px 8px;background:var(--bg);border-radius:var(--radius-sm);" data-index="${i}">
+      <div style="display:flex;flex-direction:column;gap:2px;flex-shrink:0;">
+        <button class="btn btn-xs btn-ghost" style="padding:0;line-height:1;font-size:10px;color:var(--text-muted);" onclick="moveBacklogStage(${i},-1)" ${i === 0 ? 'disabled style="opacity:0.3;padding:0;line-height:1;font-size:10px;color:var(--text-muted);cursor:not-allowed;"' : ''}>▲</button>
+        <button class="btn btn-xs btn-ghost" style="padding:0;line-height:1;font-size:10px;color:var(--text-muted);" onclick="moveBacklogStage(${i},1)" ${i === backlogStages.length-1 ? 'disabled style="opacity:0.3;padding:0;line-height:1;font-size:10px;color:var(--text-muted);cursor:not-allowed;"' : ''}>▼</button>
+      </div>
+      <input type="text" value="${s.name}" onchange="backlogStages[${i}].name=this.value" style="width:80px;flex-shrink:0;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font);background:var(--card);">
+      <input type="date" value="${s.start}" onchange="backlogStages[${i}].start=this.value" style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font);">
+      <span style="font-size:11px;color:var(--text-muted);flex-shrink:0;">至</span>
+      <input type="date" value="${s.end}" onchange="backlogStages[${i}].end=this.value" style="flex:1;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--font);">
+      <button class="btn btn-xs btn-ghost" style="color:var(--accent-rose);flex-shrink:0;font-size:16px;line-height:1;" onclick="removeBacklogStage(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+function addBacklogStage() {
+  backlogStages.push({ name:'新阶段', start:'', end:'' });
+  renderBacklogStages();
+}
+
+function removeBacklogStage(idx) {
+  if (backlogStages.length <= 1) return;
+  backlogStages.splice(idx, 1);
+  renderBacklogStages();
+}
+
+function moveBacklogStage(idx, dir) {
+  const target = idx + dir;
+  if (target < 0 || target >= backlogStages.length) return;
+  [backlogStages[idx], backlogStages[target]] = [backlogStages[target], backlogStages[idx]];
+  renderBacklogStages();
+}
+
+function openProjectModal() {
+  backlogStages = [
+    { name:'调研阶段', start:'', end:'' },
+    { name:'立项阶段', start:'', end:'' },
+    { name:'项目执行', start:'', end:'' },
+    { name:'项目验收', start:'', end:'' },
+    { name:'项目结项', start:'', end:'' },
+  ];
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">创建项目</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body" style="max-height:70vh;overflow-y:auto;">
+      <div class="form-group"><label class="form-label">项目名称 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" placeholder="输入项目名称（≤50字符）"></div>
+      <div class="form-group"><label class="form-label">项目描述 <span style="color:var(--accent-rose);">*</span></label><textarea class="form-textarea" placeholder="项目背景、目标和范围描述"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">项目负责人 <span style="color:var(--accent-rose);">*</span></label><select class="form-select"><option>张明远（默认=创建者）</option><option>李晓华</option><option>赵明</option><option>王思远</option><option>陈雨桐</option></select></div>
+        <div class="form-group"><label class="form-label">所属部门</label><select class="form-select"><option>技术部</option><option>产品部</option><option>市场部</option><option>合规部</option><option>财务部</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">总预算 (RP) <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="number" placeholder="如 10000"></div>
+        <div class="form-group"><label class="form-label">项目状态</label><select class="form-select"><option>草稿</option><option>进行中</option><option>已完成</option><option>已归档</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">开始日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
+        <div class="form-group"><label class="form-label">结束日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
+      </div>
+      <div class="form-group" style="margin-top:12px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+          <label class="form-label" style="font-size:14px;font-weight:700;margin:0;">Backlog 定义 <span style="color:var(--accent-rose);">*</span></label>
+          <button class="btn btn-xs btn-outline" onclick="addBacklogStage()" style="font-size:11px;">+ 添加阶段</button>
+        </div>
+        <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">编辑阶段名称，设置起止时间，可排序和增删</p>
+        <div id="backlogStagesContainer" style="display:flex;flex-direction:column;gap:6px;"></div>
+      </div>
+      <div class="form-group"><label class="form-label">项目成员</label><div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="tag tag-green" style="cursor:pointer;">+ 添加成员</span></div></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="closeModal();alert('项目创建成功！\\nBacklog共 ' + backlogStages.length + ' 个阶段')">创建项目</button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+  renderBacklogStages();
+}
+
+// ===== TASKS =====
+function renderKanban() {
+  const board = document.getElementById('kanbanBoard');
+  if (!board) return;
+  const filterProject = document.getElementById('taskProjectFilter')?.value || 'all';
+  const filterPriority = document.getElementById('taskPriorityFilter')?.value || 'all';
+  const filterStatus = document.getElementById('taskStatusFilter')?.value || 'all';
+  const filterAssignee = document.getElementById('taskAssigneeFilter')?.value || 'all';
+  const searchText = (document.getElementById('taskSearch')?.value || '').toLowerCase();
+  let filtered = tasks.filter(t => {
+    if (filterProject !== 'all' && t.projectId !== filterProject) return false;
+    if (filterPriority !== 'all' && t.priority !== filterPriority) return false;
+    if (filterStatus !== 'all' && t.status !== filterStatus) return false;
+    if (filterAssignee !== 'all' && t.assignee !== filterAssignee) return false;
+    if (searchText && !t.title.toLowerCase().includes(searchText) && !t.desc.toLowerCase().includes(searchText)) return false;
+    return true;
+  });
+  const statuses = [
+    { key:'todo', label:'待开始', icon:'📋', color:'var(--text-muted)' },
+    { key:'in_progress', label:'进行中', icon:'🔄', color:'var(--accent-amber)' },
+    { key:'overdue', label:'已延期', icon:'⚠️', color:'var(--accent-rose)' },
+    { key:'pending_review', label:'待审核', icon:'👁', color:'var(--accent-violet)' },
+    { key:'rejected', label:'驳回中', icon:'🔄', color:'#dc2626' },
+    { key:'review', label:'待验收', icon:'🔍', color:'#6d28d9' },
+    { key:'done', label:'已完成', icon:'✅', color:'var(--accent-emerald)' },
+    { key:'closed', label:'已关闭', icon:'📦', color:'var(--text-muted)' },
+  ];
+  board.innerHTML = statuses.map(s => {
+    const items = filtered.filter(t => t.status === s.key);
+    return `
+    <div class="kanban-col">
+      <div class="kanban-col-header">
+        <span>${s.icon} ${s.label}</span>
+        <span class="kanban-col-count">${items.length}</span>
+      </div>
+      ${items.map(t => {
+        const project = projects.find(p => p.id === t.projectId);
+        const priorityClass = t.priority.toLowerCase();
+        const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
+        const displayStatus = (isOverdue && s.key === 'in_progress') ? '⚠️ 已延期' : '';
+        return `
+        <div class="task-card" onclick="alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n当前状态: ${s.label}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n描述: ${t.desc}')">
+          <div class="task-card-title" style="display:flex;align-items:center;gap:6px;">
+            <span class="task-priority ${priorityClass}"></span>
+            ${t.title}
+            ${isOverdue ? '<span style="font-size:10px;color:var(--accent-rose);font-weight:400;">⚠️</span>' : ''}
+          </div>
+          <div class="task-card-desc">${t.desc}</div>
+          <div class="task-card-footer">
+            <div class="avatar-stack"><div style="background:var(--primary);">${t.assignee[0]}</div></div>
+            <span style="font-size:11px;font-weight:600;color:var(--primary);">${t.reward} RP</span>
+          </div>
+          ${t.delivery ? `<div style="font-size:10px;color:var(--text-muted);margin-top:4px;">📎 ${t.delivery}</div>` : ''}
+        </div>`;
+      }).join('')}
+    </div>`;
+  }).join('');
+  renderTaskList();
+  updateTaskProjectFilter();
+}
+
+function updateTaskProjectFilter() {
+  const sel = document.getElementById('taskProjectFilter');
+  if (!sel) return;
+  sel.innerHTML = '<option value="all">全部项目</option>' + projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+}
+
+function renderTaskList() {
+  const tbody = document.getElementById('taskListBody');
+  if (!tbody) return;
+  const statusLabels = { todo:'待开始', in_progress:'进行中', overdue:'已延期', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
+  const statusTags = { todo:'tag-slate', in_progress:'tag-amber', overdue:'tag-rose', pending_review:'tag-violet', rejected:'tag-rose', review:'tag-violet', done:'tag-green', closed:'tag-slate' };
+  const filterProject = document.getElementById('taskProjectFilter')?.value || 'all';
+  const filterPriority = document.getElementById('taskPriorityFilter')?.value || 'all';
+  const filterStatus = document.getElementById('taskStatusFilter')?.value || 'all';
+  const filterAssignee = document.getElementById('taskAssigneeFilter')?.value || 'all';
+  const searchText = (document.getElementById('taskSearch')?.value || '').toLowerCase();
+  let filtered = tasks.filter(t => {
+    if (filterProject !== 'all' && t.projectId !== filterProject) return false;
+    if (filterPriority !== 'all' && t.priority !== filterPriority) return false;
+    if (filterStatus !== 'all' && t.status !== filterStatus) return false;
+    if (filterAssignee !== 'all' && t.assignee !== filterAssignee) return false;
+    if (searchText && !t.title.toLowerCase().includes(searchText) && !t.desc.toLowerCase().includes(searchText)) return false;
+    return true;
+  });
+  tbody.innerHTML = filtered.map(t => {
+    const project = projects.find(p => p.id === t.projectId);
+    return `
+    <tr>
+      <td style="font-weight:600;">${t.title}</td>
+      <td>${project ? project.name : '-'}</td>
+      <td><span class="task-priority ${t.priority.toLowerCase()}" style="display:inline-block;margin-right:4px;"></span>${t.priority}</td>
+      <td><span class="tag ${statusTags[t.status]}">${statusLabels[t.status] || t.status}</span></td>
+      <td>${t.assignee}</td>
+      <td style="font-size:12px;color:var(--text-secondary);">${t.backlog || '-'}</td>
+      <td style="color:var(--primary);font-weight:600;">${t.reward} RP</td>
+      <td style="font-size:12px;color:${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? 'var(--accent-rose)' : 'var(--text-secondary)'};">${t.deadline}${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? ' ⚠️' : ''}</td>
+      <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n状态: ${statusLabels[t.status]}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n${t.completedAt ? '完成时间: ' + t.completedAt : ''}')">详情</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function switchTaskView(el, view) {
+  document.querySelectorAll('#taskViewTabs .tab-bar-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('taskViewKanban').style.display = view === 'kanban' ? 'block' : 'none';
+  document.getElementById('taskViewList').style.display = view === 'list' ? 'block' : 'none';
+}
+
+function openTaskModal() {
+  document.getElementById('modalContent').innerHTML = `
+    <div class="modal-header"><div class="modal-title">创建任务</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">任务标题 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" placeholder="输入任务标题（≤100字符）"></div>
+      <div class="form-group"><label class="form-label">任务描述 <span style="color:var(--accent-rose);">*</span></label><textarea class="form-textarea" placeholder="详细描述任务内容"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">所属项目 <span style="color:var(--accent-rose);">*</span></label><select class="form-select">${projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-label">所属Backlog <span style="color:var(--accent-rose);">*</span></label><select class="form-select"><option>调研阶段</option><option>立项阶段</option><option>项目执行</option><option>项目验收</option><option>项目结项</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">优先级 <span style="color:var(--accent-rose);">*</span></label><select class="form-select"><option>P0紧急</option><option>P1高</option><option selected>P2中</option><option>P3低</option></select></div>
+        <div class="form-group"><label class="form-label">任务负责人</label><select class="form-select"><option>张明远</option><option>李晓华</option><option>王思远</option><option>赵明</option><option>陈雨桐</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">截止日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
+        <div class="form-group"><label class="form-label">预计奖励 (RP) <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="number" placeholder="≤ 项目预算余额"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">交付形式</label><select class="form-select"><option>附件</option><option>文档链接</option><option>无需交付</option></select></div>
+        <div class="form-group"><label class="form-label">预期工作量</label><input class="form-input" type="number" placeholder="单位：人天"></div>
+      </div>
+      <div class="form-group"><label class="form-label">验收标准 <span style="color:var(--accent-rose);">*</span></label><textarea class="form-textarea" placeholder="任务完成时对照验收的标准描述" style="min-height:60px;"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="closeModal();alert('任务创建成功！')">创建任务</button>
+    </div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+// ===== POINTS =====
+function renderProjectBudgetTable() {
+  const tbody = document.getElementById('projectBudgetTable');
+  if (!tbody) return;
+  tbody.innerHTML = projects.map(p => {
+    const remaining = p.budget - p.spent - p.frozen;
+    const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
+    return `
+    <tr>
+      <td style="font-weight:600;">${p.name}</td>
+      <td>${p.budget.toLocaleString()}</td>
+      <td>${p.spent.toLocaleString()}</td>
+      <td>${p.frozen.toLocaleString()}</td>
+      <td style="color:${remaining < 0 ? 'var(--accent-rose)' : 'var(--accent-emerald)'};font-weight:600;">${remaining.toLocaleString()}</td>
+      <td><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;height:6px;background:var(--border-light);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${pct>80?'var(--accent-rose)':pct>50?'var(--accent-amber)':'var(--accent-emerald)'};border-radius:3px;"></div></div><span style="font-size:12px;font-weight:600;">${pct}%</span></div></td>
+    </tr>`;
+  }).join('');
+}
+
+// ===== MODAL =====
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+// ===== ENHANCED NAVIGATION =====
+const origNavigateTo = navigateTo;
+navigateTo = function(page) {
+  origNavigateTo(page);
+  if (page === 'projects') renderProjects();
+  if (page === 'tasks') { renderKanban(); }
+  if (page === 'points') renderProjectBudgetTable();
+  if (page === 'dashboard') { renderBacklogKanban(); renderPointsLineChart(); }
+};
+
+// ===== TODO FILTER =====
+function filterTodoItems(type) {
+  document.querySelectorAll('[id^="todoFilter"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('todoFilter' + (type === 'all' ? 'All' : type === 'review' ? 'Review' : 'Task')).classList.add('active');
+  document.querySelectorAll('#todoItemsList .todo-item').forEach(item => {
+    if (type === 'all') { item.style.display = 'block'; }
+    else { item.style.display = item.dataset.type === type ? 'block' : 'none'; }
+  });
+}
+
+function switchMsgTab(tab) {
+  document.querySelectorAll('[id^="msgTab"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('msgTab' + (tab === 'unread' ? 'Unread' : 'Read')).classList.add('active');
+  document.getElementById('unreadMessages').style.display = tab === 'unread' ? 'flex' : 'none';
+  document.getElementById('readMessages').style.display = tab === 'read' ? 'flex' : 'none';
+}
+
+// ===== BACKLOG KANBAN =====
+let currentBacklogTab = 'project';
+
+function switchBacklogTab(el, tab) {
+  currentBacklogTab = tab;
+  document.querySelectorAll('#backlogTabs .tab-bar-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderBacklogKanban();
+}
+
+function renderBacklogKanban() {
+  const sel = document.getElementById('dashboardProjectFilter');
+  if (!sel) return;
+
+  // Update filter options
+  const currentVal = sel.value;
+  sel.innerHTML = projects.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+  sel.value = currentVal || projects[0].id;
+
+  const filterProject = sel.value;
+  const project = projects.find(p => p.id === filterProject);
+
+  if (currentBacklogTab === 'project') {
+    renderBacklogProjectView(project);
+  } else {
+    renderBacklogTaskView(project);
+  }
+}
+
+function renderBacklogProjectView(project) {
+  const projView = document.getElementById('backlogProjectView');
+  const taskView = document.getElementById('backlogTaskView');
+  if (!projView) return;
+  projView.style.display = 'block';
+  if (taskView) taskView.style.display = 'none';
+
+  const projectStages = [
+    { key:'research', label:'调研阶段', icon:'🔍' },
+    { key:'initiation', label:'立项阶段', icon:'📋' },
+    { key:'execution', label:'项目执行', icon:'🔄' },
+    { key:'review', label:'项目验收', icon:'✅' },
+    { key:'closed', label:'项目结项', icon:'📦' },
+  ];
+
+  const currentUser = '张明远';
+  const projectTasks = tasks.filter(t => t.projectId === project.id);
+  const remaining = project.budget - project.spent - project.frozen;
+  const pct = Math.round((project.spent + project.frozen) / project.budget * 100);
+
+  projView.innerHTML = `
+    <div class="card" style="padding:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div>
+          <div style="font-size:15px;font-weight:700;">${project.name}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">项目负责人：${project.lead} · ${project.members}人 · ${project.startDate} ~ ${project.endDate}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--text-muted);">预算</div>
+            <div style="font-size:13px;font-weight:700;">${remaining.toLocaleString()} / ${project.budget.toLocaleString()} RP</div>
+          </div>
+          <div style="width:80px;">
+            <div class="project-budget-bar"><div class="project-budget-fill" style="width:${pct}%;background:${pct>80?'var(--accent-rose)':pct>50?'var(--accent-amber)':'var(--accent-emerald)'};"></div></div>
+            <div style="font-size:10px;color:var(--text-muted);text-align:right;">${pct}%</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+        ${projectStages.map(s => {
+          const stageTasks = projectTasks.filter(t => t.stage === s.key);
+          const isCurrent = project.stage === s.key;
+          const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', review:'待验收', done:'已完成' };
+          return `
+          <div style="background:${isCurrent ? 'var(--primary-light)' : 'var(--bg)'};border-radius:var(--radius-sm);padding:10px;border:2px solid ${isCurrent ? 'var(--primary-border)' : 'transparent'};">
+            <div style="font-size:11px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:4px;">${s.icon} ${s.label} <span style="font-weight:400;font-size:10px;color:var(--text-muted);">(${stageTasks.length})</span></div>
+            ${stageTasks.length === 0 ? '<div style="font-size:11px;color:var(--text-muted);text-align:center;padding:10px 0;">暂无任务</div>' : stageTasks.map(t => {
+              const isMine = t.assignee === currentUser;
+              const priorityClass = t.priority.toLowerCase();
+              return `
+              <div style="padding:6px 8px;background:${isMine ? 'var(--primary-light)' : 'var(--card)'};border-radius:4px;margin-bottom:4px;font-size:12px;border:1px solid ${isMine ? 'var(--primary-border)' : 'transparent'};">
+                <div style="display:flex;align-items:center;gap:4px;font-weight:600;">
+                  <span class="task-priority ${priorityClass}"></span>
+                  <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.title}</span>
+                  ${isMine ? '<span style="font-size:10px;color:var(--primary);flex-shrink:0;">我的</span>' : ''}
+                </div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:4px;">
+                  <span>${t.assignee}</span>
+                  <span style="font-size:9px;background:var(--border-light);padding:1px 5px;border-radius:3px;">${statusLabels[t.status] || t.status}</span>
+                  <span style="margin-left:auto;">${t.reward} RP</span>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+function renderBacklogTaskView(project) {
+  const projView = document.getElementById('backlogProjectView');
+  const taskView = document.getElementById('backlogTaskView');
+  if (!taskView) return;
+  taskView.style.display = 'block';
+  if (projView) projView.style.display = 'none';
+
+  const currentUser = '张明远';
+  const projectTasks = tasks.filter(t => t.projectId === project.id);
+  const remaining = project.budget - project.spent - project.frozen;
+  const pct = Math.round((project.spent + project.frozen) / project.budget * 100);
+
+  const taskStatuses = [
+    { key:'todo', label:'待开始', icon:'📋' },
+    { key:'in_progress', label:'进行中', icon:'🔄' },
+    { key:'pending_review', label:'待审核', icon:'👁' },
+    { key:'review', label:'待验收', icon:'🔍' },
+    { key:'done', label:'已完成/已关闭', icon:'✅' },
+  ];
+
+  taskView.innerHTML = `
+    <div class="card" style="padding:16px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+        <div>
+          <div style="font-size:15px;font-weight:700;">${project.name}</div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">项目负责人：${project.lead} · ${projectTasks.length}个任务</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="text-align:right;">
+            <div style="font-size:11px;color:var(--text-muted);">预算</div>
+            <div style="font-size:13px;font-weight:700;">${remaining.toLocaleString()} / ${project.budget.toLocaleString()} RP</div>
+          </div>
+          <div style="width:80px;">
+            <div class="project-budget-bar"><div class="project-budget-fill" style="width:${pct}%;background:${pct>80?'var(--accent-rose)':pct>50?'var(--accent-amber)':'var(--accent-emerald)'};"></div></div>
+            <div style="font-size:10px;color:var(--text-muted);text-align:right;">${pct}%</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;">
+        ${taskStatuses.map(s => {
+          const items = projectTasks.filter(t => t.status === s.key);
+          return `
+          <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px;">
+            <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">${s.icon} ${s.label} <span style="font-weight:400;">(${items.length})</span></div>
+            ${items.length === 0 ? '<div style="font-size:11px;color:var(--text-muted);text-align:center;padding:8px 0;">暂无任务</div>' : items.map(t => {
+              const isMine = t.assignee === currentUser;
+              const priorityClass = t.priority.toLowerCase();
+              return `
+              <div style="padding:6px 8px;background:${isMine ? 'var(--primary-light)' : 'var(--card)'};border-radius:4px;margin-bottom:4px;font-size:12px;border:1px solid ${isMine ? 'var(--primary-border)' : 'transparent'};">
+                <div style="display:flex;align-items:center;gap:4px;font-weight:600;">
+                  <span class="task-priority ${priorityClass}"></span>
+                  <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.title}</span>
+                  ${isMine ? '<span style="font-size:10px;color:var(--primary);flex-shrink:0;">我的</span>' : ''}
+                </div>
+                <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">${t.assignee} · ${t.reward} RP</div>
+              </div>`;
+            }).join('')}
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+}
+
+// ===== POINTS LINE CHART =====
+function renderPointsLineChart() {
+  const container = document.getElementById('pointsLineChart');
+  if (!container) return;
+
+  const data = [180, 120, 300, 0, 1000, 250, 500, 0, 600, 0, 800, 500, 0, 0];
+  const days = ['05-26','05-27','05-28','05-29','05-30','05-31','06-01','06-02','06-03','06-04','06-05','06-06','06-07','06-08'];
+  const max = Math.max(...data, 1);
+  const h = 140, pad = 10;
+  const w = Math.max(container.clientWidth - 40, 600);
+  const xStep = w / (data.length - 1);
+
+  let points = data.map((v, i) => `${pad + i * xStep},${h - (v / max) * h + 20}`).join(' ');
+
+  // Fill area
+  let areaPoints = `${pad},${h + 20} ` + data.map((v, i) => `${pad + i * xStep},${h - (v / max) * h + 20}`).join(' ') + ` ${pad + (data.length - 1) * xStep},${h + 20}`;
+
+  container.innerHTML = `
+    <svg width="100%" height="180" viewBox="0 0 ${w + pad * 2} 180" style="display:block;">
+      <defs>
+        <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#f97316" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="#f97316" stop-opacity="0.02"/>
+        </linearGradient>
+      </defs>
+      <!-- Grid lines -->
+      <line x1="${pad}" y1="20" x2="${pad + w}" y2="20" stroke="var(--border-light)" stroke-width="0.5"/>
+      <line x1="${pad}" y1="${h/2 + 20}" x2="${pad + w}" y2="${h/2 + 20}" stroke="var(--border-light)" stroke-width="0.5"/>
+      <line x1="${pad}" y1="${h + 20}" x2="${pad + w}" y2="${h + 20}" stroke="var(--border-light)" stroke-width="0.5"/>
+      <!-- Y labels -->
+      <text x="0" y="24" font-size="9" fill="var(--text-muted)" font-family="var(--font)">${max}</text>
+      <text x="0" y="${h/2 + 24}" font-size="9" fill="var(--text-muted)" font-family="var(--font)">${Math.round(max/2)}</text>
+      <text x="0" y="${h + 24}" font-size="9" fill="var(--text-muted)" font-family="var(--font)">0</text>
+      <!-- Area -->
+      <polygon points="${areaPoints}" fill="url(#areaGrad)"/>
+      <!-- Line -->
+      <polyline points="${points}" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Dots -->
+      ${data.map((v, i) => v > 0 ? `<circle cx="${pad + i * xStep}" cy="${h - (v / max) * h + 20}" r="3.5" fill="#f97316" stroke="white" stroke-width="1.5"/>` : '').join('')}
+      <!-- X labels -->
+      ${days.map((d, i) => `<text x="${pad + i * xStep}" y="175" font-size="9" fill="var(--text-muted)" text-anchor="middle" font-family="var(--font)">${d}</text>`).join('')}
+    </svg>`;
+}
+
+// ===== INIT =====
+renderBacklogKanban();
+renderPointsLineChart();
+renderConversations();
+updateNotifBadge();
+
+document.getElementById('chatInput')?.addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+</script>
+</body>
+</html>
