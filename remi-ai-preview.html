@@ -2895,7 +2895,7 @@ function renderTaskActions(t) {
   const container = document.getElementById(`taskActions_${t.id}`);
   if (!container) return;
   const buttons = getTaskButtons(t);
-  container.innerHTML = buttons.map(b => `<button class="btn btn-xs ${b.class}" onclick="event.stopPropagation();${b.action}" style="font-size:10px;padding:2px 8px;white-space:nowrap;">${b.label}</button>`).join('');
+  container.innerHTML = buttons.map(b => `<button class="btn btn-xs ${b.cls}" onclick="event.stopPropagation();${b.action}" style="font-size:10px;padding:2px 8px;white-space:nowrap;">${b.label}</button>`).join('');
 }
 
 function getTaskButtons(t) {
@@ -2903,35 +2903,35 @@ function getTaskButtons(t) {
   switch(t.status) {
     case 'draft': return [
       ...base,
-      { label:'编辑', action:"editTask('${t.id}')", cls:'btn-outline' },
-      { label:'发布', action:"publishTask('${t.id}')", cls:'btn-primary' },
+      { label:'编辑', action:`editTask('${t.id}')`, cls:'btn-outline' },
+      { label:'发布', action:`publishTask('${t.id}')`, cls:'btn-primary' },
     ];
     case 'todo': return [...base];
     case 'in_progress': return [
       ...base,
-      { label:'处理', action:"processTask('${t.id}')", cls:'btn-primary' },
-      { label:'编辑', action:"editTask('${t.id}')", cls:'btn-outline' },
-      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+      { label:'处理', action:`processTask('${t.id}')`, cls:'btn-primary' },
+      { label:'编辑', action:`editTask('${t.id}')`, cls:'btn-outline' },
+      { label:'关闭', action:`confirmCloseTask('${t.id}')`, cls:'btn-outline' },
     ];
     case 'pending_review': return [
       ...base,
-      { label:'审核', action:"auditTask('${t.id}')", cls:'btn-primary' },
-      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+      { label:'审核', action:`auditTask('${t.id}')`, cls:'btn-primary' },
+      { label:'关闭', action:`confirmCloseTask('${t.id}')`, cls:'btn-outline' },
     ];
     case 'rejected': return [
       ...base,
-      { label:'处理', action:"resubmitTask('${t.id}')", cls:'btn-primary' },
-      { label:'编辑', action:"editTask('${t.id}')", cls:'btn-outline' },
-      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+      { label:'处理', action:`resubmitTask('${t.id}')`, cls:'btn-primary' },
+      { label:'编辑', action:`editTask('${t.id}')`, cls:'btn-outline' },
+      { label:'关闭', action:`confirmCloseTask('${t.id}')`, cls:'btn-outline' },
     ];
     case 'review': return [
       ...base,
-      { label:'验收', action:"acceptTask('${t.id}')", cls:'btn-primary' },
-      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+      { label:'验收', action:`acceptTask('${t.id}')`, cls:'btn-primary' },
+      { label:'关闭', action:`confirmCloseTask('${t.id}')`, cls:'btn-outline' },
     ];
     case 'done': return [
       ...base,
-      { label:'关闭', action:"confirmCloseTask('${t.id}')", cls:'btn-outline' },
+      { label:'关闭', action:`confirmCloseTask('${t.id}')`, cls:'btn-outline' },
     ];
     default: return base;
   }
