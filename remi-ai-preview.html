@@ -2845,6 +2845,7 @@ function switchProjectView(el, view) {
   el.classList.add('active');
   document.getElementById('projectGrid').style.display = view === 'card' ? '' : 'none';
   document.getElementById('projectListView').style.display = view === 'list' ? '' : 'none';
+  renderProjects();
 }
 
 function openTaskModal() {
