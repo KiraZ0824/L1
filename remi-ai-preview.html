@@ -1918,7 +1918,7 @@
             </div>
             <div class="select-wrap"><select id="taskProjectFilter" onchange="renderKanban()"><option value="all">全部项目</option></select></div>
             <div class="select-wrap"><select id="taskPriorityFilter" onchange="renderKanban()"><option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div>
-            <div class="select-wrap"><select id="taskStatusFilter" onchange="renderKanban()"><option value="all">全部状态</option><option value="todo">待开始</option><option value="in_progress">进行中</option><option value="overdue">已延期</option><option value="pending_review">待审核</option><option value="rejected">驳回中</option><option value="review">待验收</option><option value="done">已完成</option><option value="closed">已关闭</option></select></div>
+            <div class="select-wrap"><select id="taskStatusFilter" onchange="renderKanban()"><option value="all">全部状态</option><option value="todo">待开始</option><option value="in_progress">进行中</option><option value="pending_review">待审核</option><option value="rejected">驳回中</option><option value="review">待验收</option><option value="done">已完成</option><option value="closed">已关闭</option></select></div>
             <div class="select-wrap"><select id="taskAssigneeFilter" onchange="renderKanban()"><option value="all">全部负责人</option><option>张明远</option><option>李晓华</option><option>王思远</option><option>赵明</option><option>陈雨桐</option></select></div>
           </div>
           <div class="tab-bar" id="taskViewTabs">
@@ -2576,7 +2576,6 @@ function renderKanban() {
   const statuses = [
     { key:'todo', label:'待开始', icon:'📋', color:'var(--text-muted)' },
     { key:'in_progress', label:'进行中', icon:'🔄', color:'var(--accent-amber)' },
-    { key:'overdue', label:'已延期', icon:'⚠️', color:'var(--accent-rose)' },
     { key:'pending_review', label:'待审核', icon:'👁', color:'var(--accent-violet)' },
     { key:'rejected', label:'驳回中', icon:'🔄', color:'#dc2626' },
     { key:'review', label:'待验收', icon:'🔍', color:'#6d28d9' },
@@ -2595,7 +2594,6 @@ function renderKanban() {
         const project = projects.find(p => p.id === t.projectId);
         const priorityClass = t.priority.toLowerCase();
         const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
-        const displayStatus = (isOverdue && s.key === 'in_progress') ? '⚠️ 已延期' : '';
         return `
         <div class="task-card" onclick="alert('任务: ${t.title}\\n项目: ${project ? project.name : '-'}\\n所属Backlog: ${t.backlog || '-'}\\n优先级: ${t.priority}\\n当前状态: ${s.label}\\n负责人: ${t.assignee}\\n奖励: ${t.reward} RP\\n截止日期: ${t.deadline}\\n交付形式: ${t.delivery || '-'}\\n描述: ${t.desc}')">
           <div class="task-card-title" style="display:flex;align-items:center;gap:6px;">
