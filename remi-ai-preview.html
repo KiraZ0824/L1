@@ -3624,13 +3624,13 @@ function renderTodoItems() {
   if (!container) return;
   const activeFilter = document.querySelector('[id^="todoFilter"].active');
   const currentType = activeFilter ? (activeFilter.id === 'todoFilterAll' ? 'all' : activeFilter.id === 'todoFilterReview' ? 'review' : 'task') : 'all';
-  // Build bonus request items (data-type: bonus)
+  // Build bonus request items (data-type: review)
   const bonusHtml = bonusRequests.filter(function(r) {
     return r.status === 'pending' && r.reviewer === '张明远';
   }).map(function(r) {
     const p = projects.find(function(x) { return x.id === r.projectId; });
     const projectName = p ? p.name : '未知项目';
-    return '<div class="todo-item" data-type="bonus" style="padding:6px 0;border-bottom:1px solid var(--border-light);">' +
+    return '<div class="todo-item" data-type="review" style="padding:6px 0;border-bottom:1px solid var(--border-light);">' +
       '<div style="display:flex;align-items:center;justify-content:space-between;">' +
         '<div style="flex:1;min-width:0;">' +
           '<div style="font-size:12px;font-weight:600;line-height:1.4;">追加奖励申请 - ' + projectName + '</div>' +
