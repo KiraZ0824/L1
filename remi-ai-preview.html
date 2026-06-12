@@ -1554,7 +1554,7 @@
               <h1 style="font-size:20px;font-weight:700;">用户管理</h1>
               <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">组织架构 · 用户列表 · 角色权限</p>
             </div>
-            <button class="btn btn-primary">
+            <button class="btn btn-primary" onclick="openAddUserModal()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
               添加用户
             </button>
@@ -1568,7 +1568,7 @@
             <div class="card" style="margin-bottom:16px;">
               <div class="card-header">
                 <div class="card-title">组织架构</div>
-                <button class="btn btn-sm btn-outline">
+                <button class="btn btn-sm btn-outline" onclick="openAddDepartmentModal()">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                   添加部门
                 </button>
@@ -2568,6 +2568,49 @@ function switchUserTab(el, tabId) {
   document.querySelectorAll('.user-tab-content').forEach(c => c.style.display = 'none');
   const target = document.getElementById(`user-${tabId}`);
   if (target) target.style.display = 'block';
+}
+
+function openAddUserModal() {
+  const deptOpts = ['技术部','产品部','市场部','合规部','财务部','前端组','后端组','AI组'].map(function(d) {
+    return '<option value="' + d + '">' + d + '</option>';
+  }).join('');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>\n      添加用户',
+    '<div style="padding:20px;display:flex;flex-direction:column;gap:12px;">' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">姓名 *</label><input class="form-input" id="addUserName" placeholder="输入姓名"></div><div class="form-group"><label class="form-label">邮箱 *</label><input class="form-input" id="addUserEmail" placeholder="输入邮箱" type="email"></div></div>' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">所属部门</label><select class="form-select" id="addUserDept">' + deptOpts + '</select></div><div class="form-group"><label class="form-label">角色</label><select class="form-select" id="addUserRole"><option>普通用户</option><option>审核员</option><option>管理员</option></select></div></div>' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">手机号</label><input class="form-input" id="addUserPhone" placeholder="输入手机号"></div><div class="form-group"><label class="form-label">状态</label><select class="form-select" id="addUserStatus"><option>在线</option><option>离线</option></select></div></div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitAddUser()">确认添加</button></div>' +
+    '</div>'
+  );
+}
+
+function submitAddUser() {
+  const name = document.getElementById('addUserName').value.trim();
+  const email = document.getElementById('addUserEmail').value.trim();
+  if (!name || !email) { alert('请填写姓名和邮箱'); return; }
+  alert('用户 ' + name + ' 添加成功！\n邮箱：' + email);
+  closeProjectDetail();
+}
+
+function openAddDepartmentModal() {
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>\n      添加部门',
+    '<div style="padding:20px;display:flex;flex-direction:column;gap:12px;">' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">部门名称 *</label><input class="form-input" id="addDeptName" placeholder="输入部门名称"></div><div class="form-group"><label class="form-label">上级部门</label><select class="form-select" id="addDeptParent"><option value="">无（顶级部门）</option><option>技术部</option><option>产品部</option><option>市场部</option><option>合规部</option><option>财务部</option></select></div></div>' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">部门负责人</label><select class="form-select" id="addDeptLead"><option>张明远</option><option>李晓华</option><option>王思远</option><option>陈雨桐</option><option>赵明</option></select></div><div class="form-group"><label class="form-label">部门人数</label><input class="form-input" id="addDeptCount" type="number" placeholder="0" value="0"></div></div>' +
+      '<div class="form-group"><label class="form-label">部门描述</label><textarea class="form-textarea" id="addDeptDesc" rows="2" placeholder="可选：部门职责描述" style="resize:vertical;"></textarea></div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitAddDepartment()">确认添加</button></div>' +
+    '</div>'
+  );
+}
+
+function submitAddDepartment() {
+  const name = document.getElementById('addDeptName').value.trim();
+  if (!name) { alert('请填写部门名称'); return; }
+  const parent = document.getElementById('addDeptParent').value;
+  alert('部门 ' + name + ' 添加成功！' + (parent ? '\n上级部门：' + parent : '\n顶级部门'));
+  closeProjectDetail();
 }
 
 function showPermissionPanel(roleName) {
