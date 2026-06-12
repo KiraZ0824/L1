@@ -1305,65 +1305,7 @@
                     <button class="btn btn-xs btn-outline" id="todoFilterTask" onclick="filterTodoItems('task')" style="font-size:11px;padding:2px 8px;">待办任务</button>
                   </div>
                 </div>
-                <div style="display:flex;flex-direction:column;" id="todoItemsList">
-                  <div class="todo-item" data-type="review" style="padding:6px 0;border-bottom:1px solid var(--border-light);">
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
-                      <div style="flex:1;min-width:0;">
-                        <div style="font-size:12px;font-weight:600;line-height:1.4;">员工入职培训手册.md</div>
-                        <div style="font-size:11px;color:var(--text-muted);">陈雨桐 · 2小时前</div>
-                      </div>
-                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
-                        <button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 8px;">审核</button>
-                        <button class="btn btn-xs btn-ghost" style="font-size:10px;padding:2px 8px;">查看</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="todo-item" data-type="review" style="padding:6px 0;border-bottom:1px solid var(--border-light);">
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
-                      <div style="flex:1;min-width:0;">
-                        <div style="font-size:12px;font-weight:600;line-height:1.4;">AI对话模块技术方案V2.docx</div>
-                        <div style="font-size:11px;color:var(--text-muted);">王思远 · 昨天</div>
-                      </div>
-                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
-                        <button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 8px;">审核</button>
-                        <button class="btn btn-xs btn-ghost" style="font-size:10px;padding:2px 8px;">查看</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="todo-item" data-type="task" style="padding:6px 0;border-bottom:1px solid var(--border-light);">
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
-                      <div style="flex:1;min-width:0;">
-                        <div style="font-size:12px;font-weight:600;line-height:1.4;">后端架构评审</div>
-                        <div style="font-size:11px;color:var(--text-muted);">技术文档平台 · 截止 06-15 · 500 RP</div>
-                      </div>
-                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
-                        <button class="btn btn-xs btn-outline" style="font-size:10px;padding:2px 8px;">处理</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="todo-item" data-type="task" style="padding:6px 0;border-bottom:1px solid var(--border-light);">
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
-                      <div style="flex:1;min-width:0;">
-                        <div style="font-size:12px;font-weight:600;line-height:1.4;">用户权限模块测试</div>
-                        <div style="font-size:11px;color:var(--text-muted);">技术文档平台 · 截止 06-25 · 400 RP</div>
-                      </div>
-                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
-                        <button class="btn btn-xs btn-outline" style="font-size:10px;padding:2px 8px;">处理</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="todo-item" data-type="task" style="padding:6px 0;">
-                    <div style="display:flex;align-items:center;justify-content:space-between;">
-                      <div style="flex:1;min-width:0;">
-                        <div style="font-size:12px;font-weight:600;line-height:1.4;">预算管理模块开发</div>
-                        <div style="font-size:11px;color:var(--text-muted);">技术文档平台 · 截止 07-10 · 600 RP</div>
-                      </div>
-                      <div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">
-                        <button class="btn btn-xs btn-outline" style="font-size:10px;padding:2px 8px;">处理</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <div style="display:flex;flex-direction:column;" id="todoItemsList"></div>
               </div>
 
               <!-- 最新消息 -->
@@ -1375,50 +1317,8 @@
                     <button class="btn btn-xs btn-outline" id="msgTabRead" onclick="switchMsgTab('read')" style="font-size:11px;padding:2px 10px;border:none;background:transparent;">已读</button>
                   </div>
                 </div>
-                <div id="unreadMessages" style="display:flex;flex-direction:column;">
-                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">
-                    <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:5px;"></span>
-                    <div style="flex:1;min-width:0;">
-                      <div style="font-size:12px;font-weight:600;">任务验收通过</div>
-                      <div style="font-size:11px;color:var(--text-muted);">你的任务「API接口文档编写」已通过验收，800 RP 已到账</div>
-                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">10分钟前</div>
-                    </div>
-                  </div>
-                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">
-                    <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:5px;"></span>
-                    <div style="flex:1;min-width:0;">
-                      <div style="font-size:12px;font-weight:600;">新任务分配</div>
-                      <div style="font-size:11px;color:var(--text-muted);">张明远 给你分配了新任务「后端架构评审」</div>
-                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">30分钟前</div>
-                    </div>
-                  </div>
-                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;">
-                    <span style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:5px;"></span>
-                    <div style="flex:1;min-width:0;">
-                      <div style="font-size:12px;font-weight:600;">知识审核通过</div>
-                      <div style="font-size:11px;color:var(--text-muted);">你上传的文档「Remi 平台 API 接口规范 V2.1.docx」已通过审核</div>
-                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">2小时前</div>
-                    </div>
-                  </div>
-                </div>
-                <div id="readMessages" style="display:none;flex-direction:column;">
-                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">
-                    <span style="width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:5px;"></span>
-                    <div style="flex:1;min-width:0;">
-                      <div style="font-size:12px;font-weight:600;">项目预算预警</div>
-                      <div style="font-size:11px;color:var(--text-muted);">「技术文档平台」项目预算已使用 50%，剩余 5,000 RP</div>
-                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">昨天</div>
-                    </div>
-                  </div>
-                  <div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;">
-                    <span style="width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:5px;"></span>
-                    <div style="flex:1;min-width:0;">
-                      <div style="font-size:12px;font-weight:600;">额外奖励到账</div>
-                      <div style="font-size:11px;color:var(--text-muted);">李晓华 给你发放了额外奖励 500 RP（Q2财报分析优秀贡献）</div>
-                      <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">昨天</div>
-                    </div>
-                  </div>
-                </div>
+                <div id="unreadMessages" style="display:flex;flex-direction:column;"></div>
+                <div id="readMessages" style="display:none;flex-direction:column;"></div>
               </div>
             </div>
           </div>
@@ -2319,12 +2219,15 @@
 
 // Projects
 const projects = [
-  { id:'p1', name:'技术文档平台', desc:'构建企业级技术文档管理与知识沉淀平台', stage:'execution', budget:10000, spent:4200, frozen:800, members:8, tasks:12, lead:'张明远', dept:'技术部', startDate:'2026-04-01', endDate:'2026-09-30' },
-  { id:'p2', name:'Q2 财务分析', desc:'2026年第二季度财务数据深度分析与可视化报告', stage:'execution', budget:5000, spent:2800, frozen:500, members:4, tasks:6, lead:'李晓华', dept:'产品部', startDate:'2026-05-01', endDate:'2026-07-15' },
-  { id:'p3', name:'合规风控升级', desc:'数据安全合规政策V3.0升级与企业风险管理体系建设', stage:'review', budget:8000, spent:3500, frozen:1200, members:5, tasks:8, lead:'赵明', dept:'合规部', startDate:'2026-03-15', endDate:'2026-08-30' },
-  { id:'p4', name:'多语言翻译模块', desc:'基于AI的多语言翻译引擎开发与产品化落地', stage:'research', budget:15000, spent:0, frozen:0, members:6, tasks:3, lead:'王思远', dept:'技术部', startDate:'2026-07-01', endDate:'2026-12-31' },
-  { id:'p5', name:'市场调研报告', desc:'2026年H1市场竞品调研与用户需求分析', stage:'closed', budget:3000, spent:3000, frozen:0, members:3, tasks:5, lead:'陈雨桐', dept:'市场部', startDate:'2026-02-01', endDate:'2026-05-30' },
+  { id:'p1', name:'技术文档平台', desc:'构建企业级技术文档管理与知识沉淀平台', type:'内部项目', stage:'execution', budget:10000, spent:4200, frozen:800, members:8, tasks:12, lead:'张明远', dept:'技术部', startDate:'2026-04-01', endDate:'2026-09-30' },
+  { id:'p2', name:'Q2 财务分析', desc:'2026年第二季度财务数据深度分析与可视化报告', type:'内部项目', stage:'execution', budget:5000, spent:2800, frozen:500, members:4, tasks:6, lead:'李晓华', dept:'产品部', startDate:'2026-05-01', endDate:'2026-07-15' },
+  { id:'p3', name:'合规风控升级', desc:'数据安全合规政策V3.0升级与企业风险管理体系建设', type:'内部项目', stage:'review', budget:8000, spent:3500, frozen:1200, members:5, tasks:8, lead:'赵明', dept:'合规部', startDate:'2026-03-15', endDate:'2026-08-30' },
+  { id:'p4', name:'多语言翻译模块', desc:'基于AI的多语言翻译引擎开发与产品化落地', type:'客户项目', stage:'research', budget:15000, spent:0, frozen:0, members:6, tasks:3, lead:'王思远', dept:'技术部', startDate:'2026-07-01', endDate:'2026-12-31' },
+  { id:'p5', name:'市场调研报告', desc:'2026年H1市场竞品调研与用户需求分析', type:'研究项目', stage:'closed', budget:3000, spent:3000, frozen:0, members:3, tasks:5, lead:'陈雨桐', dept:'市场部', startDate:'2026-02-01', endDate:'2026-05-30' },
 ];
+
+// Bonus Requests
+const bonusRequests = [];
 
 // Tasks
 const tasks = [
@@ -2567,42 +2470,37 @@ function openBonusModal(projectId) {
   const projectTasks = tasks.filter(t => t.projectId === projectId);
   const memberSet = new Set();
   projectTasks.forEach(t => memberSet.add(t.assignee));
-  const members = Array.from(memberSet);
+  if (!memberSet.has(p.lead)) memberSet.add(p.lead);
+  _bonusMembers = Array.from(memberSet);
+  _bonusRowIdx = 0;
+  const opts = _bonusMembers.map(function(m) {
+    return '<option value="' + m + '"' + (m === p.lead ? ' selected' : '') + '>' + m + '</option>';
+  }).join('');
   const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>\n      追加奖励 · ' + p.name,
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
       '<div style="font-size:13px;color:var(--text-muted);">项目：<strong style="color:var(--text);">' + p.name + '</strong>（' + (stageLabels[p.stage] || p.stage) + '）</div>' +
       '<div>' +
-        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">选择项目组成员（可多选）</label>' +
-        '<div id="bonusMemberList" style="display:flex;flex-direction:column;gap:4px;max-height:200px;overflow-y:auto;padding:8px;border:1px solid var(--border-light);border-radius:8px;">' +
-          members.map(m => '<label style="display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:6px;cursor:pointer;font-size:13px;"><input type="checkbox" value="' + m + '" style="accent-color:var(--primary);"><span>' + m + '</span></label>').join('') +
-          (members.length === 0 ? '<div style="color:var(--text-muted);font-size:12px;padding:8px;">暂无任务成员数据</div>' : '') +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">奖励分配列表</label>' +
+        '<div id="bonusRewardRows" style="background:var(--bg);border-radius:8px;padding:6px 8px;border:1px solid var(--border-light);">' +
+          _buildBonusRow(p.lead, '') +
         '</div>' +
+        '<button class="btn btn-xs btn-outline" onclick="addBonusRow()" style="margin-top:6px;font-size:11px;">+ 添加人员</button>' +
       '</div>' +
       '<div>' +
-        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">奖励积分（统一金额）</label>' +
-        '<input type="number" id="bonusPoints" placeholder="输入奖励积分" min="1" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">审核流程</label>' +
+        '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;">' +
+          '<span style="font-size:12px;color:var(--text-muted);flex-shrink:0;">审核人：</span>' +
+          '<select id="bonusReviewer" style="flex:1;padding:6px 8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;background:var(--card);">' + opts + '</select>' +
+        '</div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;">' +
         '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
-        '<button class="btn btn-primary" onclick="submitBonus(\'' + projectId + '\')">确认发放</button>' +
+        '<button class="btn btn-primary" onclick="submitBonusRequest(\'' + projectId + '\')">发起申请</button>' +
       '</div>' +
     '</div>'
   );
-}
-
-function submitBonus(projectId) {
-  const checks = document.querySelectorAll('#bonusMemberList input[type="checkbox"]:checked');
-  const points = parseInt(document.getElementById('bonusPoints').value);
-  if (checks.length === 0) { alert('请至少选择一名成员'); return; }
-  if (!points || points <= 0) { alert('请输入有效的奖励积分'); return; }
-  const names = Array.from(checks).map(c => c.value).join('、');
-  const p = projects.find(x => x.id === projectId);
-  if (p) { p.spent += points * checks.length; }
-  alert('已向 ' + names + ' 各发放 ' + points + ' RP 追加奖励！');
-  refreshAllTaskViews();
-  closeProjectDetail();
 }
 
 // 点击外部关闭技能选择下拉框
@@ -2750,8 +2648,9 @@ function openProjectDetail(projectId) {
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
         <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">项目负责人</div><div style="font-size:13px;font-weight:500;">${p.lead}</div></div>
         <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">所属部门</div><div style="font-size:13px;font-weight:500;">${p.dept}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">总预算</div><div style="font-size:15px;font-weight:700;color:var(--primary);">${p.budget.toLocaleString()} RP</div></div>
+        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">项目类型</div><div style="font-size:13px;font-weight:500;">${p.type || '未设置'}</div></div>
         <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">项目状态</div><div><span class="tag ${stageTags[p.stage] || 'tag-slate'}" style="font-size:11px;">${stageLabels[p.stage] || '未知'}</span></div></div>
+        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">总预算</div><div style="font-size:15px;font-weight:700;color:var(--primary);">${p.budget.toLocaleString()} RP</div></div>
         <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">开始日期</div><div style="font-size:13px;font-weight:500;">${p.startDate}</div></div>
         <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">结束日期</div><div style="font-size:13px;font-weight:500;">${p.endDate}</div></div>
       </div>
@@ -2959,6 +2858,10 @@ function openProjectModal() {
       <div class="form-row">
         <div class="form-group"><label class="form-label">开始日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
         <div class="form-group"><label class="form-label">结束日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">项目类型</label><select class="form-select"><option>内部项目</option><option>客户项目</option><option>研究项目</option></select></div>
+        <div class="form-group"></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">预计收益 / 预计价值</label><input class="form-input" placeholder="如 50000 RP" style="color:var(--text-muted);"></div>
@@ -3648,6 +3551,221 @@ function renderAdminData() {
   switchAdminTab(_currentAdminTab);
 }
 
+// ===== BONUS HELPERS =====
+let _bonusMembers = [];
+let _bonusRowIdx = 0;
+let _bonusRequestCounter = 0;
+
+function _buildBonusRow(person, amount) {
+  _bonusRowIdx++;
+  const idx = _bonusRowIdx;
+  const opts = _bonusMembers.map(function(m) {
+    return '<option value="' + m + '"' + (m === person ? ' selected' : '') + '>' + m + '</option>';
+  }).join('');
+  return '<div class="reward-row" style="display:flex;align-items:center;gap:6px;padding:5px 0;" data-idx="' + idx + '">' +
+    '<select id="bp_' + idx + '" style="flex:1;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);">' + opts + '</select>' +
+    '<input type="number" id="ba_' + idx + '" value="' + amount + '" placeholder="金额" style="width:90px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:13px;text-align:right;" min="0">' +
+    '<input type="text" id="br_' + idx + '" placeholder="奖励原因" style="flex:0.7;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;">' +
+    '<button class="btn btn-xs btn-ghost" onclick="removeBonusRow(' + idx + ')" style="color:var(--accent-rose);font-size:14px;padding:2px 6px;line-height:1;">✕</button>' +
+    '</div>';
+}
+
+function addBonusRow() {
+  const container = document.getElementById('bonusRewardRows');
+  const firstPerson = _bonusMembers[0] || '';
+  container.insertAdjacentHTML('beforeend', _buildBonusRow(firstPerson, ''));
+}
+
+function removeBonusRow(idx) {
+  const rows = document.querySelectorAll('#bonusRewardRows .reward-row');
+  if (rows.length <= 1) return;
+  const row = document.querySelector('.reward-row[data-idx="' + idx + '"]');
+  if (row) row.remove();
+}
+
+function submitBonusRequest(projectId) {
+  const rows = document.querySelectorAll('#bonusRewardRows .reward-row');
+  const reviewer = document.getElementById('bonusReviewer').value;
+  const allocations = [];
+  let hasValidRow = false;
+  rows.forEach(function(row) {
+    const idx = row.dataset.idx;
+    const person = document.getElementById('bp_' + idx).value;
+    const amount = parseInt(document.getElementById('ba_' + idx).value) || 0;
+    const reason = document.getElementById('br_' + idx).value.trim();
+    if (person && amount > 0) {
+      hasValidRow = true;
+    }
+    allocations.push({ person: person, amount: amount, reason: reason });
+  });
+  if (!hasValidRow) { return; }
+  if (!reviewer) { return; }
+  _bonusRequestCounter++;
+  const totalAmount = allocations.reduce(function(sum, a) { return sum + a.amount; }, 0);
+  bonusRequests.push({
+    id: 'br' + _bonusRequestCounter,
+    projectId: projectId,
+    requester: '张明远',
+    reviewer: reviewer,
+    allocations: allocations,
+    status: 'pending',
+    opinion: '',
+    createdAt: new Date().toISOString().slice(0, 10)
+  });
+  closeProjectDetail();
+  renderTodoItems();
+  renderMessages();
+}
+
+function renderTodoItems() {
+  const container = document.getElementById('todoItemsList');
+  if (!container) return;
+  const activeFilter = document.querySelector('[id^="todoFilter"].active');
+  const currentType = activeFilter ? (activeFilter.id === 'todoFilterAll' ? 'all' : activeFilter.id === 'todoFilterReview' ? 'review' : 'task') : 'all';
+  const items = bonusRequests.filter(function(r) {
+    return r.status === 'pending' && r.reviewer === '张明远';
+  }).map(function(r) {
+    const p = projects.find(function(x) { return x.id === r.projectId; });
+    const projectName = p ? p.name : '未知项目';
+    return '<div class="todo-item" data-type="bonus" style="padding:6px 0;border-bottom:1px solid var(--border-light);">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-size:12px;font-weight:600;line-height:1.4;">追加奖励申请 - ' + projectName + '</div>' +
+          '<div style="font-size:11px;color:var(--text-muted);">' + r.requester + ' · 待审核</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">' +
+          '<button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 8px;" onclick="openBonusReview(\'' + r.id + '\')">审核</button>' +
+          '<button class="btn btn-xs btn-ghost" style="font-size:10px;padding:2px 8px;">查看</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  container.innerHTML = items;
+  filterTodoItems(currentType);
+}
+
+function renderMessages() {
+  const unreadContainer = document.getElementById('unreadMessages');
+  const readContainer = document.getElementById('readMessages');
+  if (!unreadContainer || !readContainer) return;
+  const unreadItems = [];
+  const readItems = [];
+  bonusRequests.forEach(function(r) {
+    const p = projects.find(function(x) { return x.id === r.projectId; });
+    const projectName = p ? p.name : '未知项目';
+    const totalAmount = r.allocations.reduce(function(sum, a) { return sum + a.amount; }, 0);
+    if (r.status === 'pending') {
+      unreadItems.push(
+        '<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">' +
+          '<span style="width:6px;height:6px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:5px;"></span>' +
+          '<div style="flex:1;min-width:0;">' +
+            '<div style="font-size:12px;font-weight:600;">追加奖励待审核</div>' +
+            '<div style="font-size:11px;color:var(--text-muted);">来自 ' + r.requester + ' 的追加奖励申请，金额 ' + totalAmount + ' RP</div>' +
+            '<div style="font-size:10px;color:var(--text-muted);margin-top:2px;">' + r.createdAt + '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    } else if (r.status === 'approved') {
+      readItems.push(
+        '<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">' +
+          '<span style="width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:5px;"></span>' +
+          '<div style="flex:1;min-width:0;">' +
+            '<div style="font-size:12px;font-weight:600;">追加奖励已通过</div>' +
+            '<div style="font-size:11px;color:var(--text-muted);">你的追加奖励申请已通过，共 ' + totalAmount + ' RP 已发放</div>' +
+            '<div style="font-size:10px;color:var(--text-muted);margin-top:2px;">' + r.createdAt + '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    } else if (r.status === 'rejected') {
+      readItems.push(
+        '<div style="display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--border-light);">' +
+          '<span style="width:6px;height:6px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:5px;"></span>' +
+          '<div style="flex:1;min-width:0;">' +
+            '<div style="font-size:12px;font-weight:600;">追加奖励已驳回</div>' +
+            '<div style="font-size:11px;color:var(--text-muted);">你的追加奖励申请已被驳回，原因：' + r.opinion + '</div>' +
+            '<div style="font-size:10px;color:var(--text-muted);margin-top:2px;">' + r.createdAt + '</div>' +
+          '</div>' +
+        '</div>'
+      );
+    }
+  });
+  unreadContainer.innerHTML = unreadItems.join('');
+  readContainer.innerHTML = readItems.join('');
+}
+
+function openBonusReview(requestId) {
+  const r = bonusRequests.find(function(x) { return x.id === requestId; });
+  if (!r) return;
+  const p = projects.find(function(x) { return x.id === r.projectId; });
+  const projectName = p ? p.name : '未知项目';
+  const totalAmount = r.allocations.reduce(function(sum, a) { return sum + a.amount; }, 0);
+  const allocHtml = r.allocations.map(function(a) {
+    return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;">' +
+      '<span style="flex:1;color:var(--text);">' + a.person + '</span>' +
+      '<span style="width:90px;text-align:right;color:var(--primary);font-weight:600;">' + a.amount + ' RP</span>' +
+      '<span style="flex:0.7;color:var(--text-muted);">' + (a.reason || '-') + '</span>' +
+    '</div>';
+  }).join('');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/></svg>\n      审核奖励申请 · ' + projectName,
+    '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="font-size:13px;color:var(--text-muted);">项目：<strong style="color:var(--text);">' + projectName + '</strong></div>' +
+      '<div style="font-size:13px;color:var(--text-muted);">申请人：<strong style="color:var(--text);">' + r.requester + '</strong></div>' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">奖励分配列表</label>' +
+        '<div style="background:var(--bg);border-radius:8px;padding:6px 8px;border:1px solid var(--border-light);">' +
+          '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:11px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:4px;">' +
+            '<span style="flex:1;">人员</span><span style="width:90px;text-align:right;">金额</span><span style="flex:0.7;">原因</span>' +
+          '</div>' +
+          allocHtml +
+          '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;font-weight:600;border-top:1px solid var(--border-light);margin-top:4px;padding-top:4px;">' +
+            '<span style="flex:1;">合计</span><span style="width:90px;text-align:right;color:var(--primary);">' + totalAmount + ' RP</span><span style="flex:0.7;"></span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<input type="hidden" id="bonusReviewId" value="' + requestId + '">' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label>' +
+        '<textarea id="bonusReviewOpinion" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="请填写审核意见..."></textarea>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">' +
+        '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
+        '<button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectBonus()">驳回</button>' +
+        '<button class="btn btn-primary" onclick="doApproveBonus()">同意</button>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function doApproveBonus() {
+  const requestId = document.getElementById('bonusReviewId').value;
+  const r = bonusRequests.find(function(x) { return x.id === requestId; });
+  if (!r) return;
+  const opinion = document.getElementById('bonusReviewOpinion').value.trim();
+  if (!opinion) { return; }
+  const p = projects.find(function(x) { return x.id === r.projectId; });
+  const totalAmount = r.allocations.reduce(function(sum, a) { return sum + a.amount; }, 0);
+  r.status = 'approved';
+  r.opinion = opinion;
+  if (p) { p.spent += totalAmount; }
+  closeProjectDetail();
+  renderTodoItems();
+  renderMessages();
+}
+
+function doRejectBonus() {
+  const requestId = document.getElementById('bonusReviewId').value;
+  const r = bonusRequests.find(function(x) { return x.id === requestId; });
+  if (!r) return;
+  const opinion = document.getElementById('bonusReviewOpinion').value.trim();
+  if (!opinion) { return; }
+  r.status = 'rejected';
+  r.opinion = opinion;
+  closeProjectDetail();
+  renderTodoItems();
+  renderMessages();
+}
+
 // ===== TODO FILTER =====
 function filterTodoItems(type) {
   document.querySelectorAll('[id^="todoFilter"]').forEach(b => b.classList.remove('active'));
@@ -3693,6 +3811,8 @@ document.addEventListener('DOMContentLoaded', function() {
     var lang = localStorage.getItem('remi_lang') || 'zh';
     btn.textContent = lang === 'zh' ? '中' : 'EN';
   }
+  renderTodoItems();
+  renderMessages();
 });
 
 function renderBacklogKanban() {
