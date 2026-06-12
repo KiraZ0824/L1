@@ -1630,7 +1630,7 @@
           <div class="user-tab-content" id="user-users-list" style="display:none;">
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
               <input type="text" id="userSearchInput" placeholder="搜索姓名/邮箱/部门..." oninput="filterUserList()" style="flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--border-light);border-radius:8px;font-size:12px;">
-              <select id="userDeptFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:12px;"><option value="">全部部门</option><option>总经办</option><option>BD</option><option>合规部</option><option>技术部</option><option>产品部</option><option>运维部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select>
+              <select id="userDeptFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:12px;"><option value="">全部部门</option><option>总经办</option><option>BD</option><option>合规部</option><option>产品研发部</option><option>技术部</option><option>产品部</option><option>运维部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select>
               <select id="userRoleFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:12px;"><option value="">全部角色</option><option>管理员</option><option>审核员</option><option>普通用户</option></select>
             </div>
             <div class="table-wrap">
@@ -1652,9 +1652,9 @@
                     <td>技术部</td><td><span class="tag tag-amber">审核员</span></td><td>wang@remi.ai</td><td><span class="tag tag-green">在线</span></td><td>15分钟前</td>
                     <td><button class="btn btn-xs btn-ghost" onclick="alert('编辑用户：王思远')">编辑</button><button class="btn btn-xs btn-ghost" style="color:var(--accent-rose);" onclick="alert('已禁用王思远')">禁用</button><button class="btn btn-xs btn-ghost" onclick="alert('重置密码链接已发送至 wang@remi.ai')">重置密码</button></td>
                   </tr>
-                  <tr data-name="陈雨桐" data-dept="市场部" data-role="普通用户" data-email="chen@remi.ai">
+                  <tr data-name="陈雨桐" data-dept="BD" data-role="普通用户" data-email="chen@remi.ai">
                     <td><div style="display:flex;align-items:center;gap:8px;"><div style="width:28px;height:28px;border-radius:50%;background:#8b5cf6;display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:11px;">陈</div>陈雨桐</div></td>
-                    <td>市场部</td><td><span class="tag tag-slate">普通用户</span></td><td>chen@remi.ai</td><td><span class="tag tag-slate">离线</span></td><td>2小时前</td>
+                    <td>BD</td><td><span class="tag tag-slate">普通用户</span></td><td>chen@remi.ai</td><td><span class="tag tag-slate">离线</span></td><td>2小时前</td>
                     <td><button class="btn btn-xs btn-ghost" onclick="alert('编辑用户：陈雨桐')">编辑</button><button class="btn btn-xs btn-ghost" style="color:var(--accent-rose);" onclick="alert('已禁用陈雨桐')">禁用</button><button class="btn btn-xs btn-ghost" onclick="alert('重置密码链接已发送至 chen@remi.ai')">重置密码</button></td>
                   </tr>
                   <tr data-name="赵明" data-dept="合规部" data-role="普通用户" data-email="zhao@remi.ai">
@@ -2660,7 +2660,7 @@ function filterUserList() {
 }
 
 function openAddUserModal() {
-  const deptOpts = ['技术部','产品部','市场部','合规部','财务部','前端组','后端组','AI组'].map(function(d) {
+  const deptOpts = ['总经办','BD','合规部','产品研发部','财务部','人事部','战略投资部','技术部','产品部','运维部','前端组','后端组','AI组'].map(function(d) {
     return '<option value="' + d + '">' + d + '</option>';
   }).join('');
   _showTaskPanel(
@@ -2686,7 +2686,7 @@ function openAddDepartmentModal() {
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>\n      添加部门',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:12px;">' +
-      '<div class="form-row"><div class="form-group"><label class="form-label">部门名称 *</label><input class="form-input" id="addDeptName" placeholder="输入部门名称"></div><div class="form-group"><label class="form-label">上级部门</label><select class="form-select" id="addDeptParent"><option value="">无（顶级部门）</option><option>技术部</option><option>产品部</option><option>市场部</option><option>合规部</option><option>财务部</option></select></div></div>' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">部门名称 *</label><input class="form-input" id="addDeptName" placeholder="输入部门名称"></div><div class="form-group"><label class="form-label">上级部门</label><select class="form-select" id="addDeptParent"><option value="">无（顶级部门）</option><option>总经办</option><option>BD</option><option>合规部</option><option>产品研发部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select></div></div>' +
       '<div class="form-row"><div class="form-group"><label class="form-label">部门负责人</label><select class="form-select" id="addDeptLead"><option>张明远</option><option>李晓华</option><option>王思远</option><option>陈雨桐</option><option>赵明</option></select></div><div class="form-group"><label class="form-label">部门人数</label><div style="padding:8px;font-size:13px;color:var(--text-muted);background:var(--bg);border-radius:8px;">根据绑定人员自动计算</div></div></div>' +
       '<div class="form-group"><label class="form-label">部门描述</label><textarea class="form-textarea" id="addDeptDesc" rows="2" placeholder="可选：部门职责描述" style="resize:vertical;"></textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitAddDepartment()">确认添加</button></div>' +
@@ -2712,7 +2712,26 @@ function openUploadDocModal() {
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><input type="file" id="uploadDocFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目 *</label><select id="uploadDocProject" onchange="onUploadProjectChange()" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目</option>' + projectOpts + '</select></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关联 Backlog 任务（可选）</label><select id="uploadDocTask" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">不关联任务</option></select></div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">文档分类</label><select id="uploadDocCategory" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option>技术文档</option><option>案例分析</option><option>模板</option><option>产品文档</option><option>需求文档</option><option>会议纪要</option><option>其他</option></select></div>' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">二级标签</label>' +
+        '<div style="display:flex;flex-direction:column;gap:8px;background:var(--bg);border-radius:8px;padding:10px;border:1px solid var(--border-light);">' +
+          '<div style="display:flex;align-items:center;gap:8px;">' +
+            '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">知识来源</span>' +
+            '<select id="uploadDocSource" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);"><option>员工创作</option><option>APEX专家</option><option>AI辅助</option><option>外部资料</option></select>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:8px;">' +
+            '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">知识类型</span>' +
+            '<select id="uploadDocType" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);"><option>方法论</option><option>案例分析</option><option>技术文档</option><option>模板</option><option>会议纪要</option><option>产品文档</option><option>需求文档</option><option>测试用例</option><option>其他</option></select>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">文档属性</label>' +
+        '<div style="display:flex;gap:16px;background:var(--bg);border-radius:8px;padding:10px;border:1px solid var(--border-light);">' +
+          '<label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" id="uploadDocPublic" style="accent-color:var(--primary);"> 允许公开引用</label>' +
+          '<label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" id="uploadDocAiCall" checked style="accent-color:var(--primary);"> 允许AI调用</label>' +
+        '</div>' +
+      '</div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitUploadDoc()">确认上传</button></div>' +
     '</div>'
   );
@@ -2734,9 +2753,12 @@ function submitUploadDoc() {
   if (!projectId) { alert('请选择所属项目'); return; }
   const project = projects.find(function(p) { return p.id === projectId; });
   const taskId = document.getElementById('uploadDocTask').value;
-  const category = document.getElementById('uploadDocCategory').value;
+  const source = document.getElementById('uploadDocSource').value;
+  const type = document.getElementById('uploadDocType').value;
+  const isPublic = document.getElementById('uploadDocPublic').checked;
+  const isAiCall = document.getElementById('uploadDocAiCall').checked;
   const taskLabel = taskId ? '（关联任务）' : '';
-  alert('文档「' + file.files[0].name + '」上传成功！\n所属项目：' + (project ? project.name : '') + '\n分类：' + category + ' ' + taskLabel);
+  alert('文档「' + file.files[0].name + '」上传成功！\n所属项目：' + (project ? project.name : '') + '\n知识来源：' + source + '\n知识类型：' + type + '\n公开引用：' + (isPublic ? '是' : '否') + '\nAI调用：' + (isAiCall ? '是' : '否') + ' ' + taskLabel);
   closeProjectDetail();
 }
 
