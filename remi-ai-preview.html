@@ -2470,6 +2470,8 @@ function openBonusModal(projectId) {
   const projectTasks = tasks.filter(t => t.projectId === projectId);
   const memberSet = new Set();
   projectTasks.forEach(t => memberSet.add(t.assignee));
+  tasks.forEach(t => memberSet.add(t.assignee));
+  projects.forEach(pr => memberSet.add(pr.lead));
   if (!memberSet.has(p.lead)) memberSet.add(p.lead);
   _bonusMembers = Array.from(memberSet);
   _bonusRowIdx = 0;
@@ -3622,7 +3624,8 @@ function renderTodoItems() {
   if (!container) return;
   const activeFilter = document.querySelector('[id^="todoFilter"].active');
   const currentType = activeFilter ? (activeFilter.id === 'todoFilterAll' ? 'all' : activeFilter.id === 'todoFilterReview' ? 'review' : 'task') : 'all';
-  const items = bonusRequests.filter(function(r) {
+  // Build bonus request items (data-type: bonus)
+  const bonusHtml = bonusRequests.filter(function(r) {
     return r.status === 'pending' && r.reviewer === '张明远';
   }).map(function(r) {
     const p = projects.find(function(x) { return x.id === r.projectId; });
@@ -3640,7 +3643,44 @@ function renderTodoItems() {
       '</div>' +
     '</div>';
   }).join('');
-  container.innerHTML = items;
+  // Build review items (data-type: review) from pending_review tasks
+  const reviewHtml = tasks.filter(function(t) {
+    return t.status === 'pending_review';
+  }).map(function(t) {
+    const p = projects.find(function(x) { return x.id === t.projectId; });
+    return '<div class="todo-item" data-type="review" style="padding:6px 0;border-bottom:1px solid var(--border-light);">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-size:12px;font-weight:600;line-height:1.4;">' + t.title + '</div>' +
+          '<div style="font-size:11px;color:var(--text-muted);">' + t.assignee + ' · ' + (p ? p.name : '') + '</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">' +
+          '<button class="btn btn-xs btn-primary" style="font-size:10px;padding:2px 8px;" onclick="auditTask(\'' + t.id + '\')">审核</button>' +
+          '<button class="btn btn-xs btn-ghost" style="font-size:10px;padding:2px 8px;" onclick="openTaskDetail(\'' + t.id + '\')">查看</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  // Build task items (data-type: task) from todo/in_progress tasks
+  const taskHtml = tasks.filter(function(t) {
+    return t.status === 'todo' || t.status === 'in_progress';
+  }).sort(function(a, b) {
+    return a.deadline < b.deadline ? -1 : 1;
+  }).slice(0, 5).map(function(t) {
+    const p = projects.find(function(x) { return x.id === t.projectId; });
+    return '<div class="todo-item" data-type="task" style="padding:6px 0;border-bottom:1px solid var(--border-light);">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;">' +
+        '<div style="flex:1;min-width:0;">' +
+          '<div style="font-size:12px;font-weight:600;line-height:1.4;">' + t.title + '</div>' +
+          '<div style="font-size:11px;color:var(--text-muted);">' + (p ? p.name : '') + ' · 截止 ' + t.deadline + ' · ' + t.reward + ' RP</div>' +
+        '</div>' +
+        '<div style="display:flex;gap:4px;flex-shrink:0;margin-left:8px;">' +
+          '<button class="btn btn-xs btn-outline" style="font-size:10px;padding:2px 8px;" onclick="openTaskDetail(\'' + t.id + '\')">查看</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('');
+  container.innerHTML = bonusHtml + reviewHtml + taskHtml;
   filterTodoItems(currentType);
 }
 
