@@ -1383,7 +1383,7 @@
         <h1>知识库管理</h1>
         <p>文档上传、解析、分类、审核、版本管理 · 共 47 个文档</p>
       </div>
-      <button class="btn btn-primary" onclick="alert('打开文件选择器')">
+      <button class="btn btn-primary" onclick="openUploadDocModal()">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         上传文档
       </button>
@@ -1407,7 +1407,7 @@
           <div class="kb-tree-item" onclick="filterKbTree(this,'compliance')">📁 合规风控 <span class="count">6</span></div>
           <div class="kb-tree-item" onclick="filterKbTree(this,'other')">📁 未分类 <span class="count">6</span></div>
         </div>
-        <div class="kb-tree-section-title" style="margin-top:16px;">审核状态</div>
+        <div class="kb-tree-section-title" style="margin-top:16px;">知识状态</div>
         <div class="kb-tree-item" onclick="filterKbTree(this,'pending_review')">
           <span style="color:var(--accent-amber);">⏳</span> 待审核 <span class="count">3</span>
         </div>
@@ -1434,15 +1434,14 @@
               <div class="select-wrap"><select><option value="all">全部项目</option><option>技术文档平台</option><option>Q2 财务分析</option><option>合规风控升级</option></select></div>
               <div class="select-wrap"><select><option value="all">AI调用</option><option>可调用</option><option>不可调用</option></select></div>
             </div>
-            <div style="display:flex;gap:6px;">
-              <button class="btn btn-sm btn-outline">批量权限</button>
-              <button class="btn btn-sm btn-outline">导出</button>
+            <div style="display:flex;gap:6px;flex-shrink:0;">
+              <button class="btn btn-sm btn-outline" style="white-space:nowrap;">批量权限</button>
+              <button class="btn btn-sm btn-outline" style="white-space:nowrap;">导出</button>
             </div>
           </div>
           <div id="kbListContent">
             <!-- 待审核行 -->
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:#fef3c7;">📝</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">员工入职培训手册.md</div>
                 <div class="kb-file-meta"><span>V1</span><span>128 KB</span><span>Markdown</span><span>未分类</span><span>上传者：张明远</span><span style="color:var(--text-muted);">被引用 3 次</span></div>
@@ -1454,7 +1453,6 @@
               </div>
             </div>
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:#fef3c7;">📋</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">Q2 项目验收报告模板.docx</div>
                 <div class="kb-file-meta"><span>V1</span><span>245 KB</span><span>DOCX</span><span>模板</span><span>上传者：李婷</span><span style="color:var(--text-muted);">被引用 0 次</span></div>
@@ -1466,7 +1464,6 @@
               </div>
             </div>
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:#ede9fe;">📑</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">前端组件设计规范 V1.0.pdf</div>
                 <div class="kb-file-meta"><span>V1</span><span>2.6 MB</span><span>PDF</span><span>技术文档</span><span>上传者：陈雨</span><span style="color:var(--text-muted);">被引用 0 次</span></div>
@@ -1479,7 +1476,6 @@
             </div>
             <!-- 已入库行 -->
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:var(--primary-light);">📄</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">Remi 平台 API 接口规范 V2.1.docx</div>
                 <div class="kb-file-meta"><span>V2</span><span>2.4 MB</span><span>DOCX</span><span>技术文档</span><span style="color:var(--primary);">被引用 23 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
@@ -1489,7 +1485,6 @@
               </div>
             </div>
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:#d1fae5;">📊</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">2026 Q2 财务分析报告.xlsx</div>
                 <div class="kb-file-meta"><span>V1</span><span>5.8 MB</span><span>XLSX</span><span>产品设计</span><span style="color:var(--primary);">被引用 15 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
@@ -1499,7 +1494,6 @@
               </div>
             </div>
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:#ede9fe;">📕</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">PRD - 智能对话模块.pdf</div>
                 <div class="kb-file-meta"><span>V1</span><span>3.2 MB</span><span>PDF</span><span>产品设计</span><span style="color:var(--primary);">被引用 41 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
@@ -1509,7 +1503,6 @@
               </div>
             </div>
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:#fce7f3;">📄</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">数据安全合规政策 V3.0.docx</div>
                 <div class="kb-file-meta"><span>V3</span><span>856 KB</span><span>DOCX</span><span>合规风控</span><span style="color:var(--primary);">被引用 8 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
@@ -1519,7 +1512,6 @@
               </div>
             </div>
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:#d1fae5;">📗</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">敏捷开发最佳实践案例集.pdf</div>
                 <div class="kb-file-meta"><span>V2</span><span>4.1 MB</span><span>PDF</span><span>案例分析</span><span style="color:var(--primary);">被引用 12 次</span><span style="color:var(--accent-emerald);">✓ AI可调用</span></div>
@@ -1529,7 +1521,6 @@
               </div>
             </div>
             <div class="kb-file-row">
-              <div class="kb-file-icon" style="background:#fef3c7;">📊</div>
               <div class="kb-file-info">
                 <div class="kb-file-name">市场调研方法论.pdf</div>
                 <div class="kb-file-meta"><span>V1</span><span>1.8 MB</span><span>PDF</span><span>市场运营</span><span style="color:var(--text-muted);">被引用 5 次</span><span style="color:var(--text-muted);">✗ AI不可调用</span></div>
@@ -2610,6 +2601,44 @@ function submitAddDepartment() {
   if (!name) { alert('请填写部门名称'); return; }
   const parent = document.getElementById('addDeptParent').value;
   alert('部门 ' + name + ' 添加成功！' + (parent ? '\n上级部门：' + parent : '\n顶级部门'));
+  closeProjectDetail();
+}
+
+function openUploadDocModal() {
+  const projectOpts = projects.map(function(p) {
+    return '<option value="' + p.id + '">' + p.name + '</option>';
+  }).join('');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传文档',
+    '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><input type="file" id="uploadDocFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目 *</label><select id="uploadDocProject" onchange="onUploadProjectChange()" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目</option>' + projectOpts + '</select></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关联 Backlog 任务（可选）</label><select id="uploadDocTask" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">不关联任务</option></select></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">文档分类</label><select id="uploadDocCategory" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option>技术文档</option><option>案例分析</option><option>模板</option><option>产品文档</option><option>需求文档</option><option>会议纪要</option><option>其他</option></select></div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitUploadDoc()">确认上传</button></div>' +
+    '</div>'
+  );
+}
+
+function onUploadProjectChange() {
+  const projectId = document.getElementById('uploadDocProject').value;
+  const taskSelect = document.getElementById('uploadDocTask');
+  if (!projectId) { taskSelect.innerHTML = '<option value="">不关联任务</option>'; return; }
+  const relatedTasks = tasks.filter(function(t) { return t.projectId === projectId; });
+  taskSelect.innerHTML = '<option value="">不关联任务</option>' +
+    relatedTasks.map(function(t) { return '<option value="' + t.id + '">' + t.title + '</option>'; }).join('');
+}
+
+function submitUploadDoc() {
+  const file = document.getElementById('uploadDocFile');
+  const projectId = document.getElementById('uploadDocProject').value;
+  if (!file.files || file.files.length === 0) { alert('请选择要上传的文件'); return; }
+  if (!projectId) { alert('请选择所属项目'); return; }
+  const project = projects.find(function(p) { return p.id === projectId; });
+  const taskId = document.getElementById('uploadDocTask').value;
+  const category = document.getElementById('uploadDocCategory').value;
+  const taskLabel = taskId ? '（关联任务）' : '';
+  alert('文档「' + file.files[0].name + '」上传成功！\n所属项目：' + (project ? project.name : '') + '\n分类：' + category + ' ' + taskLabel);
   closeProjectDetail();
 }
 
