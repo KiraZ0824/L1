@@ -3241,26 +3241,76 @@ function doResubmit() {
   closeProjectDetail();
 }
 
+let _auditMembers = [];
+let _auditRowIdx = 0;
+
+function _buildRewardRow(person, amount) {
+  _auditRowIdx++;
+  const idx = _auditRowIdx;
+  const opts = _auditMembers.map(m =>
+    '<option value="' + m + '"' + (m === person ? ' selected' : '') + '>' + m + '</option>'
+  ).join('');
+  return '<div class="reward-row" style="display:flex;align-items:center;gap:6px;padding:5px 0;" data-idx="' + idx + '" data-default="' + amount + '">' +
+    '<select id="rp_' + idx + '" style="flex:1;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);">' + opts + '</select>' +
+    '<input type="number" id="ra_' + idx + '" value="' + amount + '" onchange="onRewardRowChange(' + idx + ')" style="width:90px;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:13px;text-align:right;" min="0">' +
+    '<input type="text" id="rr_' + idx + '" placeholder="原因" style="flex:0.7;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:#f5f5f5;" disabled>' +
+    '<button class="btn btn-xs btn-ghost" onclick="removeRewardRow(' + idx + ')" style="color:var(--accent-rose);font-size:14px;padding:2px 6px;line-height:1;">✕</button>' +
+    '</div>';
+}
+
+function addRewardRow() {
+  const container = document.getElementById('auditRewardRows');
+  const firstVal = parseInt(document.getElementById('ra_1')?.value) || 0;
+  const firstPerson = _auditMembers[0] || '';
+  container.insertAdjacentHTML('beforeend', _buildRewardRow(firstPerson, firstVal));
+}
+
+function removeRewardRow(idx) {
+  const rows = document.querySelectorAll('#auditRewardRows .reward-row');
+  if (rows.length <= 1) return;
+  const row = document.querySelector('.reward-row[data-idx="' + idx + '"]');
+  if (row) row.remove();
+}
+
+function onRewardRowChange(idx) {
+  const row = document.querySelector('.reward-row[data-idx="' + idx + '"]');
+  if (!row) return;
+  const defaultVal = parseInt(row.dataset.default);
+  const input = document.getElementById('ra_' + idx);
+  const reason = document.getElementById('rr_' + idx);
+  const val = parseInt(input.value) || 0;
+  if (val !== defaultVal) {
+    reason.disabled = false;
+    reason.style.background = '#fff';
+    reason.style.borderColor = 'var(--primary-border)';
+  } else {
+    reason.disabled = true;
+    reason.style.background = '#f5f5f5';
+    reason.style.borderColor = 'var(--border)';
+    reason.value = '';
+  }
+}
+
 function auditTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  const defaultReward = t.reward;
+  // Collect project members
+  const memberSet = new Set();
+  tasks.filter(x => x.projectId === t.projectId).forEach(x => memberSet.add(x.assignee));
+  if (!memberSet.has(t.assignee)) memberSet.add(t.assignee);
+  _auditMembers = Array.from(memberSet);
+  _auditRowIdx = 0;
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/></svg>\n      审核任务 · ' + t.id.toUpperCase(),
     _taskDetailHtml(t) +
     '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
       '<input type="hidden" id="auditTaskId" value="' + id + '">' +
-      '<input type="hidden" id="auditDefaultReward" value="' + defaultReward + '">' +
-      // Reward allocation table
       '<div>' +
-        '<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">奖励分配</div>' +
-        '<div style="background:var(--bg);border-radius:8px;padding:8px;border:1px solid var(--border-light);">' +
-          '<div style="display:flex;align-items:center;gap:8px;padding:6px 0;">' +
-            '<div style="flex:1;font-size:12px;font-weight:500;">' + t.assignee + '</div>' +
-            '<div style="width:100px;"><input type="number" id="auditRewardAmount" value="' + defaultReward + '" onchange="onAuditRewardChange(' + defaultReward + ')" style="width:100%;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:13px;text-align:right;" min="0"></div>' +
-            '<div style="flex:1;"><input type="text" id="auditRewardReason" placeholder="修改奖励必须填写原因" style="width:100%;padding:4px 6px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:#f5f5f5;" disabled></div>' +
-          '</div>' +
+        '<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">奖励分配 <span style="font-weight:400;font-size:11px;color:var(--text-muted);">（默认按预计奖励平均分配）</span></div>' +
+        '<div id="auditRewardRows" style="background:var(--bg);border-radius:8px;padding:6px 8px;border:1px solid var(--border-light);">' +
+          _buildRewardRow(t.assignee, t.reward) +
         '</div>' +
+        '<button class="btn btn-xs btn-outline" onclick="addRewardRow()" style="margin-top:6px;font-size:11px;">+ 添加人员</button>' +
       '</div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">' +
@@ -3272,33 +3322,26 @@ function auditTask(id) {
   );
 }
 
-function onAuditRewardChange(defaultReward) {
-  const input = document.getElementById('auditRewardAmount');
-  const reasonInput = document.getElementById('auditRewardReason');
-  const val = parseInt(input.value) || 0;
-  if (val !== defaultReward) {
-    reasonInput.disabled = false;
-    reasonInput.style.background = '#fff';
-    reasonInput.style.borderColor = 'var(--primary-border)';
-  } else {
-    reasonInput.disabled = true;
-    reasonInput.style.background = '#f5f5f5';
-    reasonInput.style.borderColor = 'var(--border)';
-    reasonInput.value = '';
-  }
-}
-
 function doApproveAudit() {
   const t = tasks.find(x => x.id === document.getElementById('auditTaskId').value);
   if (!t) return;
-  const defaultReward = parseInt(document.getElementById('auditDefaultReward').value);
-  const newReward = parseInt(document.getElementById('auditRewardAmount').value) || defaultReward;
-  const reason = document.getElementById('auditRewardReason').value.trim();
-  if (newReward !== defaultReward && !reason) {
-    alert('奖励金额已修改，请填写修改原因');
-    return;
-  }
-  t.reward = newReward;
+  const rows = document.querySelectorAll('#auditRewardRows .reward-row');
+  let totalAllocated = 0;
+  const allocations = [];
+  let hasModifiedWithoutReason = false;
+  rows.forEach(row => {
+    const idx = row.dataset.idx;
+    const person = document.getElementById('rp_' + idx).value;
+    const amount = parseInt(document.getElementById('ra_' + idx).value) || 0;
+    const reason = document.getElementById('rr_' + idx).value.trim();
+    const defaultVal = parseInt(row.dataset.default);
+    if (amount !== defaultVal && !reason) hasModifiedWithoutReason = true;
+    totalAllocated += amount;
+    allocations.push({ person:person, amount:amount, reason:reason });
+  });
+  if (hasModifiedWithoutReason) { alert('奖励金额已修改，请填写对应修改原因'); return; }
+  t.reward = totalAllocated;
+  t.rewardAllocation = allocations;
   t.status = 'done';
   refreshAllTaskViews();
   closeProjectDetail();
