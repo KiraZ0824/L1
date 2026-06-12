@@ -2564,41 +2564,32 @@ function renderSelectedSkillsBar() {
 function openBonusModal(projectId) {
   const p = projects.find(x => x.id === projectId);
   if (!p) return;
-  // Build team members list from tasks belonging to this project
   const projectTasks = tasks.filter(t => t.projectId === projectId);
   const memberSet = new Set();
   projectTasks.forEach(t => memberSet.add(t.assignee));
   const members = Array.from(memberSet);
   const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
-  document.getElementById('modalContent').innerHTML = `
-    <div style="width:520px;background:#fff;border-radius:16px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.15);">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
-        <h3 style="font-size:16px;font-weight:700;">追加奖励</h3>
-        <button class="btn btn-xs btn-ghost" onclick="closeModal()" style="font-size:18px;line-height:1;">&times;</button>
-      </div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:4px;">项目：<strong style="color:var(--text);">${p.name}</strong>（${stageLabels[p.stage] || p.stage}）</div>
-      <div style="margin-top:16px;">
-        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">选择项目组成员（可多选）</label>
-        <div id="bonusMemberList" style="display:flex;flex-direction:column;gap:4px;max-height:200px;overflow-y:auto;padding:8px;border:1px solid var(--border-light);border-radius:8px;margin-bottom:16px;">
-          ${members.map(m => `
-            <label style="display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:6px;cursor:pointer;font-size:13px;">
-              <input type="checkbox" value="${m}" style="accent-color:var(--primary);">
-              <span>${m}</span>
-            </label>
-          `).join('')}
-          ${members.length === 0 ? '<div style="color:var(--text-muted);font-size:12px;padding:8px;">暂无任务成员数据</div>' : ''}
-        </div>
-      </div>
-      <div style="margin-bottom:16px;">
-        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">奖励积分（统一金额）</label>
-        <input type="number" id="bonusPoints" placeholder="输入奖励积分" min="1" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">
-      </div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:16px;">
-        <button class="btn btn-outline" onclick="closeModal()">取消</button>
-        <button class="btn btn-primary" onclick="submitBonus('${projectId}')">确认发放</button>
-      </div>
-    </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>\n      追加奖励 · ' + p.name,
+    '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="font-size:13px;color:var(--text-muted);">项目：<strong style="color:var(--text);">' + p.name + '</strong>（' + (stageLabels[p.stage] || p.stage) + '）</div>' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">选择项目组成员（可多选）</label>' +
+        '<div id="bonusMemberList" style="display:flex;flex-direction:column;gap:4px;max-height:200px;overflow-y:auto;padding:8px;border:1px solid var(--border-light);border-radius:8px;">' +
+          members.map(m => '<label style="display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:6px;cursor:pointer;font-size:13px;"><input type="checkbox" value="' + m + '" style="accent-color:var(--primary);"><span>' + m + '</span></label>').join('') +
+          (members.length === 0 ? '<div style="color:var(--text-muted);font-size:12px;padding:8px;">暂无任务成员数据</div>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">奖励积分（统一金额）</label>' +
+        '<input type="number" id="bonusPoints" placeholder="输入奖励积分" min="1" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;outline:none;box-sizing:border-box;">' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;">' +
+        '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
+        '<button class="btn btn-primary" onclick="submitBonus(\'' + projectId + '\')">确认发放</button>' +
+      '</div>' +
+    '</div>'
+  );
 }
 
 function submitBonus(projectId) {
@@ -2607,8 +2598,11 @@ function submitBonus(projectId) {
   if (checks.length === 0) { alert('请至少选择一名成员'); return; }
   if (!points || points <= 0) { alert('请输入有效的奖励积分'); return; }
   const names = Array.from(checks).map(c => c.value).join('、');
-  alert(`已向 ${names} 各发放 ${points} RP 追加奖励！\n项目编号: ${projectId.toUpperCase()}`);
-  closeModal();
+  const p = projects.find(x => x.id === projectId);
+  if (p) { p.spent += points * checks.length; }
+  alert('已向 ' + names + ' 各发放 ' + points + ' RP 追加奖励！');
+  refreshAllTaskViews();
+  closeProjectDetail();
 }
 
 // 点击外部关闭技能选择下拉框
@@ -2863,8 +2857,12 @@ function renderProjects() {
             '<span>👤 ' + p.lead + '</span>' +
           '</div>' +
           '<div class="project-budget-bar"><div class="project-budget-fill" style="width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div>' +
-          '<div class="project-budget-label"><span>预算使用 ' + pct + '%</span><span>剩余 ' + remaining.toLocaleString() + ' RP</span></div>' +
-        '</div>';
+           '<div class="project-budget-label"><span>预算使用 ' + pct + '%</span><span>剩余 ' + remaining.toLocaleString() + ' RP</span></div>' +
+           '<div style="display:flex;gap:4px;margin-top:8px;justify-content:flex-end;">' +
+             '<button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openProjectDetail(\'' + p.id + '\')" style="font-size:11px;">详情</button>' +
+             '<button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openBonusModal(\'' + p.id + '\')" style="font-size:11px;">+ 追加奖励</button>' +
+           '</div>' +
+         '</div>';
       }).join('') +
     '</div>';
   }).join('');
