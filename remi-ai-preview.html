@@ -759,27 +759,44 @@
     }
     .tag-violet { background: #ede9fe; color: #6d28d9; }
 
+    /* ===== BACKEND ADMIN ===== */
+    .admin-tab-content { animation: fadeIn 0.2s ease; }
+    .admin-tab-content .card { margin-bottom: 16px; }
+    .admin-tab-content .card:last-child { margin-bottom: 0; }
+    #page-backend-admin .page-inner { max-width: 100%; }
+
     /* ===== PROJECTS ===== */
-    .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; }
+    .project-kanban { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+    .project-kanban-col {
+      background: var(--bg); border-radius: var(--radius-lg); padding: 12px; min-width: 0;
+    }
+    .project-kanban-col-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
+    }
+    .project-kanban-col-header span:first-child { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
+    .project-kanban-col-count {
+      font-size: 12px; background: var(--border); color: var(--text-muted); padding: 1px 8px; border-radius: var(--radius-full); font-weight: 600;
+    }
     .project-card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 20px;
+      border-radius: var(--radius);
+      padding: 14px;
       cursor: pointer;
       transition: var(--transition);
+      margin-bottom: 8px;
     }
-    .project-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
-    .project-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
-    .project-card-name { font-size: 15px; font-weight: 700; }
-    .project-card-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
-    .project-card-meta { display: flex; gap: 16px; font-size: 12px; color: var(--text-secondary); margin-bottom: 12px; }
-    .project-card-meta span { display: flex; align-items: center; gap: 4px; }
+    .project-card:last-child { margin-bottom: 0; }
+    .project-card:hover { box-shadow: var(--shadow-md); }
+    .project-card-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; display:flex;align-items:center;gap:6px; }
+    .project-card-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
+    .project-card-meta { display: flex; gap: 8px; font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; flex-wrap: wrap; }
+    .project-card-meta span { display: flex; align-items: center; gap: 3px; }
     .project-budget-bar {
-      height: 6px; background: var(--border-light); border-radius: 3px; overflow: hidden; margin-bottom: 4px;
+      height: 4px; background: var(--border-light); border-radius: 3px; overflow: hidden; margin-bottom: 2px;
     }
     .project-budget-fill { height: 100%; border-radius: 3px; }
-    .project-budget-label { font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; }
+    .project-budget-label { font-size: 10px; color: var(--text-muted); display: flex; justify-content: space-between; }
 
     /* ===== TASK KANBAN ===== */
     .kanban-board { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; overflow-x: auto; }
@@ -947,6 +964,8 @@
     .btn-ghost:hover { background: var(--bg); }
     .btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
     .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-danger { background: #fee2e2; color: #dc2626; }
+    .btn-danger:hover { background: #fecaca; }
     .btn-sm { padding: 5px 12px; font-size: 11px; }
     .btn-xs { padding: 3px 10px; font-size: 10px; }
 
@@ -1123,39 +1142,52 @@
   <div class="sidebar" id="sidebar">
     <div class="sidebar-logo">R</div>
     <div class="sidebar-nav">
-      <button class="sidebar-btn active" data-page="dashboard" onclick="navigateTo('dashboard')">
+      <button class="sidebar-btn active" data-page="dashboard">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         <span class="sidebar-tooltip">工作台</span>
       </button>
-      <button class="sidebar-btn" data-page="remi-ai" onclick="navigateTo('remi-ai')">
+      <button class="sidebar-btn" data-page="remi-ai">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
         <span class="sidebar-tooltip">Remi AI</span>
       </button>
       <div class="sidebar-divider"></div>
-      <button class="sidebar-btn" data-page="users" onclick="navigateTo('users')">
+      <button class="sidebar-btn" data-page="users">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         <span class="sidebar-tooltip">用户管理</span>
       </button>
-      <button class="sidebar-btn" data-page="projects" onclick="navigateTo('projects')">
+      <button class="sidebar-btn" data-page="projects">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
         <span class="sidebar-tooltip">项目管理</span>
       </button>
-      <button class="sidebar-btn" data-page="tasks" onclick="navigateTo('tasks')">
+      <button class="sidebar-btn" data-page="tasks">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
         <span class="sidebar-tooltip">任务管理</span>
       </button>
-      <button class="sidebar-btn" data-page="knowledge" onclick="navigateTo('knowledge')">
+      <button class="sidebar-btn" data-page="knowledge">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.5L10.5 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
         <span class="sidebar-tooltip">知识库管理</span>
       </button>
-      <button class="sidebar-btn" data-page="points" onclick="navigateTo('points')">
+      <button class="sidebar-btn" data-page="points">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="12" y1="2" x2="12" y2="6"/></svg>
         <span class="sidebar-tooltip">积分中心</span>
+      </button>
+      <div class="sidebar-divider"></div>
+      <button class="sidebar-btn" data-admin-tab="skills">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="sidebar-tooltip">技能管理</span>
+      </button>
+      <button class="sidebar-btn" data-admin-tab="config">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        <span class="sidebar-tooltip">项目任务配置</span>
+      </button>
+      <button class="sidebar-btn" data-admin-tab="models">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+        <span class="sidebar-tooltip">模型管理</span>
       </button>
     </div>
     <div class="sidebar-divider"></div>
     <div class="sidebar-bottom">
-      <div class="sidebar-avatar" onclick="navigateTo('usercenter')">张</div>
+      <div class="sidebar-avatar">张</div>
     </div>
   </div>
 
@@ -1227,6 +1259,7 @@
               <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">你好，张明远 · 今日待办 <strong style="color:var(--primary);">5</strong> 项</p>
             </div>
             <div style="display:flex;gap:8px;">
+              <button class="btn btn-sm" id="langToggleBtn" onclick="toggleLanguage()" style="min-width:40px;font-size:13px;font-weight:600;background:var(--bg-card);border:1px solid var(--border-light);border-radius:6px;padding:4px 10px;cursor:pointer;color:var(--text);">中</button>
               <button class="btn btn-outline btn-sm" onclick="navigateTo('projects');setTimeout(openProjectModal,300);">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 创建项目
@@ -1845,7 +1878,6 @@
             <div class="card" style="padding:16px;">
               <div class="card-header" style="margin-bottom:8px;"><div class="card-title">个人设置</div></div>
               <div class="setting-row" style="border-bottom:1px solid var(--border-light);padding:8px 0;"><div><div class="setting-label" style="font-size:13px;">登录密码</div><div class="setting-desc" style="font-size:12px;color:var(--text-muted);">上次修改 2026-03-15</div></div><button class="btn btn-sm btn-outline">修改</button></div>
-              <div class="setting-row" style="border-bottom:1px solid var(--border-light);padding:8px 0;"><div><div class="setting-label" style="font-size:13px;">语言</div><div class="setting-desc" style="font-size:12px;color:var(--text-muted);">界面显示语言</div></div><div class="select-wrap"><select style="font-size:12px;padding:2px 8px;"><option>中文</option><option>English</option></select></div></div>
               <div class="setting-row" style="padding:8px 0;"><div><div class="setting-label" style="font-size:13px;">退出登录</div><div class="setting-desc" style="font-size:12px;color:var(--text-muted);">退出当前账户</div></div><button class="btn btn-sm btn-ghost" style="color:var(--accent-rose);">退出</button></div>
             </div>
             <div class="card" style="padding:0;overflow:hidden;">
@@ -1927,7 +1959,7 @@
             <button class="tab-bar-item active" onclick="switchProjectView(this,'card')">📇 卡片视图</button>
             <button class="tab-bar-item" onclick="switchProjectView(this,'list')">📋 列表视图</button>
           </div>
-          <div class="project-grid" id="projectGrid"></div>
+          <div class="project-kanban" id="projectGrid"></div>
           <div id="projectListView" class="card" style="padding:0;overflow:hidden;display:none;">
             <div class="table-wrap" style="border:none;">
               <table>
@@ -1961,7 +1993,7 @@
             </div>
             <div class="select-wrap"><select id="taskProjectFilter" onchange="renderKanban()"><option value="all">全部项目</option></select></div>
             <div class="select-wrap"><select id="taskPriorityFilter" onchange="renderKanban()"><option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div>
-            <div class="select-wrap"><select id="taskStatusFilter" onchange="renderKanban()"><option value="all">全部状态</option><option value="draft">草稿</option><option value="todo">待开始</option><option value="in_progress">进行中</option><option value="pending_review">待审核</option><option value="rejected">驳回中</option><option value="review">待验收</option><option value="done">已完成</option><option value="closed">已关闭</option></select></div>
+            <div class="select-wrap"><select id="taskStatusFilter" onchange="renderKanban()"><option value="all">全部状态</option><option value="draft">草稿</option><option value="todo">待开始</option><option value="in_progress">进行中</option><option value="pending_review">待审核</option><option value="rejected">驳回中</option><option value="done">已验收</option><option value="closed">已关闭</option></select></div>
             <div class="select-wrap"><select id="taskAssigneeFilter" onchange="renderKanban()"><option value="all">全部负责人</option><option>张明远</option><option>李晓华</option><option>王思远</option><option>赵明</option><option>陈雨桐</option></select></div>
           </div>
           <div class="tab-bar" id="taskViewTabs">
@@ -2077,7 +2109,111 @@
   </div>
 </div>
 
-  <!-- ===== ARTIFACT PANEL ===== -->
+<!-- ===== PAGE: BACKEND ADMIN ===== -->
+<div class="page" id="page-backend-admin">
+  <div class="page-inner">
+    <div style="margin-bottom:20px;">
+      <h1 style="font-size:20px;font-weight:700;">后台管理</h1>
+      <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">系统配置与运维管理</p>
+    </div>
+    <div class="tabs" style="margin-bottom:20px;">
+      <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能管理</button>
+      <button class="tab" data-admin-tab="config" onclick="switchAdminTab('config')">项目任务配置</button>
+      <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型管理</button>
+    </div>
+
+    <!-- 技能管理 -->
+    <div class="admin-tab-content" id="admin-skills">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">系统预置技能</div>
+          <button class="btn btn-sm" onclick="alert('技能管理开发中')">+ 添加自定义技能</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>技能名称</th>
+                <th>类型</th>
+                <th>版本</th>
+                <th>状态</th>
+                <th>最近更新</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="skillTableBody">
+              <tr><td>文档解析 (docx)</td><td>官方</td><td>v2.1.0</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-10</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
+              <tr><td>文档解析 (pdf)</td><td>官方</td><td>v2.0.3</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-09</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
+              <tr><td>演示文稿 (pptx)</td><td>官方</td><td>v1.8.2</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-08</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
+              <tr><td>电子表格 (xlsx)</td><td>官方</td><td>v2.0.0</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-07</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
+              <tr><td>多模态内容生成</td><td>官方</td><td>v1.5.6</td><td><span class="tag tag-red">已下架</span></td><td>2026-05-20</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">上架</button></td></tr>
+              <tr><td style="opacity:0.6;">知识检索</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
+              <tr><td style="opacity:0.6;">文档摘要</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
+              <tr><td style="opacity:0.6;">任务查询</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
+              <tr><td style="opacity:0.6;">积分查询</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 项目任务配置 -->
+    <div class="admin-tab-content" id="admin-config" style="display:none;">
+      <div class="card" style="margin-bottom:16px;">
+        <div class="card-header">
+          <div class="card-title">项目类型配置</div>
+          <button class="btn btn-sm" onclick="addConfigItem('project')">+ 新增类型</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+            <tbody id="projectTypeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">任务类型配置</div>
+          <button class="btn btn-sm" onclick="addConfigItem('task')">+ 新增类型</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+            <tbody id="taskTypeTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 模型管理 -->
+    <div class="admin-tab-content" id="admin-models" style="display:none;">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">模型路由配置</div>
+          <button class="btn btn-sm" onclick="addModelRoute()">+ 新增路由</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>业务场景</th>
+                <th>模型</th>
+                <th>API Endpoint</th>
+                <th>优先级</th>
+                <th>Fallback</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody id="modelRouteTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== ARTIFACT PANEL ===== -->
   <div class="artifact-panel" id="artifactPanel">
     <div class="artifact-panel-header">
       <div class="artifact-panel-title">
@@ -2194,7 +2330,7 @@ const projects = [
 const tasks = [
   { id:'t1', title:'API接口文档编写', desc:'编写Remi平台V2.1版本全部API接口文档', projectId:'p1', stage:'execution', status:'done', priority:'P0', assignee:'张明远', reward:800, deadline:'2026-06-10', completedAt:'2026-06-08', backlog:'项目执行', delivery:'文档链接' },
   { id:'t2', title:'前端页面优化', desc:'优化知识库管理页面加载性能与交互体验', projectId:'p1', stage:'execution', status:'done', priority:'P1', assignee:'王思远', reward:600, deadline:'2026-06-08', completedAt:'2026-06-06', backlog:'项目执行', delivery:'无需交付' },
-  { id:'t3', title:'后端架构评审', desc:'对AI对话模块后端架构进行技术评审', projectId:'p1', stage:'execution', status:'review', priority:'P0', assignee:'张明远', reward:500, deadline:'2026-06-15', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t3', title:'后端架构评审', desc:'对AI对话模块后端架构进行技术评审', projectId:'p1', stage:'execution', status:'done', priority:'P0', assignee:'张明远', reward:500, deadline:'2026-06-15', completedAt:'2026-06-17', backlog:'项目执行', delivery:'文档链接' },
   { id:'t4', title:'数据安全合规审查', desc:'审查知识库数据安全合规性并出具报告', projectId:'p3', stage:'execution', status:'done', priority:'P0', assignee:'赵明', reward:1000, deadline:'2026-06-05', completedAt:'2026-06-05', backlog:'项目执行', delivery:'附件' },
   { id:'t5', title:'Q2财报数据分析', desc:'对Q2财务数据进行多维度分析并生成可视化报告', projectId:'p2', stage:'execution', status:'in_progress', priority:'P1', assignee:'李晓华', reward:1200, deadline:'2026-06-20', backlog:'项目执行', delivery:'文档链接' },
   { id:'t6', title:'多语言翻译引擎选型', desc:'调研对比主流翻译引擎并进行POC验证', projectId:'p4', stage:'research', status:'todo', priority:'P0', assignee:'王思远', reward:900, deadline:'2026-07-15', backlog:'调研阶段', delivery:'无需交付' },
@@ -2205,11 +2341,11 @@ const tasks = [
   { id:'t11', title:'知识库搜索性能优化', desc:'优化Elasticsearch索引策略，目标P95延迟<200ms', projectId:'p1', stage:'execution', status:'in_progress', priority:'P0', assignee:'张明远', reward:1000, deadline:'2026-06-18', backlog:'项目执行', delivery:'文档链接' },
   { id:'t12', title:'文档版本管理功能', desc:'实现知识文档的版本对比与回滚功能', projectId:'p1', stage:'initiation', status:'todo', priority:'P1', assignee:'王思远', reward:700, deadline:'2026-06-22', backlog:'立项阶段', delivery:'附件' },
   { id:'t13', title:'对话历史导出', desc:'支持导出对话为PDF/Word格式并保存到知识库', projectId:'p1', stage:'execution', status:'in_progress', priority:'P2', assignee:'张明远', reward:350, deadline:'2026-06-20', backlog:'项目执行', delivery:'文档链接' },
-  { id:'t14', title:'RAG引用溯源优化', desc:'优化引用溯源展示，支持点击跳转到原文位置', projectId:'p1', stage:'execution', status:'review', priority:'P1', assignee:'王思远', reward:550, deadline:'2026-06-12', backlog:'项目执行', delivery:'文档链接' },
+  { id:'t14', title:'RAG引用溯源优化', desc:'优化引用溯源展示，支持点击跳转到原文位置', projectId:'p1', stage:'execution', status:'done', priority:'P1', assignee:'王思远', reward:550, deadline:'2026-06-12', completedAt:'2026-06-15', backlog:'项目执行', delivery:'文档链接' },
   { id:'t15', title:'Q2财报数据清洗', desc:'对Q2原始财务数据进行清洗与标准化处理', projectId:'p2', stage:'execution', status:'done', priority:'P1', assignee:'李晓华', reward:600, deadline:'2026-06-05', completedAt:'2026-06-04', backlog:'项目执行', delivery:'附件' },
   { id:'t16', title:'可视化报表模板设计', desc:'设计Q2财报可视化报表的图表模板与配色方案', projectId:'p2', stage:'execution', status:'in_progress', priority:'P1', assignee:'李晓华', reward:450, deadline:'2026-06-16', backlog:'项目执行', delivery:'文档链接' },
   { id:'t17', title:'数据隐私合规清单', desc:'整理数据隐私合规检查清单并与法务对齐', projectId:'p3', stage:'initiation', status:'todo', priority:'P0', assignee:'赵明', reward:800, deadline:'2026-06-28', backlog:'立项阶段', delivery:'无需交付' },
-  { id:'t18', title:'安全漏洞扫描报告', desc:'对平台进行全量安全漏洞扫描并出具修复方案', projectId:'p3', stage:'review', status:'review', priority:'P1', assignee:'赵明', reward:900, deadline:'2026-06-14', backlog:'项目验收', delivery:'附件' },
+  { id:'t18', title:'安全漏洞扫描报告', desc:'对平台进行全量安全漏洞扫描并出具修复方案', projectId:'p3', stage:'review', status:'done', priority:'P1', assignee:'赵明', reward:900, deadline:'2026-06-14', completedAt:'2026-06-16', backlog:'项目验收', delivery:'附件' },
   { id:'t19', title:'翻译引擎性能对比', desc:'完成3款翻译引擎的性能基准测试对比', projectId:'p4', stage:'research', status:'in_progress', priority:'P0', assignee:'王思远', reward:750, deadline:'2026-07-20', backlog:'调研阶段', delivery:'文档链接' },
   { id:'t20', title:'多语言UI适配方案', desc:'设计前端多语言UI适配的技术方案', projectId:'p4', stage:'research', status:'todo', priority:'P2', assignee:'王思远', reward:500, deadline:'2026-07-25', backlog:'调研阶段', delivery:'无需交付' },
   { id:'t21', title:'审批流程设计文档', desc:'设计任务验收审批流程的完整文档', projectId:'p1', stage:'execution', status:'pending_review', priority:'P1', assignee:'张明远', reward:450, deadline:'2026-06-22', backlog:'项目执行', delivery:'文档链接' },
@@ -2242,11 +2378,21 @@ const skills = [
 ];
 let installedSkillIds = [];
 
-// ===== NAVIGATION =====
-document.querySelectorAll('.sidebar-btn[data-page]').forEach(item => {
-  item.addEventListener('click', () => {
-    navigateTo(item.dataset.page);
-  });
+// ===== NAVIGATION (Event delegation) =====
+document.getElementById('sidebar').addEventListener('click', function(e) {
+   var target = e.target.closest('.sidebar-btn, .sidebar-avatar');
+   if (!target) return;
+   if (target.classList.contains('sidebar-avatar')) {
+     navigateTo('usercenter');
+     return;
+   }
+   var adminTab = target.getAttribute('data-admin-tab');
+   if (adminTab) {
+     goToAdmin(adminTab);
+     return;
+   }
+   var page = target.getAttribute('data-page');
+   if (page) navigateTo(page);
 });
 
 function navigateTo(page) {
@@ -2587,7 +2733,7 @@ function openProjectDetail(projectId) {
   const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
   const projectTasks = tasks.filter(t => t.projectId === projectId);
   const memberSet = [...new Set(projectTasks.map(t => t.assignee))];
-  const taskStatusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
+  const taskStatusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', done:'已验收', closed:'已关闭' };
   // Compute per-stage dates from project timeline
   const startMs = new Date(p.startDate).getTime();
   const endMs = new Date(p.endDate).getTime();
@@ -2684,58 +2830,64 @@ function renderProjects() {
     return true;
   });
 
-  filtered.sort((a, b) => {
-    if (sortBy === 'budget') return b.budget - a.budget;
-    if (sortBy === 'progress') return (b.spent + b.frozen) / b.budget - (a.spent + a.frozen) / a.budget;
-    return b.id.localeCompare(a.id);
-  });
+  if (sortBy === 'budget') filtered.sort((a, b) => b.budget - a.budget);
+  else if (sortBy === 'progress') filtered.sort((a, b) => (b.spent + b.frozen) / b.budget - (a.spent + a.frozen) / a.budget);
 
-  grid.innerHTML = filtered.map(p => {
-    const remaining = p.budget - p.spent - p.frozen;
-    const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
-    const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
-    const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
-    const statusTag = `<span class="tag ${stageTags[p.stage] || 'tag-slate'}">${stageLabels[p.stage] || '未知'}</span>`;
-    return `
-    <div class="project-card">
-      <div class="project-card-header">
-        <div class="project-card-name">${p.name}</div>
-        ${statusTag}
-      </div>
-      <div class="project-card-desc">${p.desc}</div>
-      <div class="project-card-meta">
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>${p.members}人</span>
-        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M9 11l3 3L22 4"/></svg>${p.tasks}个任务</span>
-        <span>👤 ${p.lead}</span>
-        <span style="color:var(--text-muted);font-size:11px;">${p.id.toUpperCase()}</span>
-      </div>
-      <div class="project-budget-bar"><div class="project-budget-fill" style="width:${pct}%;background:${pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)'};"></div></div>
-      <div class="project-budget-label"><span>预算使用 ${pct}%</span><span>剩余 ${remaining.toLocaleString()} RP</span></div>
-      <div style="display:flex;gap:4px;margin-top:10px;justify-content:flex-end;">
-        <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openProjectDetail('${p.id}')" style="font-size:11px;">详情</button>
-        <button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openBonusModal('${p.id}')" style="font-size:11px;">+ 追加奖励</button>
-      </div>
-    </div>`;
+  const stageConfig = [
+    { key:'research', label:'调研阶段', icon:'🔍', color:'var(--accent-amber)' },
+    { key:'initiation', label:'立项阶段', icon:'📋', color:'var(--accent-violet)' },
+    { key:'execution', label:'项目执行', icon:'🔄', color:'var(--primary)' },
+    { key:'review', label:'项目验收', icon:'👁', color:'var(--accent-emerald)' },
+    { key:'closed', label:'项目结项', icon:'📦', color:'var(--text-muted)' },
+  ];
+
+  grid.innerHTML = stageConfig.map(s => {
+    const items = filtered.filter(p => p.stage === s.key);
+    return '<div class="project-kanban-col">' +
+      '<div class="project-kanban-col-header">' +
+        '<span>' + s.icon + ' ' + s.label + '</span>' +
+        '<span class="project-kanban-col-count">' + items.length + '</span>' +
+      '</div>' +
+      items.map(p => {
+        const remaining = p.budget - p.spent - p.frozen;
+        const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
+        return '<div class="project-card" onclick="openProjectDetail(\'' + p.id + '\')">' +
+          '<div class="project-card-name">' +
+            '<span style="font-family:monospace;font-size:10px;color:var(--text-muted);">' + p.id.toUpperCase() + '</span>' +
+            p.name +
+          '</div>' +
+          '<div class="project-card-desc">' + p.desc + '</div>' +
+          '<div class="project-card-meta">' +
+            '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' + p.members + '人</span>' +
+            '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M9 11l3 3L22 4"/></svg>' + p.tasks + '个任务</span>' +
+            '<span>👤 ' + p.lead + '</span>' +
+          '</div>' +
+          '<div class="project-budget-bar"><div class="project-budget-fill" style="width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div>' +
+          '<div class="project-budget-label"><span>预算使用 ' + pct + '%</span><span>剩余 ' + remaining.toLocaleString() + ' RP</span></div>' +
+        '</div>';
+      }).join('') +
+    '</div>';
   }).join('');
+
   // Also render list view
   const listBody = document.getElementById('projectListBody');
   if (listBody) {
+    const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
+    const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
     listBody.innerHTML = filtered.map(p => {
       const remaining = p.budget - p.spent - p.frozen;
       const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
-      const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
-      const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
-      const statusTag = `<span class="tag ${stageTags[p.stage] || 'tag-slate'}">${stageLabels[p.stage] || '未知'}</span>`;
-      return `<tr style="cursor:pointer;">
-        <td style="font-weight:600;">${p.name}</td>
-        <td style="font-family:monospace;font-size:12px;color:var(--text-muted);">${p.id.toUpperCase()}</td>
-        <td>${p.lead}</td>
-        <td>${statusTag}</td>
-        <td style="font-weight:500;">${p.budget.toLocaleString()} RP</td>
-        <td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:4px;"><div style="height:6px;border-radius:4px;width:${pct}%;background:${pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)'};"></div></div><span style="font-size:11px;color:var(--text-muted);">${pct}%</span></div></td>
-        <td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openProjectDetail('${p.id}')">详情</button>
-        <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openBonusModal('${p.id}')">追加奖励</button></td>
-      </tr>`;
+      const statusTag = '<span class="tag ' + (stageTags[p.stage] || 'tag-slate') + '">' + (stageLabels[p.stage] || '未知') + '</span>';
+      return '<tr style="cursor:pointer;" onclick="openProjectDetail(\'' + p.id + '\')">' +
+        '<td style="font-weight:600;">' + p.name + '</td>' +
+        '<td style="font-family:monospace;font-size:12px;color:var(--text-muted);">' + p.id.toUpperCase() + '</td>' +
+        '<td>' + p.lead + '</td>' +
+        '<td>' + statusTag + '</td>' +
+        '<td style="font-weight:500;">' + p.budget.toLocaleString() + ' RP</td>' +
+        '<td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:4px;"><div style="height:6px;border-radius:4px;width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div><span style="font-size:11px;color:var(--text-muted);">' + pct + '%</span></div></td>' +
+        '<td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openProjectDetail(\'' + p.id + '\')">详情</button>' +
+        '<button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openBonusModal(\'' + p.id + '\')">追加奖励</button></td>' +
+      '</tr>';
     }).join('');
   }
 }
@@ -2810,6 +2962,10 @@ function openProjectModal() {
         <div class="form-group"><label class="form-label">开始日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
         <div class="form-group"><label class="form-label">结束日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
       </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">预计收益 / 预计价值</label><input class="form-input" placeholder="如 50000 RP" style="color:var(--text-muted);"></div>
+        <div class="form-group"><label class="form-label">预计成本 / 预算</label><input class="form-input" placeholder="如 20000 RP" style="color:var(--text-muted);"></div>
+      </div>
       <div class="form-group" style="margin-top:12px;">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
           <label class="form-label" style="font-size:14px;font-weight:700;margin:0;">Backlog 定义 <span style="color:var(--accent-rose);">*</span></label>
@@ -2850,8 +3006,7 @@ function renderKanban() {
     { key:'in_progress', label:'进行中', icon:'🔄', color:'var(--accent-amber)' },
     { key:'pending_review', label:'待审核', icon:'👁', color:'var(--accent-violet)' },
     { key:'rejected', label:'驳回中', icon:'🔄', color:'#dc2626' },
-    { key:'review', label:'待验收', icon:'🔍', color:'#6d28d9' },
-    { key:'done', label:'已完成', icon:'✅', color:'var(--accent-emerald)' },
+    { key:'done', label:'已验收', icon:'✅', color:'var(--accent-emerald)' },
     { key:'closed', label:'已关闭', icon:'📦', color:'var(--text-muted)' },
   ];
   board.innerHTML = statuses.map(s => {
@@ -2909,8 +3064,8 @@ function getTaskButtons(t) {
     case 'todo': return [...base];
     case 'in_progress': return [
       ...base,
-      { label:'处理', action:`processTask('${t.id}')`, cls:'btn-primary' },
       { label:'编辑', action:`editTask('${t.id}')`, cls:'btn-outline' },
+      { label:'处理', action:`processTask('${t.id}')`, cls:'btn-primary' },
       { label:'关闭', action:`confirmCloseTask('${t.id}')`, cls:'btn-outline' },
     ];
     case 'pending_review': return [
@@ -2920,13 +3075,8 @@ function getTaskButtons(t) {
     ];
     case 'rejected': return [
       ...base,
-      { label:'处理', action:`resubmitTask('${t.id}')`, cls:'btn-primary' },
       { label:'编辑', action:`editTask('${t.id}')`, cls:'btn-outline' },
-      { label:'关闭', action:`confirmCloseTask('${t.id}')`, cls:'btn-outline' },
-    ];
-    case 'review': return [
-      ...base,
-      { label:'验收', action:`acceptTask('${t.id}')`, cls:'btn-primary' },
+      { label:'处理', action:`resubmitTask('${t.id}')`, cls:'btn-primary' },
       { label:'关闭', action:`confirmCloseTask('${t.id}')`, cls:'btn-outline' },
     ];
     case 'done': return [
@@ -2937,91 +3087,99 @@ function getTaskButtons(t) {
   }
 }
 
+// ===== TASK PANEL HELPERS =====
+function _showTaskPanel(titleHtml, bodyHtml) {
+  const panel = document.getElementById('projectDetailPanel');
+  panel.style.display = '';
+  panel.querySelector('.artifact-panel-title').innerHTML = titleHtml;
+  document.getElementById('projectDetailBody').innerHTML = bodyHtml;
+  panel.classList.add('open');
+}
+
+function _taskDetailHtml(t) {
+  const p = projects.find(pr => pr.id === t.projectId);
+  const statusLabels = { draft:'草稿', todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', done:'已验收', closed:'已关闭' };
+  const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
+  const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
+  return '<div style="padding:20px;">' +
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">' +
+      '<span style="font-family:monospace;font-size:11px;color:var(--text-muted);">' + t.id.toUpperCase() + '</span>' +
+      '<span class="tag ' + (t.status==='done'||t.status==='closed'?'tag-green':t.status==='in_progress'?'tag-amber':t.status==='rejected'?'tag-rose':'tag-slate') + '" style="font-size:10px;">' + (statusLabels[t.status]||t.status) + '</span>' +
+      (isOverdue ? '<span style="color:var(--accent-rose);font-weight:600;font-size:12px;">⚠️ 延期</span>' : '') +
+    '</div>' +
+    '<div style="font-size:17px;font-weight:700;margin-bottom:12px;">' + t.title + '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">' +
+      '<div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">优先级</div><div style="display:flex;align-items:center;gap:4px;font-size:13px;font-weight:500;"><span class="task-priority ' + t.priority.toLowerCase() + '" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span>' + t.priority + '</div></div>' +
+      '<div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">所属项目</div><div style="font-size:13px;font-weight:500;">' + (p ? p.name : '-') + '</div></div>' +
+      '<div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">所属Backlog</div><div style="font-size:13px;font-weight:500;">' + (t.backlog || '-') + '</div></div>' +
+      '<div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">任务负责人</div><div style="font-size:13px;font-weight:500;">' + t.assignee + '</div></div>' +
+      '<div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">截止日期</div><div style="font-size:13px;font-weight:500;">' + t.deadline + (isOverdue ? '<span style="color:var(--accent-rose);font-weight:600;"> 已延期</span>' : '') + '</div></div>' +
+      '<div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">奖励 (RP)</div><div style="font-size:15px;font-weight:700;color:var(--primary);">' + t.reward + ' RP</div></div>' +
+    '</div>' +
+    '<div style="padding:8px;border-radius:6px;background:var(--bg);margin-bottom:12px;">' +
+      '<div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">交付形式</div>' +
+      '<div style="font-size:13px;font-weight:500;">' + (t.delivery || '无需交付') + '</div>' +
+    '</div>' +
+    (t.desc ? '<div style="font-size:13px;color:var(--text-secondary);padding:10px 12px;background:var(--bg);border-radius:8px;margin-bottom:12px;line-height:1.6;">' + t.desc + '</div>' : '') +
+    (t.completedAt ? '<div style="font-size:12px;color:var(--accent-emerald);padding:8px;background:rgba(16,185,129,0.1);border-radius:6px;margin-bottom:12px;">✅ 完成时间：' + t.completedAt + '</div>' : '') +
+  '</div>';
+}
+
+function _deliveryUploadHtml(t) {
+  const delivery = t.delivery || '';
+  if (delivery === '文档链接') {
+    return '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付链接</label><input type="url" id="deliveryUrl" placeholder="输入文档链接地址..." style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>';
+  } else if (delivery === '附件') {
+    return '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">上传附件</label><input type="file" id="deliveryFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>';
+  }
+  return '<div style="font-size:12px;color:var(--text-muted);padding:8px;background:var(--bg);border-radius:8px;">无需交付物上传</div>';
+}
+
 // ===== TASK ACTIONS =====
 
 function openTaskDetail(taskId) {
   const t = tasks.find(x => x.id === taskId);
   if (!t) return;
-  const p = projects.find(pr => pr.id === t.projectId);
-  const statusLabels = { draft:'草稿', todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
-  const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
-  const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
-  // Use side panel like project detail
-  const panel = document.getElementById('projectDetailPanel');
-  const body = document.getElementById('projectDetailBody');
-  panel.style.display = '';
-  body.innerHTML = `
-    <div style="padding:20px;">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
-        <span style="font-family:monospace;font-size:11px;color:var(--text-muted);">${t.id.toUpperCase()}</span>
-        <span class="tag ${t.status==='done'||t.status==='closed'?'tag-green':t.status==='in_progress'?'tag-amber':t.status==='rejected'?'tag-rose':'tag-slate'}" style="font-size:10px;">${statusLabels[t.status]||t.status}</span>
-        ${isOverdue ? '<span style="color:var(--accent-rose);font-weight:600;font-size:12px;">⚠️ 延期</span>' : ''}
-      </div>
-      <div style="font-size:17px;font-weight:700;margin-bottom:4px;">${t.title}</div>
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-        <span class="task-priority ${t.priority.toLowerCase()}" style="display:inline-block;width:8px;height:8px;border-radius:50%;"></span>
-        <span style="font-size:13px;color:var(--text-muted);">${t.priority}</span>
-        <span style="font-size:13px;color:var(--primary);">${p ? p.name : '-'}</span>
-        <span style="font-size:13px;color:var(--text-muted);">· ${stageLabels[t.stage] || t.stage || '-'}</span>
-      </div>
-      <div style="font-size:13px;color:var(--text-secondary);padding:10px 12px;background:var(--bg);border-radius:8px;margin-bottom:14px;line-height:1.6;">${t.desc}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;">
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">所属项目</div><div style="font-size:13px;font-weight:500;">${p ? p.name : '-'}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">所属Backlog</div><div style="font-size:13px;font-weight:500;">${t.backlog || '-'}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">任务负责人</div><div style="font-size:13px;font-weight:500;">${t.assignee}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">截止日期</div><div style="font-size:13px;font-weight:500;">${t.deadline}${isOverdue ? ' <span style="color:var(--accent-rose);font-weight:600;">已延期</span>' : ''}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">奖励 (RP)</div><div style="font-size:15px;font-weight:700;color:var(--primary);">${t.reward} RP</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">交付形式</div><div style="font-size:13px;font-weight:500;">${t.delivery || '无需交付'}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">预期工作量</div><div style="font-size:13px;font-weight:500;">${t.effort || '未设置'} ${t.effort ? '人天' : ''}</div></div>
-        <div style="padding:8px;border-radius:6px;background:var(--bg);"><div style="font-size:10px;color:var(--text-muted);">创建时间</div><div style="font-size:13px;font-weight:500;">2026-05-25</div></div>
-      </div>
-      <div style="padding:8px;border-radius:6px;background:var(--bg);margin-bottom:14px;">
-        <div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">验收标准</div>
-        <div style="font-size:13px;font-weight:500;">完成任务并通过项目负责人审核确认</div>
-      </div>
-      ${t.completedAt ? `<div style="font-size:12px;color:var(--accent-emerald);padding:8px;background:rgba(16,185,129,0.1);border-radius:6px;margin-bottom:12px;">✅ 完成时间：${t.completedAt}</div>` : ''}
-    </div>`;
-  document.getElementById('projectDetailPanel').classList.add('open');
-  // Update title
-  panel.querySelector('.artifact-panel-title').innerHTML = '\n      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/></svg>\n      任务详情\n    ';
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/></svg>\n      任务详情',
+    _taskDetailHtml(t)
+  );
 }
 
 function editTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-header"><div class="modal-title">编辑任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
-      <input type="hidden" id="editTaskId" value="${id}">
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务标题 *</label><input id="editTitle" value="${t.title}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务描述</label><textarea id="editDesc" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;">${t.desc}</textarea></div>
-      <div class="form-row">
-        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="editProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;">${projects.map(p => `<option value="${p.id}"${p.id===t.projectId?' selected':''}>${p.name}</option>`).join('')}</select></div>
-        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属Backlog</label><input id="editBacklog" value="${t.backlog||''}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
-      </div>
-      <div class="form-row">
-        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">优先级</label><select id="editPriority" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option${t.priority==='P0'?' selected':''}>P0紧急</option><option${t.priority==='P1'?' selected':''}>P1高</option><option${t.priority==='P2'?' selected':''}>P2中</option><option${t.priority==='P3'?' selected':''}>P3低</option></select></div>
-        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务负责人</label><select id="editAssignee" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option${t.assignee==='张明远'?' selected':''}>张明远</option><option${t.assignee==='李晓华'?' selected':''}>李晓华</option><option${t.assignee==='王思远'?' selected':''}>王思远</option><option${t.assignee==='赵明'?' selected':''}>赵明</option><option${t.assignee==='陈雨桐'?' selected':''}>陈雨桐</option></select></div>
-      </div>
-      <div class="form-row">
-        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">截止日期</label><input id="editDeadline" type="date" value="${t.deadline}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
-        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计奖励 (RP)</label><input id="editReward" type="number" value="${t.reward}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
-      </div>
-      <div class="form-row">
-        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option${!t.delivery?' selected':''}>无需交付</option><option${t.delivery==='附件'?' selected':''}>附件</option><option${t.delivery==='文档链接'?' selected':''}>文档链接</option></select></div>
-        <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预期工作量 (人天)</label><input id="editEffort" value="${t.effort||''}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;" placeholder="如 3"></div>
-      </div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">验收标准</label><textarea id="editAcceptance" rows="2" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;"></textarea></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="saveEditTask()">保存修改</button></div>
-    </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>\n      编辑任务 · ' + t.id.toUpperCase(),
+    _taskDetailHtml(t) +
+    '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
+      '<input type="hidden" id="editTaskId" value="' + id + '">' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务标题 *</label><input id="editTitle" value="' + t.title + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
+      '<div class="form-row">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="editProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;">' + projects.map(p => '<option value="' + p.id + '"' + (p.id===t.projectId?' selected':'') + '>' + p.name + '</option>').join('') + '</select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属Backlog</label><input id="editBacklog" value="' + (t.backlog||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">优先级</label><select id="editPriority" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option' + (t.priority==='P0'?' selected':'') + '>P0紧急</option><option' + (t.priority==='P1'?' selected':'') + '>P1高</option><option' + (t.priority==='P2'?' selected':'') + '>P2中</option><option' + (t.priority==='P3'?' selected':'') + '>P3低</option></select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务负责人</label><select id="editAssignee" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option' + (t.assignee==='张明远'?' selected':'') + '>张明远</option><option' + (t.assignee==='李晓华'?' selected':'') + '>李晓华</option><option' + (t.assignee==='王思远'?' selected':'') + '>王思远</option><option' + (t.assignee==='赵明'?' selected':'') + '>赵明</option><option' + (t.assignee==='陈雨桐'?' selected':'') + '>陈雨桐</option></select></div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">截止日期</label><input id="editDeadline" type="date" value="' + t.deadline + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计奖励 (RP)</label><input id="editReward" type="number" value="' + t.reward + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
+      '</div>' +
+      '<div class="form-row">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><option' + (!t.delivery?' selected':'') + '>无需交付</option><option' + (t.delivery==='附件'?' selected':'') + '>附件</option><option' + (t.delivery==='文档链接'?' selected':'') + '>文档链接</option></select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预期工作量 (人天)</label><input id="editEffort" value="' + (t.effort||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;" placeholder="如 3"></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="saveEditTask()">保存修改</button></div>' +
+    '</div>'
+  );
 }
 
 function saveEditTask() {
   const t = tasks.find(x => x.id === document.getElementById('editTaskId').value);
   if (!t) return;
   t.title = document.getElementById('editTitle').value;
-  t.desc = document.getElementById('editDesc').value;
   t.projectId = document.getElementById('editProject').value;
   t.backlog = document.getElementById('editBacklog').value;
   t.priority = document.getElementById('editPriority').value;
@@ -3031,25 +3189,23 @@ function saveEditTask() {
   t.delivery = document.getElementById('editDelivery').value || '';
   t.effort = document.getElementById('editEffort').value;
   refreshAllTaskViews();
-  closeModal();
-  alert('修改已保存');
+  closeProjectDetail();
 }
 
 function processTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  // For "进行中", show completion submission modal
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-header"><div class="modal-title">提交完成说明 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
-      <input type="hidden" id="submitTaskId" value="${id}">
-      <div style="font-size:13px;color:var(--text-muted);">当前状态：<strong>进行中</strong> → 将提交至<strong>待审核</strong></div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成说明 *</label><textarea id="submitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="详细描述任务完成情况、完成内容..."></textarea></div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付物上传</label><input type="file" id="submitFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成日期</label><input type="date" id="submitDate" value="${new Date().toISOString().slice(0,10)}" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="submitForReview()">提交审核</button></div>
-    </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/></svg>\n      提交完成说明 · ' + t.id.toUpperCase(),
+    _taskDetailHtml(t) +
+    '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
+      '<input type="hidden" id="submitTaskId" value="' + id + '">' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成说明 *</label><textarea id="submitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="详细描述任务完成情况、完成内容..."></textarea></div>' +
+      _deliveryUploadHtml(t) +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成日期</label><input type="date" id="submitDate" value="' + new Date().toISOString().slice(0,10) + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitForReview()">提交审核</button></div>' +
+    '</div>'
+  );
 }
 
 function submitForReview() {
@@ -3058,23 +3214,23 @@ function submitForReview() {
   if (!document.getElementById('submitNote').value.trim()) { alert('请填写完成说明'); return; }
   t.status = 'pending_review';
   t.completedAt = new Date().toISOString().slice(0,10);
-  alert(`已提交审核：${t.title} → 待审核`);
   refreshAllTaskViews();
-  closeModal();
+  closeProjectDetail();
 }
 
 function resubmitTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-header"><div class="modal-title">重新提交审核 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
-      <input type="hidden" id="resubmitTaskId" value="${id}">
-      <div style="font-size:13px;color:var(--text-muted);">当前状态：<strong>驳回中</strong>，请修改后重新提交</div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">修改说明 *</label><textarea id="resubmitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="说明本次修改了什么内容..."></textarea></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="doResubmit()">重新提交</button></div>
-    </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>\n      重新提交审核 · ' + t.id.toUpperCase(),
+    _taskDetailHtml(t) +
+    '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
+      '<input type="hidden" id="resubmitTaskId" value="' + id + '">' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">修改说明 *</label><textarea id="resubmitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="说明本次修改了什么内容..."></textarea></div>' +
+      _deliveryUploadHtml(t) +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="doResubmit()">重新提交</button></div>' +
+    '</div>'
+  );
 }
 
 function doResubmit() {
@@ -3083,36 +3239,34 @@ function doResubmit() {
   if (!document.getElementById('resubmitNote').value.trim()) { alert('请填写修改说明'); return; }
   t.status = 'pending_review';
   t.completedAt = new Date().toISOString().slice(0,10);
-  alert(`已重新提交：${t.title} → 待审核`);
   refreshAllTaskViews();
-  closeModal();
+  closeProjectDetail();
 }
 
 function auditTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-header"><div class="modal-title">审核任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
-      <input type="hidden" id="auditTaskId" value="${id}">
-      <div style="padding:10px;background:var(--bg);border-radius:8px;"><div style="font-size:14px;font-weight:600;margin-bottom:4px;">${t.title}</div><div style="font-size:12px;color:var(--text-muted);">提交完成说明：</div><div style="font-size:13px;margin-top:4px;padding:8px;background:white;border-radius:6px;">${t.completedAt ? '[已完成] ' + t.completedAt : '(暂无完成说明)'}</div></div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">
-        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
-        <button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectAudit()">驳回</button>
-        <button class="btn btn-primary" onclick="doApproveAudit()">通过（→待验收）</button>
-      </div>
-    </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/></svg>\n      审核任务 · ' + t.id.toUpperCase(),
+    _taskDetailHtml(t) +
+    '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
+      '<input type="hidden" id="auditTaskId" value="' + id + '">' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">' +
+        '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
+        '<button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectAudit()">驳回</button>' +
+        '<button class="btn btn-primary" onclick="doApproveAudit()">审核通过</button>' +
+      '</div>' +
+    '</div>'
+  );
 }
 
 function doApproveAudit() {
   const t = tasks.find(x => x.id === document.getElementById('auditTaskId').value);
   if (!t) return;
-  t.status = 'review';
-  alert(`已通过审核：${t.title} → 待验收`);
+  t.status = 'done';
   refreshAllTaskViews();
-  closeModal();
+  closeProjectDetail();
 }
 
 function doRejectAudit() {
@@ -3120,60 +3274,22 @@ function doRejectAudit() {
   if (!t) return;
   if (!document.getElementById('auditNote').value.trim()) { alert('请填写审核意见'); return; }
   t.status = 'rejected';
-  alert(`已驳回：${t.title} → 驳回中，请修改后重新提交`);
   refreshAllTaskViews();
-  closeModal();
-}
-
-function acceptTask(id) {
-  const t = tasks.find(x => x.id === id);
-  if (!t) return;
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-header"><div class="modal-title">验收任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
-      <input type="hidden" id="acceptTaskId" value="${id}">
-      <div style="padding:10px;background:var(--bg);border-radius:8px;"><div style="font-size:14px;font-weight:600;margin-bottom:4px;">${t.title}</div><div style="font-size:12px;color:var(--text-muted);">状态：待验收</div></div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审批备注（如有审批流程需填写）</label><textarea id="acceptNote" rows="2" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="审批意见（选填）"></textarea></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">
-        <button class="btn btn-ghost" onclick="closeModal()">取消</button>
-        <button class="btn btn-outline" style="color:var(--accent-rose);" onclick="rejectAcceptTask()">驳回</button>
-        <button class="btn btn-primary" onclick="doAcceptTask()">验收通过</button>
-      </div>
-    </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
-}
-
-function doAcceptTask() {
-  const t = tasks.find(x => x.id === document.getElementById('acceptTaskId').value);
-  if (!t) return;
-  t.status = 'done';
-  t.completedAt = new Date().toISOString().slice(0,10);
-  alert(`验收通过：${t.title} → 已完成`);
-  refreshAllTaskViews();
-  closeModal();
-}
-
-function rejectAcceptTask() {
-  const t = tasks.find(x => x.id === document.getElementById('acceptTaskId').value);
-  if (!t) return;
-  t.status = 'rejected';
-  alert(`已驳回验收：${t.title} → 驳回中`);
-  refreshAllTaskViews();
-  closeModal();
+  closeProjectDetail();
 }
 
 function confirmCloseTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-header"><div class="modal-title">关闭任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
-      <input type="hidden" id="closeTaskId" value="${id}">
-      <div style="font-size:13px;color:var(--text-muted);">即将关闭任务「${t.title}」，请填写关闭原因。</div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关闭原因 *</label><textarea id="closeReason" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="必须填写关闭原因..."></textarea></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" style="color:var(--accent-rose);" onclick="doCloseTask()">确认关闭</button></div>
-    </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--accent-rose);"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>\n      关闭任务 · ' + t.id.toUpperCase(),
+    '<div style="padding:20px;">' +
+      '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">即将关闭任务「' + t.title + '」，请填写关闭原因。</div>' +
+      '<input type="hidden" id="closeTaskId" value="' + id + '">' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关闭原因 *</label><textarea id="closeReason" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="必须填写关闭原因..."></textarea></div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;margin-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" style="background:var(--accent-rose);border-color:var(--accent-rose);" onclick="doCloseTask()">确认关闭</button></div>' +
+    '</div>'
+  );
 }
 
 function doCloseTask() {
@@ -3181,32 +3297,30 @@ function doCloseTask() {
   if (!t) return;
   if (!document.getElementById('closeReason').value.trim()) { alert('必须填写关闭原因'); return; }
   t.status = 'closed';
-  alert(`已关闭：${t.title}（原因：${document.getElementById('closeReason').value}）`);
   refreshAllTaskViews();
-  closeModal();
+  closeProjectDetail();
 }
 
 function publishTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
-  document.getElementById('modalContent').innerHTML = `
-    <div class="modal-header"><div class="modal-title">发布任务 · ${t.id.toUpperCase()}</div><button class="modal-close" onclick="closeModal()">✕</button></div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:12px;">
-      <input type="hidden" id="publishTaskId" value="${id}">
-      <div style="font-size:13px;color:var(--text-muted);">当前为草稿状态，发布后将变更为<strong>待开始</strong>，可分配给团队成员。</div>
-      <div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">发布说明</label><input id="publishNote" placeholder="可选：添加发布说明..." style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>
-      <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeModal()">取消</button><button class="btn btn-primary" onclick="doPublishTask()">确认发布</button></div>
-    </div>`;
-  document.getElementById('modalOverlay').classList.add('open');
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>\n      发布任务 · ' + t.id.toUpperCase(),
+    '<div style="padding:20px;">' +
+      '<input type="hidden" id="publishTaskId" value="' + id + '">' +
+      '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">当前为草稿状态，发布后将变为<strong>待开始</strong>，可分配给团队成员。</div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">发布说明</label><input id="publishNote" placeholder="可选：添加发布说明..." style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;margin-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="doPublishTask()">确认发布</button></div>' +
+    '</div>'
+  );
 }
 
 function doPublishTask() {
   const t = tasks.find(x => x.id === document.getElementById('publishTaskId').value);
   if (!t) return;
   t.status = 'todo';
-  alert(`已发布：${t.title} → 待开始`);
   refreshAllTaskViews();
-  closeModal();
+  closeProjectDetail();
 }
 
 function refreshAllTaskViews() {
@@ -3223,8 +3337,8 @@ function updateTaskProjectFilter() {
 function renderTaskList() {
   const tbody = document.getElementById('taskListBody');
   if (!tbody) return;
-  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', review:'待验收', done:'已完成', closed:'已关闭' };
-  const statusTags = { todo:'tag-slate', in_progress:'tag-amber', pending_review:'tag-violet', rejected:'tag-rose', review:'tag-violet', done:'tag-green', closed:'tag-slate' };
+  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', done:'已验收', closed:'已关闭' };
+  const statusTags = { todo:'tag-slate', in_progress:'tag-amber', pending_review:'tag-violet', rejected:'tag-rose', done:'tag-green', closed:'tag-slate' };
   const filterProject = document.getElementById('taskProjectFilter')?.value || 'all';
   const filterPriority = document.getElementById('taskPriorityFilter')?.value || 'all';
   const filterStatus = document.getElementById('taskStatusFilter')?.value || 'all';
@@ -3351,6 +3465,111 @@ navigateTo = function(page) {
   if (page === 'dashboard') { renderBacklogKanban(); renderPointsLineChart(); }
 };
 
+let _currentAdminTab = 'skills';
+
+function goToAdmin(tab) {
+  _currentAdminTab = tab || 'skills';
+  // 1. Hide all pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  // 2. Show admin page
+  var adminPage = document.getElementById('page-backend-admin');
+  if (adminPage) adminPage.classList.add('active');
+  // 3. Update sidebar active states (data-page AND data-admin-tab buttons)
+  document.querySelectorAll('.sidebar-btn[data-page], .sidebar-btn[data-admin-tab]').forEach(function(n) { n.classList.remove('active'); });
+  var btn = document.querySelector('.sidebar-btn[data-admin-tab="' + tab + '"]');
+  if (btn) btn.classList.add('active');
+  // 4. Fill data tables and switch tab
+  renderAdminData();
+  switchAdminTab(_currentAdminTab);
+}
+
+// ===== BACKEND ADMIN =====
+const adminProjectTypes = ['BD', '运营', '合规', '风控', '产品', 'IT', '智能中心', '管理'];
+const adminTaskTypes = ['文档处理', '数据分析', '内容生成', '代码编写', '翻译', '审查', '报告', '设计'];
+const adminModelRoutes = [
+  { scene: '文档处理', model: 'GPT-4o', endpoint: 'https://api.openai.com/v1/chat/completions', priority: 1, fallback: 'GPT-3.5-turbo', status: true },
+  { scene: '数据分析', model: 'Claude 3.5 Sonnet', endpoint: 'https://api.anthropic.com/v1/messages', priority: 1, fallback: 'GPT-4o', status: true },
+  { scene: '代码生成', model: 'Claude 3.5 Sonnet', endpoint: 'https://api.anthropic.com/v1/messages', priority: 1, fallback: 'GPT-4o', status: true },
+  { scene: '翻译', model: 'GPT-4o mini', endpoint: 'https://api.openai.com/v1/chat/completions', priority: 2, fallback: 'GPT-3.5-turbo', status: true },
+  { scene: '通用对话', model: 'GPT-4o mini', endpoint: 'https://api.openai.com/v1/chat/completions', priority: 2, fallback: 'GPT-3.5-turbo', status: false },
+];
+
+function switchAdminTab(tab) {
+   document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+   document.querySelectorAll('.tabs > [data-admin-tab]').forEach(el => el.classList.remove('active'));
+   const content = document.getElementById('admin-' + tab);
+   if (content) content.style.display = 'block';
+   const btn = document.querySelector('.tabs > [data-admin-tab="' + tab + '"]');
+   if (btn) btn.classList.add('active');
+ }
+
+function toggleSkill(btn) {
+  const row = btn.closest('tr');
+  const statusTag = row.querySelector('.tag');
+  if (statusTag.textContent.includes('已上架')) {
+    statusTag.className = 'tag tag-red';
+    statusTag.textContent = '已下架';
+    btn.textContent = '上架';
+  } else {
+    statusTag.className = 'tag tag-green';
+    statusTag.textContent = '已上架';
+    btn.textContent = '下架';
+  }
+  statusTag.style.animation = 'fadeIn 0.2s ease';
+}
+
+function addConfigItem(type) {
+  const name = prompt('请输入' + (type === 'project' ? '项目' : '任务') + '类型名称：');
+  if (!name || !name.trim()) return;
+  const tbody = document.getElementById(type === 'project' ? 'projectTypeTableBody' : 'taskTypeTableBody');
+  const now = new Date().toISOString().slice(0, 10);
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + name.trim() + '</td><td>' + (type === 'project' ? '项目类型' : '任务类型') + '</td><td>' + now + '</td><td><button class="btn btn-sm btn-danger" onclick="this.closest(\'tr\').remove()">删除</button></td>';
+  tbody.appendChild(tr);
+}
+
+function addModelRoute() {
+  const scene = prompt('请输入业务场景名称：');
+  if (!scene || !scene.trim()) return;
+  const tbody = document.getElementById('modelRouteTableBody');
+  const now = new Date().toISOString().slice(0, 10);
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td>' + scene.trim() + '</td><td>GPT-4o</td><td>https://api.openai.com/v1/chat/completions</td><td>3</td><td>GPT-3.5-turbo</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="this.closest(\'tr\').remove()">删除</button></td>';
+  tbody.appendChild(tr);
+}
+
+function renderAdminData() {
+  const projectTbody = document.getElementById('projectTypeTableBody');
+  if (projectTbody) {
+    projectTbody.innerHTML = '';
+    adminProjectTypes.forEach(function(t) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + t + '</td><td>项目类型</td><td>2026-06-01</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除 ' + t + ' ？\'))this.closest(\'tr\').remove()">删除</button></td>';
+      projectTbody.appendChild(tr);
+    });
+  }
+  const taskTbody = document.getElementById('taskTypeTableBody');
+  if (taskTbody) {
+    taskTbody.innerHTML = '';
+    adminTaskTypes.forEach(function(t) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td>' + t + '</td><td>任务类型</td><td>2026-06-01</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除 ' + t + ' ？\'))this.closest(\'tr\').remove()">删除</button></td>';
+      taskTbody.appendChild(tr);
+    });
+  }
+  const modelTbody = document.getElementById('modelRouteTableBody');
+  if (modelTbody) {
+    modelTbody.innerHTML = '';
+    adminModelRoutes.forEach(function(r) {
+      const tr = document.createElement('tr');
+      const statusHtml = r.status ? '<span class="tag tag-green">启用</span>' : '<span class="tag tag-red">停用</span>';
+      tr.innerHTML = '<td>' + r.scene + '</td><td>' + r.model + '</td><td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + r.endpoint + '">' + r.endpoint + '</td><td>' + r.priority + '</td><td>' + r.fallback + '</td><td>' + statusHtml + '</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除此路由？\'))this.closest(\'tr\').remove()">删除</button></td>';
+      modelTbody.appendChild(tr);
+    });
+  }
+  switchAdminTab(_currentAdminTab);
+}
+
 // ===== TODO FILTER =====
 function filterTodoItems(type) {
   document.querySelectorAll('[id^="todoFilter"]').forEach(b => b.classList.remove('active'));
@@ -3377,6 +3596,26 @@ function switchBacklogTab(el, tab) {
   el.classList.add('active');
   renderBacklogKanban();
 }
+
+// 语言切换
+function toggleLanguage() {
+  var btn = document.getElementById('langToggleBtn');
+  var current = localStorage.getItem('remi_lang') || 'zh';
+  var next = current === 'zh' ? 'en' : 'zh';
+  localStorage.setItem('remi_lang', next);
+  btn.textContent = next === 'zh' ? '中' : 'EN';
+  // 可选：刷新页面文字
+  location.reload();
+}
+
+// 初始化语言按钮
+document.addEventListener('DOMContentLoaded', function() {
+  var btn = document.getElementById('langToggleBtn');
+  if (btn) {
+    var lang = localStorage.getItem('remi_lang') || 'zh';
+    btn.textContent = lang === 'zh' ? '中' : 'EN';
+  }
+});
 
 function renderBacklogKanban() {
   const sel = document.getElementById('dashboardProjectFilter');
@@ -3439,7 +3678,7 @@ function renderBacklogProjectView(project) {
         ${projectStages.map(s => {
           const stageTasks = projectTasks.filter(t => t.stage === s.key);
           const isCurrent = project.stage === s.key;
-          const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', review:'待验收', done:'已完成' };
+          const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', done:'已验收', closed:'已关闭' };
           return `
           <div style="background:${isCurrent ? 'var(--primary-light)' : 'var(--bg)'};border-radius:var(--radius-sm);padding:10px;border:2px solid ${isCurrent ? 'var(--primary-border)' : 'transparent'};">
             <div style="font-size:11px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:4px;">${s.icon} ${s.label} <span style="font-weight:400;font-size:10px;color:var(--text-muted);">(${stageTasks.length})</span></div>
@@ -3482,8 +3721,7 @@ function renderBacklogTaskView(project) {
     { key:'todo', label:'待开始', icon:'📋' },
     { key:'in_progress', label:'进行中', icon:'🔄' },
     { key:'pending_review', label:'待审核', icon:'👁' },
-    { key:'review', label:'待验收', icon:'🔍' },
-    { key:'done', label:'已完成/已关闭', icon:'✅' },
+    { key:'done', label:'已验收/已关闭', icon:'✅' },
   ];
 
   taskView.innerHTML = `
@@ -3577,6 +3815,9 @@ function renderPointsLineChart() {
 renderBacklogKanban();
 renderPointsLineChart();
 renderConversations();
+function updateNotifBadge() {
+  // no-op: placeholder for notification badge update
+}
 updateNotifBadge();
 
 document.getElementById('chatInput')?.addEventListener('input', function() {
