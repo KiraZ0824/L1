@@ -763,8 +763,7 @@
     .admin-tab-content { animation: fadeIn 0.2s ease; }
     .admin-tab-content .card { margin-bottom: 16px; }
     .admin-tab-content .card:last-child { margin-bottom: 0; }
-    #page-backend-admin.active { flex: 1; }
-    #page-backend-admin .page-inner { max-width: 100%; min-height: 100%; }
+    #page-backend-admin .page-inner { max-width: 100%; }
 
     /* ===== PROJECTS ===== */
     .project-kanban { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
@@ -2065,108 +2064,107 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
+      <!-- ===== PAGE: BACKEND ADMIN ===== -->
+      <div class="page" id="page-backend-admin">
+        <div class="page-inner">
+          <div style="margin-bottom:20px;">
+            <h1 style="font-size:20px;font-weight:700;">后台管理</h1>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">系统配置与运维管理</p>
+          </div>
+          <div class="tabs" style="margin-bottom:20px;">
+            <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能管理</button>
+            <button class="tab" data-admin-tab="config" onclick="switchAdminTab('config')">项目任务配置</button>
+            <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型管理</button>
+          </div>
 
-<!-- ===== PAGE: BACKEND ADMIN ===== -->
-<div class="page" id="page-backend-admin">
-  <div class="page-inner">
-    <div style="margin-bottom:20px;">
-      <h1 style="font-size:20px;font-weight:700;">后台管理</h1>
-      <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">系统配置与运维管理</p>
-    </div>
-    <div class="tabs" style="margin-bottom:20px;">
-      <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能管理</button>
-      <button class="tab" data-admin-tab="config" onclick="switchAdminTab('config')">项目任务配置</button>
-      <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型管理</button>
-    </div>
+          <!-- 技能管理 -->
+          <div class="admin-tab-content" id="admin-skills">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">系统预置技能</div>
+                <button class="btn btn-sm" onclick="alert('技能管理开发中')">+ 添加自定义技能</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>技能名称</th>
+                      <th>类型</th>
+                      <th>版本</th>
+                      <th>状态</th>
+                      <th>最近更新</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="skillTableBody">
+                    <tr><td>文档解析 (docx)</td><td>官方</td><td>v2.1.0</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-10</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
+                    <tr><td>文档解析 (pdf)</td><td>官方</td><td>v2.0.3</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-09</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
+                    <tr><td>演示文稿 (pptx)</td><td>官方</td><td>v1.8.2</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-08</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
+                    <tr><td>电子表格 (xlsx)</td><td>官方</td><td>v2.0.0</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-07</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
+                    <tr><td>多模态内容生成</td><td>官方</td><td>v1.5.6</td><td><span class="tag tag-red">已下架</span></td><td>2026-05-20</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">上架</button></td></tr>
+                    <tr><td style="opacity:0.6;">知识检索</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
+                    <tr><td style="opacity:0.6;">文档摘要</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
+                    <tr><td style="opacity:0.6;">任务查询</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
+                    <tr><td style="opacity:0.6;">积分查询</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
-    <!-- 技能管理 -->
-    <div class="admin-tab-content" id="admin-skills">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">系统预置技能</div>
-          <button class="btn btn-sm" onclick="alert('技能管理开发中')">+ 添加自定义技能</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>技能名称</th>
-                <th>类型</th>
-                <th>版本</th>
-                <th>状态</th>
-                <th>最近更新</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="skillTableBody">
-              <tr><td>文档解析 (docx)</td><td>官方</td><td>v2.1.0</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-10</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
-              <tr><td>文档解析 (pdf)</td><td>官方</td><td>v2.0.3</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-09</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
-              <tr><td>演示文稿 (pptx)</td><td>官方</td><td>v1.8.2</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-08</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
-              <tr><td>电子表格 (xlsx)</td><td>官方</td><td>v2.0.0</td><td><span class="tag tag-green">已上架</span></td><td>2026-06-07</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">下架</button></td></tr>
-              <tr><td>多模态内容生成</td><td>官方</td><td>v1.5.6</td><td><span class="tag tag-red">已下架</span></td><td>2026-05-20</td><td><button class="btn btn-sm" onclick="toggleSkill(this)">上架</button></td></tr>
-              <tr><td style="opacity:0.6;">知识检索</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
-              <tr><td style="opacity:0.6;">文档摘要</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
-              <tr><td style="opacity:0.6;">任务查询</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
-              <tr><td style="opacity:0.6;">积分查询</td><td>系统内置</td><td>—</td><td><span class="tag tag-green">已上架</span></td><td>—</td><td><span style="font-size:12px;color:var(--text-muted);">不可操作</span></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
+          <!-- 项目任务配置 -->
+          <div class="admin-tab-content" id="admin-config" style="display:none;">
+            <div class="card" style="margin-bottom:16px;">
+              <div class="card-header">
+                <div class="card-title">项目类型配置</div>
+                <button class="btn btn-sm" onclick="addConfigItem('project')">+ 新增类型</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+                  <tbody id="projectTypeTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">任务类型配置</div>
+                <button class="btn btn-sm" onclick="addConfigItem('task')">+ 新增类型</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+                  <tbody id="taskTypeTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
 
-    <!-- 项目任务配置 -->
-    <div class="admin-tab-content" id="admin-config" style="display:none;">
-      <div class="card" style="margin-bottom:16px;">
-        <div class="card-header">
-          <div class="card-title">项目类型配置</div>
-          <button class="btn btn-sm" onclick="addConfigItem('project')">+ 新增类型</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
-            <tbody id="projectTypeTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">任务类型配置</div>
-          <button class="btn btn-sm" onclick="addConfigItem('task')">+ 新增类型</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
-            <tbody id="taskTypeTableBody"></tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-
-    <!-- 模型管理 -->
-    <div class="admin-tab-content" id="admin-models" style="display:none;">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">模型路由配置</div>
-          <button class="btn btn-sm" onclick="addModelRoute()">+ 新增路由</button>
-        </div>
-        <div class="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>业务场景</th>
-                <th>模型</th>
-                <th>API Endpoint</th>
-                <th>优先级</th>
-                <th>Fallback</th>
-                <th>状态</th>
-                <th>操作</th>
-              </tr>
-            </thead>
-            <tbody id="modelRouteTableBody"></tbody>
-          </table>
+          <!-- 模型管理 -->
+          <div class="admin-tab-content" id="admin-models" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">模型路由配置</div>
+                <button class="btn btn-sm" onclick="addModelRoute()">+ 新增路由</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>业务场景</th>
+                      <th>模型</th>
+                      <th>API Endpoint</th>
+                      <th>优先级</th>
+                      <th>Fallback</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="modelRouteTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -3634,9 +3632,6 @@ function closeModal() {
 // ===== ENHANCED NAVIGATION =====
 const origNavigateTo = navigateTo;
 navigateTo = function(page) {
-  // Restore main content area when leaving admin page
-  var mainEl = document.querySelector('.main');
-  if (mainEl) mainEl.style.display = '';
   origNavigateTo(page);
   if (page === 'projects') renderProjects();
   if (page === 'tasks') { renderKanban(); }
@@ -3648,19 +3643,11 @@ let _currentAdminTab = 'skills';
 
 function goToAdmin(tab) {
   _currentAdminTab = tab || 'skills';
-  // 1. Hide main content area (admin page is sibling of .main in .app)
-  var mainEl = document.querySelector('.main');
-  if (mainEl) mainEl.style.display = 'none';
-  // 2. Hide all pages
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  // 3. Show admin page
-  var adminPage = document.getElementById('page-backend-admin');
-  if (adminPage) adminPage.classList.add('active');
-  // 4. Update sidebar active states (data-page AND data-admin-tab buttons)
+  // Highlight the correct sidebar button
   document.querySelectorAll('.sidebar-btn[data-page], .sidebar-btn[data-admin-tab]').forEach(function(n) { n.classList.remove('active'); });
   var btn = document.querySelector('.sidebar-btn[data-admin-tab="' + tab + '"]');
   if (btn) btn.classList.add('active');
-  // 5. Fill data tables and switch tab
+  navigateTo('backend-admin');
   renderAdminData();
   switchAdminTab(_currentAdminTab);
 }
