@@ -2183,12 +2183,14 @@
             <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">系统配置与运维管理</p>
           </div>
           <div class="tabs" style="margin-bottom:20px;">
-            <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">AI参数配置</button>
+            <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能配置</button>
+            <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型配置</button>
+            <button class="tab" data-admin-tab="safety" onclick="switchAdminTab('safety')">内容安全配置</button>
           </div>
 
-          <!-- AI参数配置 -->
+          <!-- 技能配置 -->
           <div class="admin-tab-content" id="admin-skills">
-            <div class="card" style="margin-bottom:16px;">
+            <div class="card">
               <div class="card-header">
                 <div class="card-title">系统预置技能</div>
                 <button class="btn btn-sm" onclick="alert('技能管理开发中')">+ 添加自定义技能</button>
@@ -2219,6 +2221,10 @@
                 </table>
               </div>
             </div>
+          </div>
+
+          <!-- 模型配置 -->
+          <div class="admin-tab-content" id="admin-models" style="display:none;">
             <div class="card">
               <div class="card-header">
                 <div class="card-title">模型路由配置</div>
@@ -2239,6 +2245,46 @@
                   </thead>
                   <tbody id="modelRouteTableBody"></tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- 内容安全配置 -->
+          <div class="admin-tab-content" id="admin-safety" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">内容安全规则</div>
+                <button class="btn btn-sm">+ 新增规则</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>规则名称</th>
+                      <th>触发条件</th>
+                      <th>动作</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>敏感词过滤</td><td>命中敏感词库</td><td>拦截并告警</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
+                    <tr><td>隐私信息检测</td><td>检测到身份证/手机号</td><td>自动脱敏</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
+                    <tr><td>恶意代码检测</td><td>检测到 SQL/XSS 注入</td><td>拦截并记录</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
+                    <tr><td>内容合规审核</td><td>输出内容涉政/涉黄</td><td>审核后放行</td><td><span class="tag tag-amber">审核中</span></td><td><button class="btn btn-sm btn-ghost">配置</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="card" style="margin-top:16px;">
+              <div class="card-header">
+                <div class="card-title">安全策略配置</div>
+              </div>
+              <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> 启用敏感词过滤</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> 自动脱敏个人隐私信息</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> 记录所有AI输出日志</label>
+                <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox"> 开启人工审核通道</label>
               </div>
             </div>
           </div>
