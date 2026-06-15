@@ -763,7 +763,8 @@
     .admin-tab-content { animation: fadeIn 0.2s ease; }
     .admin-tab-content .card { margin-bottom: 16px; }
     .admin-tab-content .card:last-child { margin-bottom: 0; }
-    #page-backend-admin .page-inner { max-width: 100%; }
+    #page-backend-admin.active { flex: 1; }
+    #page-backend-admin .page-inner { max-width: 100%; min-height: 100%; }
 
     /* ===== PROJECTS ===== */
     .project-kanban { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
@@ -3633,6 +3634,9 @@ function closeModal() {
 // ===== ENHANCED NAVIGATION =====
 const origNavigateTo = navigateTo;
 navigateTo = function(page) {
+  // Restore main content area when leaving admin page
+  var mainEl = document.querySelector('.main');
+  if (mainEl) mainEl.style.display = '';
   origNavigateTo(page);
   if (page === 'projects') renderProjects();
   if (page === 'tasks') { renderKanban(); }
@@ -3644,16 +3648,19 @@ let _currentAdminTab = 'skills';
 
 function goToAdmin(tab) {
   _currentAdminTab = tab || 'skills';
-  // 1. Hide all pages
+  // 1. Hide main content area (admin page is sibling of .main in .app)
+  var mainEl = document.querySelector('.main');
+  if (mainEl) mainEl.style.display = 'none';
+  // 2. Hide all pages
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  // 2. Show admin page
+  // 3. Show admin page
   var adminPage = document.getElementById('page-backend-admin');
   if (adminPage) adminPage.classList.add('active');
-  // 3. Update sidebar active states (data-page AND data-admin-tab buttons)
+  // 4. Update sidebar active states (data-page AND data-admin-tab buttons)
   document.querySelectorAll('.sidebar-btn[data-page], .sidebar-btn[data-admin-tab]').forEach(function(n) { n.classList.remove('active'); });
   var btn = document.querySelector('.sidebar-btn[data-admin-tab="' + tab + '"]');
   if (btn) btn.classList.add('active');
-  // 4. Fill data tables and switch tab
+  // 5. Fill data tables and switch tab
   renderAdminData();
   switchAdminTab(_currentAdminTab);
 }
