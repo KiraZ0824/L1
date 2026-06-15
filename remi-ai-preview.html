@@ -1242,17 +1242,14 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="12" y1="2" x2="12" y2="6"/></svg>
         <span class="sidebar-tooltip">积分中心</span>
       </button>
+      <div class="sidebar-divider"></div>
+      <button class="sidebar-btn" data-page="project-task-config">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+        <span class="sidebar-tooltip">项目任务管理</span>
+      </button>
       <button class="sidebar-btn" data-admin-tab="skills">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
-        <span class="sidebar-tooltip">技能管理</span>
-      </button>
-      <button class="sidebar-btn" data-admin-tab="config">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-        <span class="sidebar-tooltip">项目任务配置</span>
-      </button>
-      <button class="sidebar-btn" data-admin-tab="models">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
-        <span class="sidebar-tooltip">模型管理</span>
+        <span class="sidebar-tooltip">AI参数配置</span>
       </button>
     </div>
     <div class="sidebar-divider"></div>
@@ -1280,7 +1277,7 @@
                 新建对话
               </button>
               <button class="conv-hide-btn" onclick="hideAllConversations()" title="收起/展开对话列表">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="convHideIcon" style="width:14px;height:14px;transition:transform 0.2s;"><polyline points="15 18 9 12 15 6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" id="convHideIcon" style="width:14px;height:14px;transition:transform 0.2s;"><polyline points="6 9 12 15 18 9"/></svg>
               </button>
             </div>
             <div class="conv-list" id="convList" style="flex:1;overflow-y:auto;padding:0 8px;"></div>
@@ -2137,6 +2134,47 @@
           </div>
         </div>
       </div>
+      <!-- ===== PAGE: PROJECT TASK CONFIG ===== -->
+      <div class="page" id="page-project-task-config">
+        <div class="page-inner">
+          <div style="margin-bottom:20px;">
+            <h1 style="font-size:20px;font-weight:700;">项目任务管理</h1>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">项目类型与任务类型配置管理</p>
+          </div>
+          <div class="tabs" style="margin-bottom:20px;">
+            <button class="tab active" onclick="switchPTConfigTab(this,'project')">项目配置</button>
+            <button class="tab" onclick="switchPTConfigTab(this,'task')">任务配置</button>
+          </div>
+          <div id="ptc-project">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">项目类型配置</div>
+                <button class="btn btn-sm" onclick="addConfigItem('project')">+ 新增类型</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+                  <tbody id="projectTypeTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div id="ptc-task" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">任务类型配置</div>
+                <button class="btn btn-sm" onclick="addConfigItem('task')">+ 新增类型</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+                  <tbody id="taskTypeTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- ===== PAGE: BACKEND ADMIN ===== -->
       <div class="page" id="page-backend-admin">
         <div class="page-inner">
@@ -2145,14 +2183,12 @@
             <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">系统配置与运维管理</p>
           </div>
           <div class="tabs" style="margin-bottom:20px;">
-            <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能管理</button>
-            <button class="tab" data-admin-tab="config" onclick="switchAdminTab('config')">项目任务配置</button>
-            <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型管理</button>
+            <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">AI参数配置</button>
           </div>
 
-          <!-- 技能管理 -->
+          <!-- AI参数配置 -->
           <div class="admin-tab-content" id="admin-skills">
-            <div class="card">
+            <div class="card" style="margin-bottom:16px;">
               <div class="card-header">
                 <div class="card-title">系统预置技能</div>
                 <button class="btn btn-sm" onclick="alert('技能管理开发中')">+ 添加自定义技能</button>
@@ -2183,38 +2219,6 @@
                 </table>
               </div>
             </div>
-          </div>
-
-          <!-- 项目任务配置 -->
-          <div class="admin-tab-content" id="admin-config" style="display:none;">
-            <div class="card" style="margin-bottom:16px;">
-              <div class="card-header">
-                <div class="card-title">项目类型配置</div>
-                <button class="btn btn-sm" onclick="addConfigItem('project')">+ 新增类型</button>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
-                  <tbody id="projectTypeTableBody"></tbody>
-                </table>
-              </div>
-            </div>
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">任务类型配置</div>
-                <button class="btn btn-sm" onclick="addConfigItem('task')">+ 新增类型</button>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
-                  <tbody id="taskTypeTableBody"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <!-- 模型管理 -->
-          <div class="admin-tab-content" id="admin-models" style="display:none;">
             <div class="card">
               <div class="card-header">
                 <div class="card-title">模型路由配置</div>
@@ -2605,7 +2609,7 @@ function hideAllConversations() {
   const icon = document.getElementById('convHideIcon');
   const hidden = list.style.display === 'none';
   list.style.display = hidden ? '' : 'none';
-  if (icon) icon.style.transform = hidden ? '' : 'rotate(-90deg)';
+  if (icon) icon.style.transform = hidden ? '' : 'rotate(180deg)';
 }
 
 function toggleSkillSelector() {
@@ -3704,6 +3708,13 @@ function switchUcPointsTab(el, tab) {
   document.getElementById('ucPointsTabSettlement').style.display = tab === 'settlement' ? '' : 'none';
 }
 
+function switchPTConfigTab(el, tab) {
+  document.querySelectorAll('#page-project-task-config .tabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('ptc-project').style.display = tab === 'project' ? '' : 'none';
+  document.getElementById('ptc-task').style.display = tab === 'task' ? '' : 'none';
+}
+
 function switchProjectView(el, view) {
   document.querySelectorAll('#projectViewTabs .tab-bar-item').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
@@ -3775,6 +3786,7 @@ navigateTo = function(page) {
   if (page === 'tasks') { renderKanban(); }
   if (page === 'points') renderProjectBudgetTable();
   if (page === 'dashboard') { renderBacklogKanban(); renderPointsLineChart(); }
+  if (page === 'project-task-config') renderAdminData();
 };
 
 let _currentAdminTab = 'skills';
