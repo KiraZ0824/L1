@@ -1104,6 +1104,88 @@
     }
     .toggle.on::after { left: 20px; }
 
+    .notif-row {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .notif-row-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .notif-row-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .notif-row-title { font-size: 13px; font-weight: 600; }
+    .notif-row-desc { font-size: 11px; color: var(--text-muted); }
+    .notif-text {
+      font-size: 13px;
+      color: var(--text-secondary);
+      padding: 8px 10px;
+      background: var(--card);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-light);
+      line-height: 1.5;
+    }
+    .notif-actions { display: flex; }
+    .notif-input {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      color: var(--text);
+      resize: vertical;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .notif-input:focus { border-color: var(--primary); }
+    .sw-word { font-weight: 600; font-family: monospace; }
+
+    .pagination {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 12px 16px;
+      border-top: 1px solid var(--border-light);
+    }
+    .pagination button {
+      min-width: 28px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+    }
+    .pagination button:hover:not(:disabled):not(.active) {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .pagination button.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+    .pagination button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
     .table-wrap {
       overflow-x: auto;
       border: 1px solid var(--border);
@@ -1250,6 +1332,10 @@
       <button class="sidebar-btn" data-admin-tab="skills">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         <span class="sidebar-tooltip">AI参数配置</span>
+      </button>
+      <button class="sidebar-btn" data-admin-tab="messages">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="8" y1="11" x2="16" y2="11"/></svg>
+        <span class="sidebar-tooltip">消息配置</span>
       </button>
     </div>
     <div class="sidebar-divider"></div>
@@ -2179,13 +2265,14 @@
       <div class="page" id="page-backend-admin">
         <div class="page-inner">
           <div style="margin-bottom:20px;">
-            <h1 style="font-size:20px;font-weight:700;">后台管理</h1>
-            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">系统配置与运维管理</p>
+            <h1 style="font-size:20px;font-weight:700;">AI参数配置</h1>
           </div>
           <div class="tabs" style="margin-bottom:20px;">
             <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能配置</button>
             <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型配置</button>
             <button class="tab" data-admin-tab="safety" onclick="switchAdminTab('safety')">内容安全配置</button>
+            <button class="tab" data-admin-tab="messages" onclick="switchAdminTab('messages')">消息配置</button>
+            <button class="tab" data-admin-tab="retrieval" onclick="switchAdminTab('retrieval')">知识检索规则</button>
           </div>
 
           <!-- 技能配置 -->
@@ -2249,6 +2336,103 @@
             </div>
           </div>
 
+          <!-- 消息配置 -->
+          <div class="admin-tab-content" id="admin-messages" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">消息通知模板</div>
+                <span style="font-size:12px;color:var(--text-muted);">支持变量：{user} 用户名称、{task_name} 任务名称、{result} 审核结果、{points} 积分数额、{balance} 当前余额</span>
+              </div>
+              <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+                <div class="notif-row" data-type="assign">
+                  <div class="notif-row-header">
+                    <div class="notif-row-info">
+                      <span class="notif-row-title">任务分配通知</span>
+                      <span class="notif-row-desc">通知接收人在任务被分配时触发</span>
+                    </div>
+                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                  </div>
+                  <div class="notif-row-body">
+                    <div class="notif-text">您已被分配任务「{task_name}」，请及时处理。</div>
+                    <textarea class="notif-input" style="display:none;" rows="2">您已被分配任务「{task_name}」，请及时处理。</textarea>
+                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="notif-row" data-type="review">
+                  <div class="notif-row-header">
+                    <div class="notif-row-info">
+                      <span class="notif-row-title">审核通知</span>
+                      <span class="notif-row-desc">通知审核人有任务待审核时触发</span>
+                    </div>
+                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                  </div>
+                  <div class="notif-row-body">
+                    <div class="notif-text">任务「{task_name}」待审核，请前往查看。</div>
+                    <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」待审核，请前往查看。</textarea>
+                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="notif-row" data-type="accept">
+                  <div class="notif-row-header">
+                    <div class="notif-row-info">
+                      <span class="notif-row-title">验收通知</span>
+                      <span class="notif-row-desc">通知验收人任务已完成待验收时触发</span>
+                    </div>
+                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                  </div>
+                  <div class="notif-row-body">
+                    <div class="notif-text">任务「{task_name}」已完成，请验收。</div>
+                    <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」已完成，请验收。</textarea>
+                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="notif-row" data-type="result">
+                  <div class="notif-row-header">
+                    <div class="notif-row-info">
+                      <span class="notif-row-title">审核结果通知</span>
+                      <span class="notif-row-desc">任务提交人审核出结果时触发</span>
+                    </div>
+                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                  </div>
+                  <div class="notif-row-body">
+                    <div class="notif-text">任务「{task_name}」审核{result}</div>
+                    <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」审核{result}</textarea>
+                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="notif-row" data-type="reward">
+                  <div class="notif-row-header">
+                    <div class="notif-row-info">
+                      <span class="notif-row-title">奖励到账通知</span>
+                      <span class="notif-row-desc">用户获得积分奖励时触发</span>
+                    </div>
+                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                  </div>
+                  <div class="notif-row-body">
+                    <div class="notif-text">您获得奖励 {points} 积分，当前余额 {balance} 积分。</div>
+                    <textarea class="notif-input" style="display:none;" rows="2">您获得奖励 {points} 积分，当前余额 {balance} 积分。</textarea>
+                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- 内容安全配置 -->
           <div class="admin-tab-content" id="admin-safety" style="display:none;">
             <div class="card">
@@ -2267,7 +2451,7 @@
                       <th>操作</th>
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody id="safetyRuleTbody">
                     <tr><td>敏感词过滤</td><td>命中敏感词库</td><td>拦截并告警</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
                     <tr><td>隐私信息检测</td><td>检测到身份证/手机号</td><td>自动脱敏</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
                     <tr><td>恶意代码检测</td><td>检测到 SQL/XSS 注入</td><td>拦截并记录</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
@@ -2275,16 +2459,139 @@
                   </tbody>
                 </table>
               </div>
+              <div class="pagination" id="rulePagination"></div>
             </div>
             <div class="card" style="margin-top:16px;">
               <div class="card-header">
-                <div class="card-title">安全策略配置</div>
+                <div class="card-title">敏感词库维护</div>
+                <div style="display:flex;gap:8px;">
+                  <input class="form-input" id="sensitiveWordSearch" placeholder="搜索敏感词…" style="width:200px;padding:6px 10px;font-size:12px;" oninput="filterSensitiveWords(this.value)">
+                  <button class="btn btn-sm" onclick="addSensitiveWord()">+ 添加敏感词</button>
+                </div>
               </div>
-              <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
-                <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> 启用敏感词过滤</label>
-                <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> 自动脱敏个人隐私信息</label>
-                <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox" checked> 记录所有AI输出日志</label>
-                <label style="display:flex;align-items:center;gap:8px;font-size:13px;"><input type="checkbox"> 开启人工审核通道</label>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>敏感词</th>
+                      <th>分类</th>
+                      <th>严重级别</th>
+                      <th>命中次数</th>
+                      <th>状态</th>
+                      <th>操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sensitiveWordTableBody">
+                    <tr><td class="sw-word">赌博</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>127</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">色情</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>89</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">暴力</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>203</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">毒品</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>56</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">诈骗</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>312</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">反动</td><td>政治敏感</td><td><span class="tag tag-red">高危</span></td><td>45</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">台独</td><td>政治敏感</td><td><span class="tag tag-red">高危</span></td><td>34</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">脏话A</td><td>不文明用语</td><td><span class="tag tag-amber">中危</span></td><td>567</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">脏话B</td><td>不文明用语</td><td><span class="tag tag-amber">中危</span></td><td>432</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">广告推广</td><td>垃圾信息</td><td><span class="tag tag-amber">中危</span></td><td>1024</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">恶意链接</td><td>垃圾信息</td><td><span class="tag tag-amber">中危</span></td><td>789</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="pagination" id="swPagination"></div>
+            </div>
+          </div>
+          <!-- 知识检索规则 -->
+          <div class="admin-tab-content" id="admin-retrieval" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">检索策略配置</div>
+                <span style="font-size:12px;color:var(--text-muted);">配置知识库检索的行为和参数</span>
+              </div>
+              <div style="padding:16px;display:flex;flex-direction:column;gap:16px;">
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div class="form-group">
+                    <label class="form-label">检索模式</label>
+                    <select class="form-input" style="appearance:auto;">
+                      <option selected>混合检索（向量+关键词）</option>
+                      <option>纯向量检索</option>
+                      <option>纯关键词检索</option>
+                    </select>
+                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">向量检索语义相似度，关键词检索精确匹配</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">Top-K 结果数量</label>
+                    <select class="form-input" style="appearance:auto;">
+                      <option>3</option>
+                      <option selected>5</option>
+                      <option>8</option>
+                      <option>10</option>
+                      <option>15</option>
+                      <option>20</option>
+                    </select>
+                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">每次检索返回的最相关文档片段数</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">相似度阈值</label>
+                    <select class="form-input" style="appearance:auto;">
+                      <option>0.50</option>
+                      <option>0.60</option>
+                      <option selected>0.70</option>
+                      <option>0.75</option>
+                      <option>0.80</option>
+                      <option>0.85</option>
+                      <option>0.90</option>
+                    </select>
+                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">低于此阈值的文档将被过滤</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">重排序策略</label>
+                    <select class="form-input" style="appearance:auto;">
+                      <option selected>交叉编码器重排序</option>
+                      <option>Cohere Rerank</option>
+                      <option>BM25 + 向量融合排序</option>
+                      <option>不启用重排序</option>
+                    </select>
+                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">对初筛结果进行二次排序提升准确率</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">检索召回策略</label>
+                    <select class="form-input" style="appearance:auto;">
+                      <option selected>MMR（最大边际相关性）</option>
+                      <option>Top-K 直接截断</option>
+                      <option>按时间优先</option>
+                    </select>
+                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">多结果时选择最相关且不重复的片段</span>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label">查询扩展</label>
+                    <select class="form-input" style="appearance:auto;">
+                      <option selected>禁用</option>
+                      <option>同义词扩展</option>
+                      <option>AI 生成相关查询</option>
+                    </select>
+                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">自动扩展用户查询以提高召回率</span>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:16px;">
+                  <button class="btn btn-primary btn-sm">保存配置</button>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="margin-top:16px;">
+              <div class="card-header">
+                <div class="card-title">检索白名单</div>
+                <button class="btn btn-sm">+ 添加白名单</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr><th>文档/目录</th><th>类型</th><th>所有人</th><th>操作</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>/公司制度/员工手册_v3.pdf</td><td>文档</td><td>行政部</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td>/技术文档/API 规范/</td><td>目录</td><td>技术部</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td>/产品手册/</td><td>目录</td><td>产品部</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -2869,23 +3176,80 @@ function submitAddUser() {
   closeProjectDetail();
 }
 
+// Used department codes (top-level departments), uppercase letters
+const deptCodes = ['A','B','C','D','E','F','G','H'];
+// Department group numbers per parent: { parentName: [groupNum strings] }
+const deptGroupNums = {
+  '总经办': ['01','02'],
+  'BD': ['01'],
+  '合规部': ['01','02','03'],
+  '产品研发部': ['01','02'],
+  '财务部': ['01'],
+  '人事部': ['01','02'],
+  '市场部': ['01']
+};
+
 function openAddDepartmentModal() {
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>\n      添加部门',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:12px;">' +
-      '<div class="form-row"><div class="form-group"><label class="form-label">部门名称 *</label><input class="form-input" id="addDeptName" placeholder="输入部门名称"></div><div class="form-group"><label class="form-label">上级部门</label><select class="form-select" id="addDeptParent"><option value="">无（顶级部门）</option><option>总经办</option><option>BD</option><option>合规部</option><option>产品研发部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select></div></div>' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">部门名称 *</label><input class="form-input" id="addDeptName" placeholder="输入部门名称"></div><div class="form-group"><label class="form-label">上级部门</label><select class="form-select" id="addDeptParent" onchange="toggleDeptFields()"><option value="">无（顶级部门）</option><option>总经办</option><option>BD</option><option>合规部</option><option>产品研发部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select></div></div>' +
+      '<div id="deptCodeRow" class="form-group"><label class="form-label">部门代码 * <span style="font-size:11px;color:var(--text-muted);font-weight:400;">一个大写字母，不可重复</span></label><input class="form-input" id="addDeptCode" placeholder="例：I" maxlength="1" style="text-transform:uppercase;width:120px;"></div>' +
+      '<div id="deptGroupRow" class="form-group" style="display:none;"><label class="form-label">部门组号 * <span style="font-size:11px;color:var(--text-muted);font-weight:400;">01-99 的数字，与该上级部门内不重复</span></label><input class="form-input" id="addDeptGroup" placeholder="例：01" maxlength="2" style="width:120px;"></div>' +
       '<div class="form-row"><div class="form-group"><label class="form-label">部门负责人</label><select class="form-select" id="addDeptLead"><option>张明远</option><option>李晓华</option><option>王思远</option><option>陈雨桐</option><option>赵明</option></select></div><div class="form-group"><label class="form-label">部门人数</label><div style="padding:8px;font-size:13px;color:var(--text-muted);background:var(--bg);border-radius:8px;">根据绑定人员自动计算</div></div></div>' +
       '<div class="form-group"><label class="form-label">部门描述</label><textarea class="form-textarea" id="addDeptDesc" rows="2" placeholder="可选：部门职责描述" style="resize:vertical;"></textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitAddDepartment()">确认添加</button></div>' +
     '</div>'
   );
+  toggleDeptFields();
+}
+
+function toggleDeptFields() {
+  const parent = document.getElementById('addDeptParent').value;
+  const codeRow = document.getElementById('deptCodeRow');
+  const groupRow = document.getElementById('deptGroupRow');
+  const codeInput = document.getElementById('addDeptCode');
+  const groupInput = document.getElementById('addDeptGroup');
+  if (parent) {
+    codeRow.style.display = 'none';
+    codeInput.value = '';
+    groupRow.style.display = '';
+    // Pre-fill with next available number for this parent
+    const used = deptGroupNums[parent] || [];
+    for (let i = 1; i <= 99; i++) {
+      const num = String(i).padStart(2, '0');
+      if (used.indexOf(num) === -1) {
+        groupInput.placeholder = '例：' + num;
+        break;
+      }
+    }
+  } else {
+    codeRow.style.display = '';
+    groupRow.style.display = 'none';
+    groupInput.value = '';
+  }
 }
 
 function submitAddDepartment() {
   const name = document.getElementById('addDeptName').value.trim();
   if (!name) { alert('请填写部门名称'); return; }
   const parent = document.getElementById('addDeptParent').value;
-  alert('部门 ' + name + ' 添加成功！' + (parent ? '\n上级部门：' + parent : '\n顶级部门'));
+  const code = document.getElementById('addDeptCode').value.trim().toUpperCase();
+  const group = document.getElementById('addDeptGroup').value.trim();
+  if (!parent) {
+    if (!code) { alert('顶级部门必须填写部门代码'); return; }
+    if (!/^[A-Z]$/.test(code)) { alert('部门代码必须为一个大写字母（A-Z）'); return; }
+    if (deptCodes.indexOf(code) !== -1) { alert('部门代码 ' + code + ' 已存在，请使用其他字母'); return; }
+    deptCodes.push(code);
+    alert('部门 ' + name + ' 添加成功！\n顶级部门（代码：' + code + '）');
+  } else {
+    if (!group) { alert('非顶级部门必须填写部门组号'); return; }
+    if (!/^0[1-9]$|^[1-9]\d$/.test(group)) { alert('部门组号必须为 01-99 之间的数字'); return; }
+    if (!deptGroupNums[parent]) deptGroupNums[parent] = [];
+    if (deptGroupNums[parent].indexOf(group) !== -1) { alert('部门组号 ' + group + ' 在 ' + parent + ' 下已存在，请使用其他编号'); return; }
+    deptGroupNums[parent].push(group);
+    alert('部门 ' + name + ' 添加成功！\n上级部门：' + parent + '（组号：' + group + '）');
+  }
   closeProjectDetail();
 }
 
@@ -3857,6 +4221,7 @@ const adminModelRoutes = [
   { scene: '代码生成', model: 'Claude 3.5 Sonnet', endpoint: 'https://api.anthropic.com/v1/messages', priority: 1, fallback: 'GPT-4o', status: true },
   { scene: '翻译', model: 'GPT-4o mini', endpoint: 'https://api.openai.com/v1/chat/completions', priority: 2, fallback: 'GPT-3.5-turbo', status: true },
   { scene: '通用对话', model: 'GPT-4o mini', endpoint: 'https://api.openai.com/v1/chat/completions', priority: 2, fallback: 'GPT-3.5-turbo', status: false },
+  { scene: '路由处理', model: 'GPT-4o', endpoint: 'https://api.openai.com/v1/chat/completions', priority: 1, fallback: 'Claude 3.5 Sonnet', status: true },
 ];
 
 function switchAdminTab(tab) {
@@ -3866,7 +4231,41 @@ function switchAdminTab(tab) {
    if (content) content.style.display = 'block';
    const btn = document.querySelector('.tabs > [data-admin-tab="' + tab + '"]');
    if (btn) btn.classList.add('active');
+   if (tab === 'safety') {
+     initPagination('safetyRuleTbody', 'rulePagination', 5);
+     initPagination('sensitiveWordTableBody', 'swPagination', 5);
+   }
  }
+
+function editNotifTemplate(btn) {
+  const row = btn.closest('.notif-row');
+  row.querySelector('.notif-text').style.display = 'none';
+  const textarea = row.querySelector('.notif-input');
+  textarea.style.display = 'block';
+  textarea.value = row.querySelector('.notif-text').textContent;
+  row.querySelector('.notif-actions').style.display = 'flex';
+}
+
+function saveNotifTemplate(btn) {
+  const row = btn.closest('.notif-row');
+  const textarea = row.querySelector('.notif-input');
+  const textDiv = row.querySelector('.notif-text');
+  textDiv.textContent = textarea.value;
+  textDiv.style.display = 'block';
+  textarea.style.display = 'none';
+  row.querySelector('.notif-actions').style.display = 'none';
+  console.log('Template [' + row.dataset.type + '] saved:', textarea.value);
+}
+
+function cancelEditNotif(btn) {
+  const row = btn.closest('.notif-row');
+  const textarea = row.querySelector('.notif-input');
+  const textDiv = row.querySelector('.notif-text');
+  textarea.value = textDiv.textContent;
+  textDiv.style.display = 'block';
+  textarea.style.display = 'none';
+  row.querySelector('.notif-actions').style.display = 'none';
+}
 
 function toggleSkill(btn) {
   const row = btn.closest('tr');
@@ -3901,6 +4300,90 @@ function addModelRoute() {
   const tr = document.createElement('tr');
   tr.innerHTML = '<td>' + scene.trim() + '</td><td>GPT-4o</td><td>https://api.openai.com/v1/chat/completions</td><td>3</td><td>GPT-3.5-turbo</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="this.closest(\'tr\').remove()">删除</button></td>';
   tbody.appendChild(tr);
+}
+
+function addSensitiveWord() {
+  const word = prompt('请输入敏感词：');
+  if (!word || !word.trim()) return;
+  const category = prompt('请输入分类（违法内容/政治敏感/不文明用语/垃圾信息）：') || '违法内容';
+  const tbody = document.getElementById('sensitiveWordTableBody');
+  const tr = document.createElement('tr');
+  tr.innerHTML = '<td class="sw-word">' + word.trim() + '</td><td>' + category + '</td><td><span class="tag tag-red">高危</span></td><td>0</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除？\'))this.closest(\'tr\').remove()">删除</button></td>';
+  tbody.appendChild(tr);
+}
+
+function filterSensitiveWords(val) {
+  const q = val.toLowerCase().trim();
+  const rows = document.querySelectorAll('#sensitiveWordTableBody tr');
+  rows.forEach(function(tr) {
+    tr.dataset._match = !q || tr.textContent.toLowerCase().includes(q) ? '1' : '0';
+  });
+  goToPage('sensitiveWordTableBody', 'swPagination', 1);
+}
+
+function initPagination(tbodyId, paginationId, pageSize) {
+  const rows = document.getElementById(tbodyId).querySelectorAll('tr');
+  rows.forEach(function(r) { if (!r.dataset._match) r.dataset._match = '1'; });
+  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+  const pagination = document.getElementById(paginationId);
+  pagination.dataset.pageSize = pageSize;
+  pagination.innerHTML = '';
+  // prev
+  const prevBtn = document.createElement('button');
+  prevBtn.textContent = '‹';
+  prevBtn.disabled = true;
+  prevBtn.onclick = function() {
+    const cur = parseInt(pagination.dataset.page || '1');
+    goToPage(tbodyId, paginationId, cur - 1);
+  };
+  pagination.appendChild(prevBtn);
+  // page nums
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = i;
+    btn.className = i === 1 ? 'active' : '';
+    btn.onclick = function() { goToPage(tbodyId, paginationId, i); };
+    pagination.appendChild(btn);
+  }
+  // next
+  const nextBtn = document.createElement('button');
+  nextBtn.textContent = '›';
+  nextBtn.disabled = totalPages <= 1;
+  nextBtn.onclick = function() {
+    const cur = parseInt(pagination.dataset.page || '1');
+    goToPage(tbodyId, paginationId, cur + 1);
+  };
+  pagination.appendChild(nextBtn);
+  pagination.dataset.page = '1';
+  // show first page
+  showPageRows(tbodyId, rows, 1, pageSize);
+}
+
+function goToPage(tbodyId, paginationId, page) {
+  const pagination = document.getElementById(paginationId);
+  const rows = document.getElementById(tbodyId).querySelectorAll('tr');
+  const pageSize = parseInt(pagination.dataset.pageSize || '5');
+  const totalPages = Math.max(1, Math.ceil(rows.length / pageSize));
+  page = Math.max(1, Math.min(page, totalPages));
+  pagination.dataset.page = page;
+  const btns = pagination.querySelectorAll('button');
+  btns.forEach(function(b, i) {
+    if (i === 0) { b.disabled = page <= 1; }
+    else if (i === btns.length - 1) { b.disabled = page >= totalPages; }
+    else { b.className = parseInt(b.textContent) === page ? 'active' : ''; }
+  });
+  showPageRows(tbodyId, rows, page, pageSize);
+}
+
+function showPageRows(tbodyId, rows, page, pageSize) {
+  const filtered = [].filter.call(rows, function(r) { return r.dataset._match !== '0'; });
+  var start = (page - 1) * pageSize;
+  var end = start + pageSize;
+  rows.forEach(function(r) {
+    var isVisible = r.dataset._match !== '0';
+    var idx = isVisible ? filtered.indexOf(r) : -1;
+    r.style.display = (idx >= start && idx < end) ? '' : 'none';
+  });
 }
 
 function renderAdminData() {
