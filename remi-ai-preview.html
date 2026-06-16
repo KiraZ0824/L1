@@ -668,7 +668,7 @@
     }
     .kb-header h1 { font-size: 20px; font-weight: 700; }
     .kb-header p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
-    .kb-grid { display: grid; grid-template-columns: 220px 1fr; gap: 20px; min-width: 0; }
+    .kb-grid { display: grid; grid-template-columns: 1fr; gap: 20px; min-width: 0; }
     .kb-tree {
       background: var(--card);
       border: 1px solid var(--border);
@@ -767,6 +767,147 @@
     }
     .kb-review-item:last-child { border-bottom: none; }
     .kb-upload-area:hover { border-color: var(--primary-border); background: var(--primary-light); }
+
+    /* ===== VECTOR MANAGEMENT ===== */
+    .vm-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px 8px;
+    }
+    .vm-header-title { font-size: 15px; font-weight: 600; }
+    .vm-header-count { font-size: 13px; color: var(--text-muted); white-space: nowrap; }
+    .vm-filter-bar {
+      display: flex;
+      gap: 8px;
+      padding: 0 20px 14px;
+    }
+    .vm-dp {
+      height: 32px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 12px;
+      padding: 0 14px;
+      outline: none;
+      box-sizing: border-box;
+    }
+    .vm-dp:focus { border-color: var(--primary); }
+    .vm-text-input { flex: 1; min-width: 140px; }
+    .vm-split { display: flex; gap: 16px; min-width: 0; height: calc(100vh - 370px); min-height: 400px; }
+    .vm-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      min-width: 0;
+    }
+    .vm-right {
+      width: 400px;
+      flex-shrink: 0;
+      overflow-y: auto;
+    }
+    .vm-table { width: 100%; border-collapse: collapse; }
+    .vm-table th {
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      z-index: 1;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-align: left;
+      border-bottom: 1px solid var(--border-light);
+      white-space: nowrap;
+    }
+    .vm-table td {
+      padding: 8px 12px;
+      font-size: 12px;
+      border-bottom: 1px solid var(--border-light);
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vm-table tr:hover td { background: var(--primary-light); }
+    .vm-table tr.vm-selected td { background: var(--primary-light); }
+    .vm-table input[type="checkbox"] { cursor: pointer; accent-color: var(--primary); }
+    .vm-bottom-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 12px;
+    }
+    .vm-page-btn {
+      padding: 4px 12px;
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--card);
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .vm-page-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+    .vm-page-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .vm-select-sm {
+      height: 28px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--card);
+      color: var(--text);
+      font-size: 12px;
+      padding: 0 6px;
+      outline: none;
+      appearance: auto;
+    }
+    /* Detail panel */
+    .vm-detail-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
+    .vm-detail-cancel { font-size: 12px; color: var(--text-muted); cursor: pointer; }
+    .vm-detail-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .vm-detail-id { font-size: 13px; font-family: monospace; margin-bottom: 16px; word-break: break-all; }
+    .vm-vector-block {
+      font-family: monospace;
+      font-size: 12px;
+      color: var(--text);
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      line-height: 1.7;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+    .vm-meta-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+    .vm-meta-field { margin-bottom: 12px; }
+    .vm-meta-field:last-child { margin-bottom: 0; }
+    .vm-meta-field label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
+    .vm-meta-field input, .vm-meta-field textarea, .vm-meta-field select {
+      width: 100%;
+      padding: 6px 10px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      color: var(--text);
+      outline: none;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+    .vm-meta-field input:focus, .vm-meta-field textarea:focus, .vm-meta-field select:focus { border-color: var(--primary); }
+    .vm-meta-field textarea { resize: vertical; min-height: 50px; }
+    .vm-other-info { margin-bottom: 16px; }
+    .vm-other-row { display: flex; margin-bottom: 4px; font-size: 12px; align-items: baseline; }
+    .vm-other-key { width: 100px; flex-shrink: 0; color: var(--text-muted); word-break: break-all; }
+    .vm-other-val { flex: 1; color: var(--text); }
+    @media (max-width: 900px) { .vm-split { flex-direction: column; height: auto; } .vm-right { width: 100%; } }
 
     .setting-row {
       display: flex;
@@ -1122,6 +1263,7 @@
       gap: 2px;
     }
     .notif-row-title { font-size: 13px; font-weight: 600; }
+    .notif-row-en { font-size: 12px; color: var(--text-muted); margin-top: 1px; }
     .notif-row-desc { font-size: 11px; color: var(--text-muted); }
     .notif-text {
       font-size: 13px;
@@ -1148,6 +1290,21 @@
       transition: border-color 0.15s;
     }
     .notif-input:focus { border-color: var(--primary); }
+    .notif-en-input {
+      width: 100%;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      color: var(--text);
+      box-sizing: border-box;
+      outline: none;
+      margin-top: 6px;
+      transition: border-color 0.15s;
+    }
+    .notif-en-input:focus { border-color: var(--primary); }
     .sw-word { font-weight: 600; font-family: monospace; }
 
     .pagination {
@@ -1544,39 +1701,12 @@
         上传文档
       </button>
     </div>
+    <div class="tabs" style="margin-bottom:20px;">
+      <button class="tab active" onclick="switchKbTab(this,'mgmt')">知识管理</button>
+      <button class="tab" onclick="switchKbTab(this,'vector')">向量数据管理</button>
+    </div>
+    <div id="kb-mgmt">
     <div class="kb-grid">
-      <div class="kb-tree">
-        <div class="kb-tree-section-title">知识分类</div>
-        <div class="kb-tree-item active" onclick="filterKbTree(this,'all')">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-          全部文档 <span class="count">47</span>
-        </div>
-        <div style="padding-left:8px;margin-top:4px;">
-          <div class="kb-tree-item" onclick="filterKbTree(this,'tech')">📁 技术文档 <span class="count">15</span></div>
-          <div style="padding-left:18px;">
-            <div class="kb-tree-item" style="font-size:12px;" onclick="filterKbTree(this,'api')">📄 API 规范 <span class="count">5</span></div>
-            <div class="kb-tree-item" style="font-size:12px;" onclick="filterKbTree(this,'arch')">📄 架构文档 <span class="count">7</span></div>
-            <div class="kb-tree-item" style="font-size:12px;" onclick="filterKbTree(this,'dev')">📄 开发指南 <span class="count">3</span></div>
-          </div>
-          <div class="kb-tree-item" onclick="filterKbTree(this,'product')">📁 产品设计 <span class="count">12</span></div>
-          <div class="kb-tree-item" onclick="filterKbTree(this,'market')">📁 市场运营 <span class="count">8</span></div>
-          <div class="kb-tree-item" onclick="filterKbTree(this,'compliance')">📁 合规风控 <span class="count">6</span></div>
-          <div class="kb-tree-item" onclick="filterKbTree(this,'other')">📁 未分类 <span class="count">6</span></div>
-        </div>
-        <div class="kb-tree-section-title" style="margin-top:16px;">知识状态</div>
-        <div class="kb-tree-item" onclick="filterKbTree(this,'pending_review')">
-          <span style="color:var(--accent-amber);">⏳</span> 待审核 <span class="count">3</span>
-        </div>
-        <div class="kb-tree-item" onclick="filterKbTree(this,'in_review')">
-          <span style="color:var(--accent-violet);">🔍</span> 审核中 <span class="count">2</span>
-        </div>
-        <div class="kb-tree-item" onclick="filterKbTree(this,'approved')">
-          <span style="color:var(--accent-emerald);">✅</span> 已入库 <span class="count">38</span>
-        </div>
-        <div class="kb-tree-item" onclick="filterKbTree(this,'archived')">
-          <span style="color:var(--text-muted);">📦</span> 已归档 <span class="count">4</span>
-        </div>
-      </div>
       <div class="kb-main">
         <div class="kb-files">
           <div class="kb-files-header">
@@ -1689,6 +1819,45 @@
         </div>
       </div>
     </div>
+    </div>
+    <div id="kb-vector" style="display:none;">
+  <div class="vm-header">
+    <div class="vm-header-title">知识库向量集</div>
+    <div class="vm-header-count" id="vmTotalCount">显示 0 / 0</div>
+  </div>
+  <div class="vm-filter-bar">
+    <select class="vm-dp" id="vmPartitionFilter" onchange="vmRenderList()">
+      <option value="">全部分区</option><option value="0">Shard-0</option><option value="1">Shard-1</option><option value="2">Shard-2</option><option value="3">Shard-3</option><option value="4">Shard-4</option><option value="5">Shard-5</option><option value="6">Shard-6</option><option value="7">Shard-7</option>
+    </select>
+    <input class="vm-dp vm-text-input" id="vmIdSearch" placeholder="搜索 ID…">
+    <input class="vm-dp vm-text-input" id="vmMetaSearch" placeholder="搜索 Metadata…">
+  </div>
+  <div class="vm-split">
+    <div class="vm-left">
+      <table class="vm-table">
+        <thead><tr><th style="width:28px;"><input type="checkbox" id="vmCheckAll" onchange="vmToggleAll()"></th><th>ID</th><th style="min-width:180px;">文本摘要</th><th style="width:60px;text-align:center;">维度</th><th style="width:60px;text-align:right;">分区</th><th style="width:100px;text-align:right;">更新于</th></tr></thead>
+        <tbody id="vmTbody"></tbody>
+      </table>
+      <div class="vm-bottom-bar">
+        <div>
+          <button class="vm-page-btn" onclick="vmGoPage(vmCurrentPage-1)" id="vmPrevBtn" disabled>上一页</button>
+          <button class="vm-page-btn" onclick="vmGoPage(vmCurrentPage+1)" id="vmNextBtn">下一页</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:12px;color:var(--text-muted);">每页</span>
+          <select class="vm-select-sm vm-page-size" onchange="vmRenderList()">
+            <option>20</option><option selected>50</option><option>100</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="vm-right" id="vmDetailPanel">
+      <div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin-bottom:8px;opacity:0.4;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><br>点击左侧列表行查看详情
+      </div>
+    </div>
+  </div>
+</div>
   </div>
 </div>
 
@@ -2239,7 +2408,7 @@
               </div>
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+                  <thead><tr><th>类型名称</th><th>英文名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
                   <tbody id="projectTypeTableBody"></tbody>
                 </table>
               </div>
@@ -2253,7 +2422,7 @@
               </div>
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>类型名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+                  <thead><tr><th>类型名称</th><th>英文名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
                   <tbody id="taskTypeTableBody"></tbody>
                 </table>
               </div>
@@ -2348,6 +2517,7 @@
                   <div class="notif-row-header">
                     <div class="notif-row-info">
                       <span class="notif-row-title">任务分配通知</span>
+                      <span class="notif-row-en" data-en="Task Assignment Notice">Task Assignment Notice</span>
                       <span class="notif-row-desc">通知接收人在任务被分配时触发</span>
                     </div>
                     <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
@@ -2355,6 +2525,7 @@
                   <div class="notif-row-body">
                     <div class="notif-text">您已被分配任务「{task_name}」，请及时处理。</div>
                     <textarea class="notif-input" style="display:none;" rows="2">您已被分配任务「{task_name}」，请及时处理。</textarea>
+                    <input class="notif-en-input" style="display:none;" data-en="Task Assignment Notice" value="Task Assignment Notice">
                     <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
                       <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
                       <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
@@ -2365,6 +2536,7 @@
                   <div class="notif-row-header">
                     <div class="notif-row-info">
                       <span class="notif-row-title">审核通知</span>
+                      <span class="notif-row-en" data-en="Review Notice">Review Notice</span>
                       <span class="notif-row-desc">通知审核人有任务待审核时触发</span>
                     </div>
                     <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
@@ -2372,6 +2544,7 @@
                   <div class="notif-row-body">
                     <div class="notif-text">任务「{task_name}」待审核，请前往查看。</div>
                     <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」待审核，请前往查看。</textarea>
+                    <input class="notif-en-input" style="display:none;" data-en="Review Notice" value="Review Notice">
                     <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
                       <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
                       <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
@@ -2382,6 +2555,7 @@
                   <div class="notif-row-header">
                     <div class="notif-row-info">
                       <span class="notif-row-title">验收通知</span>
+                      <span class="notif-row-en" data-en="Acceptance Notice">Acceptance Notice</span>
                       <span class="notif-row-desc">通知验收人任务已完成待验收时触发</span>
                     </div>
                     <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
@@ -2389,6 +2563,7 @@
                   <div class="notif-row-body">
                     <div class="notif-text">任务「{task_name}」已完成，请验收。</div>
                     <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」已完成，请验收。</textarea>
+                    <input class="notif-en-input" style="display:none;" data-en="Acceptance Notice" value="Acceptance Notice">
                     <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
                       <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
                       <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
@@ -2399,6 +2574,7 @@
                   <div class="notif-row-header">
                     <div class="notif-row-info">
                       <span class="notif-row-title">审核结果通知</span>
+                      <span class="notif-row-en" data-en="Review Result Notice">Review Result Notice</span>
                       <span class="notif-row-desc">任务提交人审核出结果时触发</span>
                     </div>
                     <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
@@ -2406,6 +2582,7 @@
                   <div class="notif-row-body">
                     <div class="notif-text">任务「{task_name}」审核{result}</div>
                     <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」审核{result}</textarea>
+                    <input class="notif-en-input" style="display:none;" data-en="Review Result Notice" value="Review Result Notice">
                     <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
                       <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
                       <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
@@ -2416,6 +2593,7 @@
                   <div class="notif-row-header">
                     <div class="notif-row-info">
                       <span class="notif-row-title">奖励到账通知</span>
+                      <span class="notif-row-en" data-en="Reward Notice">Reward Notice</span>
                       <span class="notif-row-desc">用户获得积分奖励时触发</span>
                     </div>
                     <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
@@ -2423,6 +2601,7 @@
                   <div class="notif-row-body">
                     <div class="notif-text">您获得奖励 {points} 积分，当前余额 {balance} 积分。</div>
                     <textarea class="notif-input" style="display:none;" rows="2">您获得奖励 {points} 积分，当前余额 {balance} 积分。</textarea>
+                    <input class="notif-en-input" style="display:none;" data-en="Reward Notice" value="Reward Notice">
                     <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
                       <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
                       <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
@@ -2474,6 +2653,7 @@
                   <thead>
                     <tr>
                       <th>敏感词</th>
+                      <th>英文描述</th>
                       <th>分类</th>
                       <th>严重级别</th>
                       <th>命中次数</th>
@@ -2482,17 +2662,17 @@
                     </tr>
                   </thead>
                   <tbody id="sensitiveWordTableBody">
-                    <tr><td class="sw-word">赌博</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>127</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">色情</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>89</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">暴力</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>203</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">毒品</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>56</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">诈骗</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>312</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">反动</td><td>政治敏感</td><td><span class="tag tag-red">高危</span></td><td>45</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">台独</td><td>政治敏感</td><td><span class="tag tag-red">高危</span></td><td>34</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">脏话A</td><td>不文明用语</td><td><span class="tag tag-amber">中危</span></td><td>567</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">脏话B</td><td>不文明用语</td><td><span class="tag tag-amber">中危</span></td><td>432</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">广告推广</td><td>垃圾信息</td><td><span class="tag tag-amber">中危</span></td><td>1024</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td class="sw-word">恶意链接</td><td>垃圾信息</td><td><span class="tag tag-amber">中危</span></td><td>789</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">赌博</td><td>Gambling</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>127</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">色情</td><td>Pornography</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>89</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">暴力</td><td>Violence</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>203</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">毒品</td><td>Drugs</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>56</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">诈骗</td><td>Fraud</td><td>违法内容</td><td><span class="tag tag-red">高危</span></td><td>312</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">反动</td><td>Reactionary</td><td>政治敏感</td><td><span class="tag tag-red">高危</span></td><td>45</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">台独</td><td>Taiwan Independence</td><td>政治敏感</td><td><span class="tag tag-red">高危</span></td><td>34</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">脏话A</td><td>Profanity A</td><td>不文明用语</td><td><span class="tag tag-amber">中危</span></td><td>567</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">脏话B</td><td>Profanity B</td><td>不文明用语</td><td><span class="tag tag-amber">中危</span></td><td>432</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">广告推广</td><td>Ad Spam</td><td>垃圾信息</td><td><span class="tag tag-amber">中危</span></td><td>1024</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
+                    <tr><td class="sw-word">恶意链接</td><td>Malicious Link</td><td>垃圾信息</td><td><span class="tag tag-amber">中危</span></td><td>789</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -4195,7 +4375,7 @@ navigateTo = function(page) {
   if (page === 'projects') renderProjects();
   if (page === 'tasks') { renderKanban(); }
   if (page === 'points') renderProjectBudgetTable();
-  if (page === 'dashboard') { renderBacklogKanban(); renderPointsLineChart(); }
+  if (page === 'dashboard') { renderBacklogKanban(); renderPointsLineChart(); renderNotificationMessages(); }
   if (page === 'project-task-config') renderAdminData();
 };
 
@@ -4212,9 +4392,277 @@ function goToAdmin(tab) {
   switchAdminTab(_currentAdminTab);
 }
 
+// ===== VECTOR MANAGEMENT =====
+const vmPageSize = 50;
+let vmAllData = [];
+let vmCurrentPage = 1;
+let vmSelected = {};
+
+// Generate mock vector data
+(function() {
+  const partitions = ['Shard-0','Shard-1','Shard-2','Shard-3','Shard-4','Shard-5','Shard-6','Shard-7'];
+  const summaries = [
+    '高频量化交易策略在震荡市中的风控模型',
+    '中证 500 指数增强基金最新持仓分析报告',
+    '可转债双低策略回测结果与参数优化',
+    '期权隐含波动率曲面建模方法研究',
+    'FOF 组合配置中的风险平价模型实现',
+    '股票收益率预测的 LSTM 模型对比',
+    '机器学习因子选股策略实盘跟踪报告',
+    '市场微观结构与订单簿深度分析',
+    'CTA 趋势跟踪策略多品种配置方案',
+    'Alpha 因子库构建与 ICIR 分析'
+  ];
+  const sources = ['quant_report_2026Q1','fund_research','backtest_engine','risk_model','alpha_factory','ml_strategy','options_pricing','market_micro','cta_system','portfolio_opt'];
+  const categories = ['策略分析','基金调研','回测引擎','风险模型','Alpha 工厂','机器学习','期权定价','市场微观','CTA 系统','资产配置'];
+  const tagOptions = [
+    ['量化','对冲','震荡市'],
+    ['指数增强','被动投资','持仓分析'],
+    ['可转债','低波策略','回测'],
+    ['期权','波动率','曲面建模'],
+    ['FOF','风险平价','资产配置'],
+    ['LSTM','时序预测','深度学习'],
+    ['因子选股','机器学习','ICIR'],
+    ['订单簿','做市','流动性'],
+    ['趋势跟踪','CTA','多品种'],
+    ['Alpha','因子库','ICIR']
+  ];
+  for (let i = 0; i < 86; i++) {
+    const idx = i % summaries.length;
+    const shard = 'Shard-' + (i % 8);
+    const ts = new Date(Date.now() - Math.random() * 90 * 86400000);
+    vmAllData.push({
+      id: 'v' + String(38421 - i),
+      summary: summaries[idx],
+      dims: 768,
+      shard: parseInt(String(i % 8)),
+      updated: ts.toISOString().replace('T',' ').slice(0,19),
+      _vecFull: Array.from({length:768}, () => (Math.random()*2-1).toFixed(6)),
+      metadata: {
+        source: sources[idx] + '_' + (1 + (i % 4)),
+        category: categories[idx],
+        tags: tagOptions[idx].join(','),
+        description: summaries[idx] + '，含回测数据与参数说明'
+      },
+      sys: {
+        embedding_model: 'text-embedding-3-large',
+        normalization: 'L2',
+        created: new Date(Date.now() - 180 * 86400000 - Math.random() * 30 * 86400000).toISOString().replace('T',' ').slice(0,19),
+        chunk_size: 512,
+        overlap: 64
+      }
+    });
+  }
+})();
+
+function vmGetFiltered() {
+  var partition = document.getElementById('vmPartitionFilter').value;
+  var idQ = document.getElementById('vmIdSearch').value.trim().toLowerCase();
+  var metaQ = document.getElementById('vmMetaSearch').value.trim().toLowerCase();
+  return vmAllData.filter(function(d) {
+    if (partition && parseInt(d.shard) !== parseInt(partition)) return false;
+    if (idQ && d.id.indexOf(idQ) === -1) return false;
+    if (metaQ) {
+      var match = false;
+      for (var k in d.metadata) { if (String(d.metadata[k]).toLowerCase().indexOf(metaQ) !== -1) { match = true; break; } }
+      if (!match) return false;
+    }
+    return true;
+  });
+}
+
+function vmGoPage(p) {
+  vmCurrentPage = p;
+  vmRenderList();
+}
+
+function vmRenderList() {
+  var filtered = vmGetFiltered();
+  var pageSize = parseInt(document.querySelector('.vm-page-size').value);
+  var total = filtered.length;
+  var totalPages = Math.max(1, Math.ceil(total / pageSize));
+  if (vmCurrentPage > totalPages) vmCurrentPage = totalPages;
+  if (vmCurrentPage < 1) vmCurrentPage = 1;
+  var startIdx = (vmCurrentPage - 1) * pageSize;
+  var pageData = filtered.slice(startIdx, startIdx + pageSize);
+  var tbody = document.getElementById('vmTbody');
+  var html = '';
+  pageData.forEach(function(d) {
+    var checked = vmSelected[d.id] ? ' checked' : '';
+    html += '<tr class="' + (checked ? 'vm-selected' : '') + '" onclick="vmShowDetail(\'' + d.id + '\')">';
+    html += '<td style="cursor:default;"><input type="checkbox" ' + checked + ' onclick="event.stopPropagation();vmToggleItem(\'' + d.id + '\')"></td>';
+    html += '<td style="font-family:monospace;font-size:11px;">' + d.id + '</td>';
+    html += '<td title="' + d.summary + '">' + d.summary.slice(0, 50) + (d.summary.length > 50 ? '…' : '') + '</td>';
+    html += '<td style="text-align:center;">' + d.dims + '</td>';
+    html += '<td style="text-align:right;">' + d.shard + '</td>';
+    html += '<td style="text-align:right;font-size:11px;color:var(--text-muted);white-space:normal;">' + d.updated + '</td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+  // Update pagination buttons
+  document.getElementById('vmPrevBtn').disabled = vmCurrentPage <= 1;
+  document.getElementById('vmNextBtn').disabled = vmCurrentPage >= totalPages;
+  // Update header count
+  var showStart = startIdx + 1;
+  var showEnd = Math.min(startIdx + pageSize, total);
+  document.getElementById('vmTotalCount').textContent = '显示 ' + showEnd + ' / ' + total.toLocaleString();
+  vmUpdateSelectedCount();
+}
+
+function vmToggleAll() {
+  var checked = document.getElementById('vmCheckAll').checked;
+  var rows = document.querySelectorAll('#vmTbody tr');
+  rows.forEach(function(tr) {
+    var cb = tr.querySelector('input[type="checkbox"]');
+    if (cb) {
+      cb.checked = checked;
+      var id = tr.cells[1].textContent;
+      if (checked) vmSelected[id] = true; else delete vmSelected[id];
+      tr.className = checked ? 'vm-selected' : '';
+    }
+  });
+  vmUpdateSelectedCount();
+}
+
+function vmToggleItem(id) {
+  if (vmSelected[id]) delete vmSelected[id]; else vmSelected[id] = true;
+  vmRenderList();
+}
+
+function vmUpdateSelectedCount() {
+  var count = Object.keys(vmSelected).length;
+  // No longer showing selected count text, kept for internal tracking
+  var allCbs = document.querySelectorAll('#vmTbody input[type="checkbox"]');
+  var checkedCbs = document.querySelectorAll('#vmTbody input[type="checkbox"]:checked');
+  var checkAll = document.getElementById('vmCheckAll');
+  if (checkAll) checkAll.checked = allCbs.length > 0 && allCbs.length === checkedCbs.length;
+}
+
+function vmBatchDelete() {
+  var ids = Object.keys(vmSelected);
+  if (ids.length === 0) { alert('请先选择要删除的向量'); return; }
+  if (!confirm('确定删除选中的 ' + ids.length + ' 条向量数据？此操作不可撤销。')) return;
+  idLoop: for (var i = 0; i < ids.length; i++) {
+    for (var j = 0; j < vmAllData.length; j++) {
+      if (vmAllData[j].id === ids[i]) { vmAllData.splice(j,1); continue idLoop; }
+    }
+  }
+  vmSelected = {};
+  vmRenderList();
+  document.getElementById('vmDetailPanel').innerHTML =
+    '<div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">' +
+    '已删除</div>';
+}
+
+var _vmCurrentDetailId = null;
+
+function vmShowDetail(id) {
+  _vmCurrentDetailId = id;
+  var d = null;
+  for (var i = 0; i < vmAllData.length; i++) { if (vmAllData[i].id === id) { d = vmAllData[i]; break; } }
+  if (!d) return;
+  var rows = document.querySelectorAll('#vmTbody tr');
+  rows.forEach(function(r) {
+    r.className = r.cells[1].textContent === id ? 'vm-selected' : '';
+    if (r.cells[1].textContent === id) r.scrollIntoView({block:'nearest'});
+  });
+  // Build metadata fields
+  var metaHtml = '';
+  for (var k in d.metadata) {
+    var val = d.metadata[k];
+    if (k === 'category') {
+      metaHtml += '<div class="vm-meta-field"><label>' + k + '</label><select id="vmMeta_' + k + '">' + ['策略分析','基金调研','回测引擎','风险模型','Alpha 工厂','机器学习','期权定价','市场微观','CTA 系统','资产配置'].map(function(o){return '<option' + (val===o?' selected':'') + '>' + o + '</option>';}).join('') + '</select></div>';
+    } else if (k === 'tags') {
+      metaHtml += '<div class="vm-meta-field"><label>' + k + '（逗号分隔）</label><input id="vmMeta_' + k + '" value="' + val + '"></div>';
+    } else if (k === 'description') {
+      metaHtml += '<div class="vm-meta-field"><label>' + k + '</label><textarea id="vmMeta_' + k + '" rows="3">' + val + '</textarea></div>';
+    } else {
+      metaHtml += '<div class="vm-meta-field"><label>' + k + '</label><input id="vmMeta_' + k + '" value="' + val + '"></div>';
+    }
+  }
+  var vecPreview = '[' + d._vecFull.slice(0, 8).map(function(v){return parseFloat(v).toFixed(3);}).join(', ') + '...]';
+  var html =
+    '<div class="vm-detail-title">向量详情 · 编辑模式 <span class="vm-detail-cancel" onclick="vmCancelDetail()">取消</span></div>' +
+    '<div class="vm-detail-label">向量 ID</div>' +
+    '<div class="vm-detail-id">' + d.id + '</div>' +
+    '<div class="vm-detail-label">向量值（只读）</div>' +
+    '<div class="vm-vector-block">' + vecPreview + ']</div>' +
+    '<div class="vm-detail-label">关联 Metadata（可编辑）</div>' +
+    '<div class="vm-meta-card">' + metaHtml + '</div>' +
+    '<div class="vm-other-info">' +
+      '<div class="vm-detail-label">其他信息（只读）</div>' +
+      '<div class="vm-other-row"><span class="vm-other-key">embed_model:</span><span class="vm-other-val">' + d.sys.embedding_model + '</span></div>' +
+      '<div class="vm-other-row"><span class="vm-other-key">创建时间:</span><span class="vm-other-val">' + d.sys.created + '</span></div>' +
+      '<div class="vm-other-row"><span class="vm-other-key">L2 归一化:</span><span class="vm-other-val">是</span></div>' +
+    '</div>' +
+    '<div style="display:flex;gap:8px;justify-content:flex-end;padding-bottom:20px;">' +
+      '<button class="btn btn-sm btn-primary" onclick="vmSaveMetadata()">保存</button>' +
+      '<button class="btn btn-sm" style="color:var(--accent-rose);" onclick="vmDeleteSingle()">删除</button>' +
+    '</div>';
+  document.getElementById('vmDetailPanel').innerHTML = html;
+}
+
+function vmCancelDetail() {
+  _vmCurrentDetailId = null;
+  document.getElementById('vmDetailPanel').innerHTML =
+    '<div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">' +
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin-bottom:8px;opacity:0.4;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><br>点击左侧列表行查看详情</div>';
+}
+
+function vmSaveMetadata() {
+  if (!_vmCurrentDetailId) return;
+  var d = null;
+  for (var i = 0; i < vmAllData.length; i++) { if (vmAllData[i].id === _vmCurrentDetailId) { d = vmAllData[i]; break; } }
+  if (!d) return;
+  for (var k in d.metadata) {
+    var el = document.getElementById('vmMeta_' + k);
+    if (el) d.metadata[k] = el.value;
+  }
+  alert('Metadata 已保存（仅更新 Metadata，未修改向量值）');
+}
+
+function vmDeleteSingle() {
+  if (!_vmCurrentDetailId) return;
+  if (!confirm('确定删除向量 ' + _vmCurrentDetailId + '？')) return;
+  for (var j = 0; j < vmAllData.length; j++) {
+    if (vmAllData[j].id === _vmCurrentDetailId) { vmAllData.splice(j, 1); break; }
+  }
+  delete vmSelected[_vmCurrentDetailId];
+  _vmCurrentDetailId = null;
+  vmRenderList();
+  document.getElementById('vmDetailPanel').innerHTML =
+    '<div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">已删除</div>';
+}
+
+// Init vector list when tab is shown
+function switchKbTab(el, tab) {
+  document.querySelectorAll('#page-knowledge .tabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('kb-mgmt').style.display = tab === 'mgmt' ? '' : 'none';
+  document.getElementById('kb-vector').style.display = tab === 'vector' ? '' : 'none';
+  if (tab === 'vector') { vmCurrentPage = 1; vmRenderList(); }
+}
+
 // ===== BACKEND ADMIN =====
-const adminProjectTypes = ['BD', '运营', '合规', '风控', '产品', 'IT', '智能中心', '管理'];
-const adminTaskTypes = ['文档处理', '数据分析', '内容生成', '代码编写', '翻译', '审查', '报告', '设计'];
+const adminProjectTypes = [
+  { cn: '运营', en: 'Operations' },
+  { cn: '合规', en: 'Compliance' },
+  { cn: '风控', en: 'Risk Control' },
+  { cn: '产品', en: 'Product' },
+  { cn: 'IT', en: 'Information Technology' },
+  { cn: '智能中心', en: 'AI Center' },
+  { cn: '管理', en: 'Management' }
+];
+const adminTaskTypes = [
+  { cn: '文档处理', en: 'Document Processing' },
+  { cn: '数据分析', en: 'Data Analysis' },
+  { cn: '内容生成', en: 'Content Generation' },
+  { cn: '代码编写', en: 'Code Writing' },
+  { cn: '翻译', en: 'Translation' },
+  { cn: '审查', en: 'Review' },
+  { cn: '报告', en: 'Report' },
+  { cn: '设计', en: 'Design' }
+];
 const adminModelRoutes = [
   { scene: '文档处理', model: 'GPT-4o', endpoint: 'https://api.openai.com/v1/chat/completions', priority: 1, fallback: 'GPT-3.5-turbo', status: true },
   { scene: '数据分析', model: 'Claude 3.5 Sonnet', endpoint: 'https://api.anthropic.com/v1/messages', priority: 1, fallback: 'GPT-4o', status: true },
@@ -4243,6 +4691,12 @@ function editNotifTemplate(btn) {
   const textarea = row.querySelector('.notif-input');
   textarea.style.display = 'block';
   textarea.value = row.querySelector('.notif-text').textContent;
+  // Show English name input
+  const enSpan = row.querySelector('.notif-row-en');
+  const enInput = row.querySelector('.notif-en-input');
+  enSpan.style.display = 'none';
+  enInput.style.display = 'block';
+  enInput.value = enSpan.dataset.en;
   row.querySelector('.notif-actions').style.display = 'flex';
 }
 
@@ -4253,6 +4707,13 @@ function saveNotifTemplate(btn) {
   textDiv.textContent = textarea.value;
   textDiv.style.display = 'block';
   textarea.style.display = 'none';
+  // Save English name
+  const enSpan = row.querySelector('.notif-row-en');
+  const enInput = row.querySelector('.notif-en-input');
+  enSpan.textContent = enInput.value;
+  enSpan.dataset.en = enInput.value;
+  enSpan.style.display = 'block';
+  enInput.style.display = 'none';
   row.querySelector('.notif-actions').style.display = 'none';
   console.log('Template [' + row.dataset.type + '] saved:', textarea.value);
 }
@@ -4264,6 +4725,12 @@ function cancelEditNotif(btn) {
   textarea.value = textDiv.textContent;
   textDiv.style.display = 'block';
   textarea.style.display = 'none';
+  // Cancel English name edit
+  const enSpan = row.querySelector('.notif-row-en');
+  const enInput = row.querySelector('.notif-en-input');
+  enInput.value = enSpan.dataset.en;
+  enSpan.style.display = 'block';
+  enInput.style.display = 'none';
   row.querySelector('.notif-actions').style.display = 'none';
 }
 
@@ -4283,12 +4750,14 @@ function toggleSkill(btn) {
 }
 
 function addConfigItem(type) {
-  const name = prompt('请输入' + (type === 'project' ? '项目' : '任务') + '类型名称：');
+  const name = prompt('请输入' + (type === 'project' ? '项目' : '任务') + '类型名称（中文）：');
   if (!name || !name.trim()) return;
+  const en = prompt('请输入英文名称：');
+  if (!en || !en.trim()) return;
   const tbody = document.getElementById(type === 'project' ? 'projectTypeTableBody' : 'taskTypeTableBody');
   const now = new Date().toISOString().slice(0, 10);
   const tr = document.createElement('tr');
-  tr.innerHTML = '<td>' + name.trim() + '</td><td>' + (type === 'project' ? '项目类型' : '任务类型') + '</td><td>' + now + '</td><td><button class="btn btn-sm btn-danger" onclick="this.closest(\'tr\').remove()">删除</button></td>';
+  tr.innerHTML = '<td>' + name.trim() + '</td><td>' + en.trim() + '</td><td>' + (type === 'project' ? '项目类型' : '任务类型') + '</td><td>' + now + '</td><td><button class="btn btn-sm btn-danger" onclick="this.closest(\'tr\').remove()">删除</button></td>';
   tbody.appendChild(tr);
 }
 
@@ -4305,10 +4774,12 @@ function addModelRoute() {
 function addSensitiveWord() {
   const word = prompt('请输入敏感词：');
   if (!word || !word.trim()) return;
+  const en = prompt('请输入英文描述：');
+  if (!en || !en.trim()) return;
   const category = prompt('请输入分类（违法内容/政治敏感/不文明用语/垃圾信息）：') || '违法内容';
   const tbody = document.getElementById('sensitiveWordTableBody');
   const tr = document.createElement('tr');
-  tr.innerHTML = '<td class="sw-word">' + word.trim() + '</td><td>' + category + '</td><td><span class="tag tag-red">高危</span></td><td>0</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除？\'))this.closest(\'tr\').remove()">删除</button></td>';
+  tr.innerHTML = '<td class="sw-word">' + word.trim() + '</td><td>' + en.trim() + '</td><td>' + category + '</td><td><span class="tag tag-red">高危</span></td><td>0</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除？\'))this.closest(\'tr\').remove()">删除</button></td>';
   tbody.appendChild(tr);
 }
 
@@ -4392,7 +4863,7 @@ function renderAdminData() {
     projectTbody.innerHTML = '';
     adminProjectTypes.forEach(function(t) {
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td>' + t + '</td><td>项目类型</td><td>2026-06-01</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除 ' + t + ' ？\'))this.closest(\'tr\').remove()">删除</button></td>';
+      tr.innerHTML = '<td>' + t.cn + '</td><td>' + t.en + '</td><td>项目类型</td><td>2026-06-01</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除 ' + t.cn + ' ？\'))this.closest(\'tr\').remove()">删除</button></td>';
       projectTbody.appendChild(tr);
     });
   }
@@ -4401,7 +4872,7 @@ function renderAdminData() {
     taskTbody.innerHTML = '';
     adminTaskTypes.forEach(function(t) {
       const tr = document.createElement('tr');
-      tr.innerHTML = '<td>' + t + '</td><td>任务类型</td><td>2026-06-01</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除 ' + t + ' ？\'))this.closest(\'tr\').remove()">删除</button></td>';
+      tr.innerHTML = '<td>' + t.cn + '</td><td>' + t.en + '</td><td>任务类型</td><td>2026-06-01</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除 ' + t.cn + ' ？\'))this.closest(\'tr\').remove()">删除</button></td>';
       taskTbody.appendChild(tr);
     });
   }
@@ -4482,6 +4953,7 @@ function submitBonusRequest(projectId) {
   closeProjectDetail();
   renderTodoItems();
   renderMessages();
+  renderNotificationMessages();
 }
 
 function renderTodoItems() {
@@ -4656,6 +5128,7 @@ function doApproveBonus() {
   closeProjectDetail();
   renderTodoItems();
   renderMessages();
+  renderNotificationMessages();
 }
 
 function doRejectBonus() {
@@ -4669,6 +5142,7 @@ function doRejectBonus() {
   closeProjectDetail();
   renderTodoItems();
   renderMessages();
+  renderNotificationMessages();
 }
 
 // ===== TODO FILTER =====
@@ -4709,6 +5183,101 @@ function toggleLanguage() {
   location.reload();
 }
 
+// ===== NOTIFICATION MESSAGES (Dashboard) =====
+const notifMessages = [
+  {
+    id: 'n1',
+    type: 'task',
+    title: '任务分配通知',
+    content: '您已被分配任务「Q3 市场调研报告」，请在 2026-06-20 前完成。',
+    time: '10 分钟前',
+    unread: true
+  },
+  {
+    id: 'n2',
+    type: 'review',
+    title: '审核通知',
+    content: '任务「API 接口文档编写」已完成，请审核。',
+    time: '1 小时前',
+    unread: true
+  },
+  {
+    id: 'n3',
+    type: 'review',
+    title: '验收通知',
+    content: '任务「前端页面优化」已完成并提交验收，请验收。',
+    time: '3 小时前',
+    unread: true
+  },
+  {
+    id: 'n4',
+    type: 'result',
+    title: '审核结果通知',
+    content: '任务「Q2 财报分析」审核通过，奖励 800 积分已到账。',
+    time: '昨天 14:23',
+    unread: false
+  },
+  {
+    id: 'n5',
+    type: 'reward',
+    title: '奖励到账通知',
+    content: '您获得奖励 500 积分（优秀贡献），当前余额 12,580 积分。',
+    time: '昨天 09:15',
+    unread: false
+  },
+  {
+    id: 'n6',
+    type: 'task',
+    title: '任务分配通知',
+    content: '您已被分配任务「合规风控升级方案」，优先级：高。',
+    time: '2026-06-13 16:40',
+    unread: false
+  },
+  {
+    id: 'n7',
+    type: 'result',
+    title: '审核结果通知',
+    content: '任务「智能对话模块 PRD」审核未通过，请修改后重新提交。',
+    time: '2026-06-12 11:00',
+    unread: false
+  }
+];
+
+function renderNotificationMessages() {
+  var unreadEl = document.getElementById('unreadMessages');
+  var readEl = document.getElementById('readMessages');
+  if (!unreadEl || !readEl) return;
+
+  var unreadItems = notifMessages.filter(function(m) { return m.unread; });
+  var readItems = notifMessages.filter(function(m) { return !m.unread; });
+
+  // Update badge count
+  var badge = document.querySelector('#msgTabUnread span');
+  if (badge) badge.textContent = unreadItems.length;
+
+  unreadEl.innerHTML = unreadItems.map(function(m) {
+    return '<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-light);">' +
+      '<div style="width:6px;height:6px;border-radius:50%;background:var(--primary);margin-top:6px;flex-shrink:0;"></div>' +
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="font-size:12px;font-weight:600;line-height:1.4;">' + m.title + '</div>' +
+        '<div style="font-size:11px;color:var(--text-secondary);line-height:1.4;margin-top:2px;">' + m.content + '</div>' +
+        '<div style="font-size:10px;color:var(--text-muted);margin-top:2px;">' + m.time + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('') || '<div style="padding:12px;text-align:center;font-size:12px;color:var(--text-muted);">暂无未读消息</div>';
+
+  readEl.innerHTML = readItems.map(function(m) {
+    return '<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-light);opacity:0.65;">' +
+      '<div style="width:6px;height:6px;border-radius:50%;background:var(--border);margin-top:6px;flex-shrink:0;"></div>' +
+      '<div style="flex:1;min-width:0;">' +
+        '<div style="font-size:12px;font-weight:600;line-height:1.4;">' + m.title + '</div>' +
+        '<div style="font-size:11px;color:var(--text-secondary);line-height:1.4;margin-top:2px;">' + m.content + '</div>' +
+        '<div style="font-size:10px;color:var(--text-muted);margin-top:2px;">' + m.time + '</div>' +
+      '</div>' +
+    '</div>';
+  }).join('') || '<div style="padding:12px;text-align:center;font-size:12px;color:var(--text-muted);">暂无已读消息</div>';
+}
+
 // 初始化语言按钮
 document.addEventListener('DOMContentLoaded', function() {
   var btn = document.getElementById('langToggleBtn');
@@ -4718,6 +5287,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   renderTodoItems();
   renderMessages();
+  renderNotificationMessages();
 });
 
 function renderBacklogKanban() {
