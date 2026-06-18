@@ -207,34 +207,56 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 16px;
+      gap: 24px;
       color: var(--text-muted);
-      padding: 40px 24px 60px;
+      padding: 40px 24px 20px;
+      overflow-y: auto;
     }
-    .chat-empty-icon {
-      width: 72px; height: 72px;
-      border-radius: 50%;
-      background: var(--primary-light);
+    .chat-empty-avatar {
+      width: 120px; height: 120px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 32px;
+      font-size: 80px;
+      opacity: 0.6;
+      filter: grayscale(0.5);
     }
-    .chat-empty h2 { font-size: 18px; font-weight: 700; color: var(--text); }
-    .chat-empty p { font-size: 13px; color: var(--text-muted); max-width: 400px; text-align: center; }
-    .chat-suggestions {
-      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
-      margin-top: 8px;
+    .chat-empty h2 { font-size: 22px; font-weight: 700; color: var(--text); margin: 0; }
+    .chat-empty-categories {
+      display: flex; gap: 4px;
+      background: var(--card);
+      border-radius: 20px;
+      padding: 4px;
+      border: 1px solid var(--border);
     }
-    .chat-suggestion {
+    .chat-category-btn {
       padding: 8px 16px;
+      border-radius: 16px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: var(--transition);
+      background: transparent;
+      color: var(--text-secondary);
+      border: none;
+      white-space: nowrap;
+    }
+    .chat-category-btn:hover { color: var(--text); }
+    .chat-category-btn.active { background: var(--primary); color: #fff; }
+    .chat-empty-skills {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+      margin-top: auto;
+      padding-bottom: 8px;
+    }
+    .chat-skill-tag {
+      padding: 6px 14px;
       border: 1px solid var(--border);
       border-radius: var(--radius-full);
-      font-size: 13px;
+      font-size: 12px;
       cursor: pointer;
       transition: var(--transition);
       background: var(--card);
       color: var(--text-secondary);
+      display: flex; align-items: center; gap: 4px;
     }
-    .chat-suggestion:hover { border-color: var(--primary-border); color: var(--primary); }
+    .chat-skill-tag:hover { border-color: var(--primary-border); color: var(--primary); background: var(--primary-light); }
 
     /* Chat Input */
     .chat-input-container {
@@ -1497,13 +1519,13 @@
       <div class="sidebar-divider"></div>
       <button class="sidebar-btn" data-page="project-task-config">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-        <span class="sidebar-tooltip">项目任务管理</span>
+        <span class="sidebar-tooltip">基础配置</span>
       </button>
       <button class="sidebar-btn" data-admin-tab="skills">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
         <span class="sidebar-tooltip">AI参数配置</span>
       </button>
-      <button class="sidebar-btn" data-admin-tab="messages">
+      <button class="sidebar-btn" data-page="message-config">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="12" y1="8" x2="12" y2="14"/><line x1="8" y1="11" x2="16" y2="11"/></svg>
         <span class="sidebar-tooltip">消息配置</span>
       </button>
@@ -1565,6 +1587,15 @@
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                         技能 <span id="activeSkillCount" style="font-size:11px;color:var(--primary);font-weight:600;">0/1</span>
                       </button>
+                      <select id="projectDocSelect" onchange="loadProjectDoc(this)" style="height:28px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);font-size:11px;padding:0 8px;outline:none;cursor:pointer;max-width:160px;">
+                        <option value="">📂 引用项目资料</option>
+                        <option value="2026年Q1销售数据分析报告.pdf">Q1 销售数据分析报告</option>
+                        <option value="Remi平台API接口规范V2.1.docx">API 接口规范 V2.1</option>
+                        <option value="数据安全合规政策V3.0.docx">数据安全合规政策 V3.0</option>
+                        <option value="智能对话模块PRD.pdf">智能对话模块 PRD</option>
+                        <option value="Q2项目验收报告模板.docx">Q2 项目验收报告模板</option>
+                        <option value="敏捷开发最佳实践案例集.pdf">敏捷开发最佳实践案例集</option>
+                      </select>
                       <div id="skillSelectorDropdown" class="skill-selector-dropdown" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:8px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:8px;width:220px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;"></div>
                     </div>
                     <div id="selectedSkillsBar" style="padding:4px 8px;display:flex;gap:4px;flex-wrap:wrap;"></div>
@@ -2226,43 +2257,19 @@
               </div>
               <div style="padding:0 16px;">
                 <div class="tab-bar" id="ucPointsTabBar" style="margin-bottom:0;">
-                  <button class="tab-bar-item active" onclick="switchUcPointsTab(this,'detail')">积分明细</button>
-                  <button class="tab-bar-item" onclick="switchUcPointsTab(this,'exchange')">兑换记录</button>
-                  <button class="tab-bar-item" onclick="switchUcPointsTab(this,'settlement')">结算记录</button>
+                  <button class="tab-bar-item active">积分明细</button>
                 </div>
               </div>
-              <div class="table-wrap" style="border:none;border-radius:0;" id="ucPointsTabDetail">
+              <div class="table-wrap" style="border:none;border-radius:0;">
                 <table>
                   <thead><tr><th>时间</th><th>类型</th><th>来源</th><th>变动</th><th>余额</th></tr></thead>
                   <tbody>
                     <tr><td>2026-06-08 14:30</td><td><span class="tag tag-green">任务奖励</span></td><td>API接口文档编写</td><td style="color:var(--accent-emerald);font-weight:700;">+800</td><td>12,580</td></tr>
                     <tr><td>2026-06-07 10:15</td><td><span class="tag tag-amber">额外奖励</span></td><td>Q2财报分析优秀贡献</td><td style="color:var(--accent-emerald);font-weight:700;">+500</td><td>11,780</td></tr>
-                    <tr><td>2026-06-06 16:00</td><td><span class="tag tag-green">任务奖励</span></td><td>前端页面优化</td><td style="color:var(--accent-emerald);font-weight:700;">+600</td><td>11,280</td></tr>
+                    <tr><td>2026-06-06 16:00</td><td><span class="tag tag-green">任务奖励</span></td><td>前端页面优化</td><td style="color:var(--accent-emerald);font-weight:700;">+600</td><td>10,680</td></tr>
                     <tr><td>2026-06-05 09:45</td><td><span class="tag tag-green">任务奖励</span></td><td>数据安全合规审查</td><td style="color:var(--accent-emerald);font-weight:700;">+1,000</td><td>10,680</td></tr>
                   </tbody>
                 </table>
-              </div>
-              <div class="table-wrap" style="border:none;border-radius:0;display:none;" id="ucPointsTabExchange">
-                <table>
-                  <thead><tr><th>兑换时间</th><th>兑换单号</th><th>消耗积分</th><th>获得金额</th><th>状态</th><th>操作</th></tr></thead>
-                  <tbody>
-                    <tr><td>2026-06-10 14:30</td><td style="font-family:monospace;font-size:12px;">EX-20260610-001</td><td style="color:var(--accent-rose);font-weight:600;">-5,000</td><td>50.00 元</td><td><span class="tag tag-green">兑换成功</span></td><td><button class="btn btn-xs btn-ghost">查看</button></td></tr>
-                    <tr><td>2026-06-08 09:15</td><td style="font-family:monospace;font-size:12px;">EX-20260608-002</td><td style="color:var(--accent-rose);font-weight:600;">-10,000</td><td>100.00 元</td><td><span class="tag tag-green">兑换成功</span></td><td><button class="btn btn-xs btn-ghost">查看</button></td></tr>
-                    <tr><td>2026-06-05 16:42</td><td style="font-family:monospace;font-size:12px;">EX-20260605-001</td><td style="color:var(--accent-rose);font-weight:600;">-2,480</td><td>24.80 元</td><td><span class="tag tag-amber">处理中</span></td><td><button class="btn btn-xs btn-ghost">查看</button></td></tr>
-                  </tbody>
-                </table>
-              </div>
-              <div style="display:none;" id="ucPointsTabSettlement">
-                <div class="table-wrap" style="border:none;border-radius:0;">
-                  <table>
-                    <thead><tr><th>时间</th><th>来源</th><th>金额</th><th>状态</th></tr></thead>
-                    <tbody>
-                      <tr><td>2026-06-08 14:30</td><td>API接口文档编写</td><td style="color:var(--accent-emerald);font-weight:700;">+800</td><td><span class="tag tag-green">已结算</span></td></tr>
-                      <tr><td>2026-06-07 10:15</td><td>Q2财报分析优秀贡献</td><td style="color:var(--accent-emerald);font-weight:700;">+500</td><td><span class="tag tag-green">已结算</span></td></tr>
-                      <tr><td>2026-06-06 16:00</td><td>前端页面优化</td><td style="color:var(--accent-emerald);font-weight:700;">+600</td><td><span class="tag tag-amber">待结算</span></td></tr>
-                    </tbody>
-                  </table>
-                </div>
               </div>
             </div>
           </div>
@@ -2289,15 +2296,10 @@
             <div class="select-wrap"><select id="projectLeadFilter" onchange="renderProjects()"><option value="all">全部负责人</option><option>张明远</option><option>李晓华</option><option>赵明</option><option>王思远</option><option>陈雨桐</option></select></div>
             <div class="select-wrap"><select id="projectSort" onchange="renderProjects()"><option value="created">按创建时间</option><option value="budget">按预算</option><option value="progress">按进度</option></select></div>
           </div>
-          <div class="tab-bar" id="projectViewTabs" style="margin-bottom:12px;">
-            <button class="tab-bar-item active" onclick="switchProjectView(this,'card')">📇 卡片视图</button>
-            <button class="tab-bar-item" onclick="switchProjectView(this,'list')">📋 列表视图</button>
-          </div>
-          <div class="project-kanban" id="projectGrid"></div>
-          <div id="projectListView" class="card" style="padding:0;overflow:hidden;display:none;">
+          <div id="projectListView" class="card" style="padding:0;overflow:hidden;">
             <div class="table-wrap" style="border:none;">
               <table>
-                <thead><tr><th>项目名称</th><th>编号</th><th>负责人</th><th>状态</th><th>预算</th><th>进度</th><th>操作</th></tr></thead>
+                <thead><tr><th>项目名称</th><th>编号</th><th>负责人</th><th>状态</th><th>预算</th><th>进度</th><th>关联任务</th><th>操作</th></tr></thead>
                 <tbody id="projectListBody"></tbody>
               </table>
             </div>
@@ -2380,13 +2382,11 @@
             </div>
             <div style="padding:0 16px;">
               <div class="tab-bar" id="pointsTabBar" style="margin-bottom:0;">
-                <button class="tab-bar-item active" onclick="switchPointsTab(this,'detail')">积分明细</button>
-                <button class="tab-bar-item" onclick="switchPointsTab(this,'exchange')">兑换记录</button>
-                <button class="tab-bar-item" onclick="switchPointsTab(this,'settlement')">结算记录</button>
+                <button class="tab-bar-item active">积分明细</button>
               </div>
             </div>
             <!-- 积分明细 -->
-            <div id="pointsTabDetail" class="table-wrap" style="border:none;border-radius:0;">
+            <div class="table-wrap" style="border:none;border-radius:0;">
               <table>
                 <thead><tr><th>时间</th><th>类型</th><th>来源</th><th>变动</th><th>余额</th></tr></thead>
                 <tbody>
@@ -2398,34 +2398,6 @@
                 </tbody>
               </table>
             </div>
-            <!-- 兑换记录 -->
-            <div id="pointsTabExchange" class="table-wrap" style="border:none;border-radius:0;display:none;">
-              <table>
-                <thead><tr><th>兑换时间</th><th>兑换单号</th><th>消耗积分</th><th>获得金额</th><th>钱包地址</th><th>状态</th><th>操作</th></tr></thead>
-                <tbody>
-                  <tr><td>2026-06-10 14:30</td><td style="font-family:monospace;font-size:12px;">EX-20260610-001</td><td style="color:var(--accent-rose);font-weight:600;">-5,000</td><td>50.00 元</td><td style="font-family:monospace;font-size:11px;color:var(--text-muted);">0x8f3E...2b7A</td><td><span class="tag tag-green">兑换成功</span></td><td><button class="btn btn-xs btn-ghost">查看</button></td></tr>
-                  <tr><td>2026-06-08 09:15</td><td style="font-family:monospace;font-size:12px;">EX-20260608-002</td><td style="color:var(--accent-rose);font-weight:600;">-10,000</td><td>100.00 元</td><td style="font-family:monospace;font-size:11px;color:var(--text-muted);">0x8f3E...2b7A</td><td><span class="tag tag-green">兑换成功</span></td><td><button class="btn btn-xs btn-ghost">查看</button></td></tr>
-                  <tr><td>2026-06-05 16:42</td><td style="font-family:monospace;font-size:12px;">EX-20260605-001</td><td style="color:var(--accent-rose);font-weight:600;">-2,480</td><td>24.80 元</td><td style="font-family:monospace;font-size:11px;color:var(--text-muted);">0x8f3E...2b7A</td><td><span class="tag tag-amber">处理中</span></td><td><button class="btn btn-xs btn-ghost">查看</button></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <!-- 结算记录 -->
-            <div id="pointsTabSettlement" style="display:none;">
-              <div style="display:flex;gap:16px;padding:12px 16px;border-bottom:1px solid var(--border-light);">
-                <div style="font-size:12px;color:var(--text-muted);">累计已结算: <strong style="color:var(--text);">58,320 RP</strong></div>
-                <div style="font-size:12px;color:var(--text-muted);">本月待结算: <strong style="color:var(--accent-amber);">4,600 RP</strong></div>
-                <div style="font-size:12px;color:var(--text-muted);">本月已提现: <strong style="color:var(--accent-emerald);">12,000 RP</strong></div>
-              </div>
-              <div class="table-wrap" style="border:none;border-radius:0;">
-                <table>
-                  <thead><tr><th>时间</th><th>来源</th><th>金额</th><th>状态</th></tr></thead>
-                  <tbody>
-                    <tr><td>2026-06-08 14:30</td><td>API接口文档编写 · 技术文档项目</td><td style="color:var(--accent-emerald);font-weight:700;">+800</td><td><span class="tag tag-green">已结算</span></td></tr>
-                    <tr><td>2026-06-07 10:15</td><td>Q2财报分析优秀贡献 · 财务分析项目</td><td style="color:var(--accent-emerald);font-weight:700;">+500</td><td><span class="tag tag-green">已结算</span></td></tr>
-                    <tr><td>2026-06-06 16:00</td><td>前端页面优化 · 技术文档项目</td><td style="color:var(--accent-emerald);font-weight:700;">+600</td><td><span class="tag tag-amber">待结算</span></td></tr>
-                  </tbody>
-                </table>
-              </div>
             </div>
           </div>
           <div class="card">
@@ -2443,12 +2415,13 @@
       <div class="page" id="page-project-task-config">
         <div class="page-inner">
           <div style="margin-bottom:20px;">
-            <h1 style="font-size:20px;font-weight:700;">项目任务管理</h1>
-            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">项目类型与任务类型配置管理</p>
+            <h1 style="font-size:20px;font-weight:700;">基础配置</h1>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">项目类型、任务类型与知识类型配置管理</p>
           </div>
           <div class="tabs" style="margin-bottom:20px;">
             <button class="tab active" onclick="switchPTConfigTab(this,'project')">项目配置</button>
             <button class="tab" onclick="switchPTConfigTab(this,'task')">任务配置</button>
+            <button class="tab" onclick="switchPTConfigTab(this,'knowledge')">知识配置</button>
           </div>
           <div id="ptc-project">
             <div class="card">
@@ -2478,6 +2451,132 @@
               </div>
             </div>
           </div>
+          <div id="ptc-knowledge" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">知识类型配置</div>
+                <button class="btn btn-sm" onclick="addConfigItem('knowledge')">+ 新增类型</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>类型名称</th><th>英文名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
+                  <tbody id="knowledgeTypeTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ===== PAGE: MESSAGE CONFIG ===== -->
+      <div class="page" id="page-message-config">
+        <div class="page-inner">
+          <div style="margin-bottom:20px;">
+            <h1 style="font-size:20px;font-weight:700;">消息配置</h1>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">消息通知模板管理</p>
+          </div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">消息通知模板</div>
+              <span style="font-size:12px;color:var(--text-muted);">支持变量：{user} 用户名称、{task_name} 任务名称、{result} 审核结果、{points} 积分数额、{balance} 当前余额</span>
+            </div>
+            <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
+              <div class="notif-row" data-type="assign">
+                <div class="notif-row-header">
+                  <div class="notif-row-info">
+                    <span class="notif-row-title">任务分配通知</span>
+                    <span class="notif-row-en" data-en="Task Assignment Notice">Task Assignment Notice</span>
+                    <span class="notif-row-desc">通知接收人在任务被分配时触发</span>
+                  </div>
+                  <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                </div>
+                <div class="notif-row-body">
+                  <div class="notif-text">您已被分配任务「{task_name}」，请及时处理。</div>
+                  <textarea class="notif-input" style="display:none;" rows="2">您已被分配任务「{task_name}」，请及时处理。</textarea>
+                  <input class="notif-en-input" style="display:none;" data-en="Task Assignment Notice" value="Task Assignment Notice">
+                  <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                    <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                    <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                  </div>
+                </div>
+              </div>
+              <div class="notif-row" data-type="review">
+                <div class="notif-row-header">
+                  <div class="notif-row-info">
+                    <span class="notif-row-title">审核通知</span>
+                    <span class="notif-row-en" data-en="Review Notice">Review Notice</span>
+                    <span class="notif-row-desc">通知审核人有任务待审核时触发</span>
+                  </div>
+                  <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                </div>
+                <div class="notif-row-body">
+                  <div class="notif-text">任务「{task_name}」待审核，请前往查看。</div>
+                  <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」待审核，请前往查看。</textarea>
+                  <input class="notif-en-input" style="display:none;" data-en="Review Notice" value="Review Notice">
+                  <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                    <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                    <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                  </div>
+                </div>
+              </div>
+              <div class="notif-row" data-type="accept">
+                <div class="notif-row-header">
+                  <div class="notif-row-info">
+                    <span class="notif-row-title">验收通知</span>
+                    <span class="notif-row-en" data-en="Acceptance Notice">Acceptance Notice</span>
+                    <span class="notif-row-desc">通知验收人任务已完成待验收时触发</span>
+                  </div>
+                  <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                </div>
+                <div class="notif-row-body">
+                  <div class="notif-text">任务「{task_name}」已完成，请验收。</div>
+                  <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」已完成，请验收。</textarea>
+                  <input class="notif-en-input" style="display:none;" data-en="Acceptance Notice" value="Acceptance Notice">
+                  <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                    <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                    <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                  </div>
+                </div>
+              </div>
+              <div class="notif-row" data-type="result">
+                <div class="notif-row-header">
+                  <div class="notif-row-info">
+                    <span class="notif-row-title">审核结果通知</span>
+                    <span class="notif-row-en" data-en="Review Result Notice">Review Result Notice</span>
+                    <span class="notif-row-desc">任务提交人审核出结果时触发</span>
+                  </div>
+                  <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                </div>
+                <div class="notif-row-body">
+                  <div class="notif-text">任务「{task_name}」审核{result}</div>
+                  <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」审核{result}</textarea>
+                  <input class="notif-en-input" style="display:none;" data-en="Review Result Notice" value="Review Result Notice">
+                  <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                    <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                    <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                  </div>
+                </div>
+              </div>
+              <div class="notif-row" data-type="reward">
+                <div class="notif-row-header">
+                  <div class="notif-row-info">
+                    <span class="notif-row-title">奖励到账通知</span>
+                    <span class="notif-row-en" data-en="Reward Notice">Reward Notice</span>
+                    <span class="notif-row-desc">用户获得积分奖励时触发</span>
+                  </div>
+                  <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
+                </div>
+                <div class="notif-row-body">
+                  <div class="notif-text">您获得奖励 {points} 积分，当前余额 {balance} 积分。</div>
+                  <textarea class="notif-input" style="display:none;" rows="2">您获得奖励 {points} 积分，当前余额 {balance} 积分。</textarea>
+                  <input class="notif-en-input" style="display:none;" data-en="Reward Notice" value="Reward Notice">
+                  <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
+                    <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
+                    <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- ===== PAGE: BACKEND ADMIN ===== -->
@@ -2490,7 +2589,6 @@
             <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能配置</button>
             <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型配置</button>
             <button class="tab" data-admin-tab="safety" onclick="switchAdminTab('safety')">内容安全配置</button>
-            <button class="tab" data-admin-tab="messages" onclick="switchAdminTab('messages')">消息配置</button>
             <button class="tab" data-admin-tab="retrieval" onclick="switchAdminTab('retrieval')">知识检索规则</button>
           </div>
 
@@ -2551,113 +2649,6 @@
                   </thead>
                   <tbody id="modelRouteTableBody"></tbody>
                 </table>
-              </div>
-            </div>
-          </div>
-
-          <!-- 消息配置 -->
-          <div class="admin-tab-content" id="admin-messages" style="display:none;">
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">消息通知模板</div>
-                <span style="font-size:12px;color:var(--text-muted);">支持变量：{user} 用户名称、{task_name} 任务名称、{result} 审核结果、{points} 积分数额、{balance} 当前余额</span>
-              </div>
-              <div style="padding:16px;display:flex;flex-direction:column;gap:12px;">
-                <div class="notif-row" data-type="assign">
-                  <div class="notif-row-header">
-                    <div class="notif-row-info">
-                      <span class="notif-row-title">任务分配通知</span>
-                      <span class="notif-row-en" data-en="Task Assignment Notice">Task Assignment Notice</span>
-                      <span class="notif-row-desc">通知接收人在任务被分配时触发</span>
-                    </div>
-                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
-                  </div>
-                  <div class="notif-row-body">
-                    <div class="notif-text">您已被分配任务「{task_name}」，请及时处理。</div>
-                    <textarea class="notif-input" style="display:none;" rows="2">您已被分配任务「{task_name}」，请及时处理。</textarea>
-                    <input class="notif-en-input" style="display:none;" data-en="Task Assignment Notice" value="Task Assignment Notice">
-                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
-                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
-                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="notif-row" data-type="review">
-                  <div class="notif-row-header">
-                    <div class="notif-row-info">
-                      <span class="notif-row-title">审核通知</span>
-                      <span class="notif-row-en" data-en="Review Notice">Review Notice</span>
-                      <span class="notif-row-desc">通知审核人有任务待审核时触发</span>
-                    </div>
-                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
-                  </div>
-                  <div class="notif-row-body">
-                    <div class="notif-text">任务「{task_name}」待审核，请前往查看。</div>
-                    <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」待审核，请前往查看。</textarea>
-                    <input class="notif-en-input" style="display:none;" data-en="Review Notice" value="Review Notice">
-                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
-                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
-                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="notif-row" data-type="accept">
-                  <div class="notif-row-header">
-                    <div class="notif-row-info">
-                      <span class="notif-row-title">验收通知</span>
-                      <span class="notif-row-en" data-en="Acceptance Notice">Acceptance Notice</span>
-                      <span class="notif-row-desc">通知验收人任务已完成待验收时触发</span>
-                    </div>
-                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
-                  </div>
-                  <div class="notif-row-body">
-                    <div class="notif-text">任务「{task_name}」已完成，请验收。</div>
-                    <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」已完成，请验收。</textarea>
-                    <input class="notif-en-input" style="display:none;" data-en="Acceptance Notice" value="Acceptance Notice">
-                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
-                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
-                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="notif-row" data-type="result">
-                  <div class="notif-row-header">
-                    <div class="notif-row-info">
-                      <span class="notif-row-title">审核结果通知</span>
-                      <span class="notif-row-en" data-en="Review Result Notice">Review Result Notice</span>
-                      <span class="notif-row-desc">任务提交人审核出结果时触发</span>
-                    </div>
-                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
-                  </div>
-                  <div class="notif-row-body">
-                    <div class="notif-text">任务「{task_name}」审核{result}</div>
-                    <textarea class="notif-input" style="display:none;" rows="2">任务「{task_name}」审核{result}</textarea>
-                    <input class="notif-en-input" style="display:none;" data-en="Review Result Notice" value="Review Result Notice">
-                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
-                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
-                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
-                    </div>
-                  </div>
-                </div>
-                <div class="notif-row" data-type="reward">
-                  <div class="notif-row-header">
-                    <div class="notif-row-info">
-                      <span class="notif-row-title">奖励到账通知</span>
-                      <span class="notif-row-en" data-en="Reward Notice">Reward Notice</span>
-                      <span class="notif-row-desc">用户获得积分奖励时触发</span>
-                    </div>
-                    <button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button>
-                  </div>
-                  <div class="notif-row-body">
-                    <div class="notif-text">您获得奖励 {points} 积分，当前余额 {balance} 积分。</div>
-                    <textarea class="notif-input" style="display:none;" rows="2">您获得奖励 {points} 积分，当前余额 {balance} 积分。</textarea>
-                    <input class="notif-en-input" style="display:none;" data-en="Reward Notice" value="Reward Notice">
-                    <div class="notif-actions" style="display:none;margin-top:8px;gap:8px;">
-                      <button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button>
-                      <button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -2733,95 +2724,26 @@
           <div class="admin-tab-content" id="admin-retrieval" style="display:none;">
             <div class="card">
               <div class="card-header">
-                <div class="card-title">检索策略配置</div>
-                <span style="font-size:12px;color:var(--text-muted);">配置知识库检索的行为和参数</span>
+                <div class="card-title">相似度阈值</div>
+                <span style="font-size:12px;color:var(--text-muted);">设置向量检索的最低相似度阈值</span>
               </div>
-              <div style="padding:16px;display:flex;flex-direction:column;gap:16px;">
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-                  <div class="form-group">
-                    <label class="form-label">检索模式</label>
-                    <select class="form-input" style="appearance:auto;">
-                      <option selected>混合检索（向量+关键词）</option>
-                      <option>纯向量检索</option>
-                      <option>纯关键词检索</option>
-                    </select>
-                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">向量检索语义相似度，关键词检索精确匹配</span>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">Top-K 结果数量</label>
-                    <select class="form-input" style="appearance:auto;">
-                      <option>3</option>
-                      <option selected>5</option>
-                      <option>8</option>
-                      <option>10</option>
-                      <option>15</option>
-                      <option>20</option>
-                    </select>
-                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">每次检索返回的最相关文档片段数</span>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">相似度阈值</label>
-                    <select class="form-input" style="appearance:auto;">
-                      <option>0.50</option>
-                      <option>0.60</option>
-                      <option selected>0.70</option>
-                      <option>0.75</option>
-                      <option>0.80</option>
-                      <option>0.85</option>
-                      <option>0.90</option>
-                    </select>
-                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">低于此阈值的文档将被过滤</span>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">重排序策略</label>
-                    <select class="form-input" style="appearance:auto;">
-                      <option selected>交叉编码器重排序</option>
-                      <option>Cohere Rerank</option>
-                      <option>BM25 + 向量融合排序</option>
-                      <option>不启用重排序</option>
-                    </select>
-                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">对初筛结果进行二次排序提升准确率</span>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">检索召回策略</label>
-                    <select class="form-input" style="appearance:auto;">
-                      <option selected>MMR（最大边际相关性）</option>
-                      <option>Top-K 直接截断</option>
-                      <option>按时间优先</option>
-                    </select>
-                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">多结果时选择最相关且不重复的片段</span>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">查询扩展</label>
-                    <select class="form-input" style="appearance:auto;">
-                      <option selected>禁用</option>
-                      <option>同义词扩展</option>
-                      <option>AI 生成相关查询</option>
-                    </select>
-                    <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">自动扩展用户查询以提高召回率</span>
-                  </div>
+              <div style="padding:16px;">
+                <div class="form-group" style="max-width:300px;">
+                  <label class="form-label">阈值设置</label>
+                  <select class="form-input" style="appearance:auto;">
+                    <option>0.50</option>
+                    <option>0.60</option>
+                    <option selected>0.70</option>
+                    <option>0.75</option>
+                    <option>0.80</option>
+                    <option>0.85</option>
+                    <option>0.90</option>
+                  </select>
+                  <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">低于此阈值的文档将被过滤</span>
                 </div>
-                <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:16px;">
+                <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:16px;margin-top:16px;">
                   <button class="btn btn-primary btn-sm">保存配置</button>
                 </div>
-              </div>
-            </div>
-            <div class="card" style="margin-top:16px;">
-              <div class="card-header">
-                <div class="card-title">检索白名单</div>
-                <button class="btn btn-sm">+ 添加白名单</button>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr><th>文档/目录</th><th>类型</th><th>所有人</th><th>操作</th></tr>
-                  </thead>
-                  <tbody>
-                    <tr><td>/公司制度/员工手册_v3.pdf</td><td>文档</td><td>行政部</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td>/技术文档/API 规范/</td><td>目录</td><td>技术部</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                    <tr><td>/产品手册/</td><td>目录</td><td>产品部</td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-                  </tbody>
-                </table>
               </div>
             </div>
           </div>
@@ -3042,17 +2964,48 @@ function renderMessages() {
   if (chatMessages.length === 0) {
     container.innerHTML = `
       <div class="chat-empty">
-        <div class="chat-empty-icon">💬</div>
-        <h2>有什么我可以帮你的？</h2>
-        <p>我可以回答问题、分析文档、翻译内容、生成代码...</p>
-        <div class="chat-suggestions">
-          <div class="chat-suggestion" onclick="quickSend('帮我总结一下最近的销售数据')">📊 分析销售数据</div>
-          <div class="chat-suggestion" onclick="quickSend('请将这份文档翻译成英文')">🌐 翻译文档</div>
-          <div class="chat-suggestion" onclick="quickSend('帮我写一封商务邮件')">✉️ 写邮件</div>
-          <div class="chat-suggestion" onclick="quickSend('检查这段代码的安全性')">💻 审查代码</div>
+        <div class="chat-empty-avatar">
+          <svg viewBox="0 0 100 120" width="100" height="100" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.5">
+            <rect x="25" y="5" width="50" height="40" rx="8" />
+            <circle cx="40" cy="22" r="4" />
+            <circle cx="60" cy="22" r="4" />
+            <rect x="35" y="30" width="30" height="6" rx="3" />
+            <rect x="30" y="50" width="40" height="35" rx="6" />
+            <rect x="15" y="55" width="12" height="25" rx="6" />
+            <rect x="73" y="55" width="12" height="25" rx="6" />
+            <rect x="30" y="88" width="12" height="22" rx="6" />
+            <rect x="58" y="88" width="12" height="22" rx="6" />
+            <circle cx="10" cy="10" r="4" fill="currentColor" opacity="0.3" />
+          </svg>
+        </div>
+        <h2>Remi，我帮你</h2>
+        <div class="chat-empty-categories" id="chatCategories">
+          <button class="chat-category-btn active">💻 代码开发</button>
+          <button class="chat-category-btn">🏢 日常办公</button>
+          <button class="chat-category-btn">🎨 设计创意</button>
+        </div>
+        <div class="chat-empty-skills">
+          <span class="chat-skill-tag" onclick="quickSend('帮我处理文档内容')">📄 文档处理</span>
+          <span class="chat-skill-tag" onclick="quickSend('帮我分析金融数据')"> 金融服务</span>
+          <span class="chat-skill-tag" onclick="quickSend('帮我做数据分析与可视化')"> 数据分析及可视化</span>
+          <span class="chat-skill-tag" onclick="quickSend('帮我深度研究一个话题')">🔍 深度研究</span>
+          <span class="chat-skill-tag" onclick="quickSend('帮我做产品管理')">📁 产品管理</span>
+          <span class="chat-skill-tag" onclick="quickSend('帮我制作幻灯片')"> 幻灯片</span>
         </div>
       </div>
     `;
+    // 添加分类按钮点击事件
+    setTimeout(function() {
+      var cats = document.getElementById('chatCategories');
+      if (cats) {
+        cats.addEventListener('click', function(e) {
+          if (e.target.classList.contains('chat-category-btn')) {
+            document.querySelectorAll('.chat-category-btn').forEach(function(btn) { btn.classList.remove('active'); });
+            e.target.classList.add('active');
+          }
+        });
+      }
+    }, 0);
     return;
   }
   container.innerHTML = chatMessages.map((m, idx) => `
@@ -3214,6 +3167,15 @@ function toggleSkillSelector() {
   }
   renderSkillDropdown();
   dropdown.style.display = 'block';
+}
+
+function loadProjectDoc(sel) {
+  const docName = sel.value;
+  if (!docName) return;
+  sel.value = '';
+  const input = document.getElementById('chatInput');
+  input.value = '请帮我分析文档《' + docName + '》的内容，并总结关键信息。';
+  input.focus();
 }
 
 function renderSkillDropdown() {
@@ -3695,8 +3657,6 @@ function closeProjectDetail() {
 
 // ===== PROJECTS =====
 function renderProjects() {
-  const grid = document.getElementById('projectGrid');
-  if (!grid) return;
   const search = (document.getElementById('projectSearch')?.value || '').toLowerCase();
   const statusFilter = document.getElementById('projectStatusFilter')?.value || 'all';
   const leadFilter = document.getElementById('projectLeadFilter')?.value || 'all';
@@ -3712,47 +3672,6 @@ function renderProjects() {
   if (sortBy === 'budget') filtered.sort((a, b) => b.budget - a.budget);
   else if (sortBy === 'progress') filtered.sort((a, b) => (b.spent + b.frozen) / b.budget - (a.spent + a.frozen) / a.budget);
 
-  const stageConfig = [
-    { key:'research', label:'调研阶段', icon:'🔍', color:'var(--accent-amber)' },
-    { key:'initiation', label:'立项阶段', icon:'📋', color:'var(--accent-violet)' },
-    { key:'execution', label:'项目执行', icon:'🔄', color:'var(--primary)' },
-    { key:'review', label:'项目验收', icon:'👁', color:'var(--accent-emerald)' },
-    { key:'closed', label:'项目结项', icon:'📦', color:'var(--text-muted)' },
-  ];
-
-  grid.innerHTML = stageConfig.map(s => {
-    const items = filtered.filter(p => p.stage === s.key);
-    return '<div class="project-kanban-col">' +
-      '<div class="project-kanban-col-header">' +
-        '<span>' + s.icon + ' ' + s.label + '</span>' +
-        '<span class="project-kanban-col-count">' + items.length + '</span>' +
-      '</div>' +
-      items.map(p => {
-        const remaining = p.budget - p.spent - p.frozen;
-        const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
-        return '<div class="project-card" onclick="openProjectDetail(\'' + p.id + '\')">' +
-          '<div class="project-card-name">' +
-            '<span style="font-family:monospace;font-size:10px;color:var(--text-muted);">' + p.id.toUpperCase() + '</span>' +
-            p.name +
-          '</div>' +
-          '<div class="project-card-desc">' + p.desc + '</div>' +
-          '<div class="project-card-meta">' +
-            '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>' + p.members + '人</span>' +
-            '<span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px;"><path d="M9 11l3 3L22 4"/></svg>' + p.tasks + '个任务</span>' +
-            '<span>👤 ' + p.lead + '</span>' +
-          '</div>' +
-          '<div class="project-budget-bar"><div class="project-budget-fill" style="width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div>' +
-           '<div class="project-budget-label"><span>预算使用 ' + pct + '%</span><span>剩余 ' + remaining.toLocaleString() + ' RP</span></div>' +
-           '<div style="display:flex;gap:4px;margin-top:8px;justify-content:flex-end;">' +
-             '<button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openProjectDetail(\'' + p.id + '\')" style="font-size:11px;">详情</button>' +
-             '<button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openBonusModal(\'' + p.id + '\')" style="font-size:11px;">+ 追加奖励</button>' +
-           '</div>' +
-         '</div>';
-      }).join('') +
-    '</div>';
-  }).join('');
-
-  // Also render list view
   const listBody = document.getElementById('projectListBody');
   if (listBody) {
     const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
@@ -3761,6 +3680,7 @@ function renderProjects() {
       const remaining = p.budget - p.spent - p.frozen;
       const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
       const statusTag = '<span class="tag ' + (stageTags[p.stage] || 'tag-slate') + '">' + (stageLabels[p.stage] || '未知') + '</span>';
+      const taskCount = tasks.filter(function(t) { return t.projectId === p.id; }).length;
       return '<tr style="cursor:pointer;" onclick="openProjectDetail(\'' + p.id + '\')">' +
         '<td style="font-weight:600;">' + p.name + '</td>' +
         '<td style="font-family:monospace;font-size:12px;color:var(--text-muted);">' + p.id.toUpperCase() + '</td>' +
@@ -3768,11 +3688,19 @@ function renderProjects() {
         '<td>' + statusTag + '</td>' +
         '<td style="font-weight:500;">' + p.budget.toLocaleString() + ' RP</td>' +
         '<td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:4px;"><div style="height:6px;border-radius:4px;width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div><span style="font-size:11px;color:var(--text-muted);">' + pct + '%</span></div></td>' +
+        '<td><a href="javascript:void(0)" onclick="event.stopPropagation();goToProjectTasks(\'' + p.id + '\')" style="color:var(--primary);text-decoration:none;font-weight:600;">' + taskCount + ' 个任务</a></td>' +
         '<td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openProjectDetail(\'' + p.id + '\')">详情</button>' +
         '<button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openBonusModal(\'' + p.id + '\')">追加奖励</button></td>' +
       '</tr>';
     }).join('');
   }
+}
+
+function goToProjectTasks(projectId) {
+  var filter = document.getElementById('taskProjectFilter');
+  if (filter) filter.value = projectId;
+  navigateTo('tasks');
+  renderKanban();
 }
 
 // ===== BACKLOG STAGES (dynamic) =====
@@ -4343,36 +4271,14 @@ function switchTaskView(el, view) {
   document.getElementById('taskViewList').style.display = view === 'list' ? 'block' : 'none';
 }
 
-function switchPointsTab(el, tab) {
-  document.querySelectorAll('#pointsTabBar .tab-bar-item').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('pointsTabDetail').style.display = tab === 'detail' ? '' : 'none';
-  document.getElementById('pointsTabExchange').style.display = tab === 'exchange' ? '' : 'none';
-  document.getElementById('pointsTabSettlement').style.display = tab === 'settlement' ? '' : 'none';
-}
-
-function switchUcPointsTab(el, tab) {
-  document.querySelectorAll('#ucPointsTabBar .tab-bar-item').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('ucPointsTabDetail').style.display = tab === 'detail' ? '' : 'none';
-  document.getElementById('ucPointsTabExchange').style.display = tab === 'exchange' ? '' : 'none';
-  document.getElementById('ucPointsTabSettlement').style.display = tab === 'settlement' ? '' : 'none';
-}
-
 function switchPTConfigTab(el, tab) {
   document.querySelectorAll('#page-project-task-config .tabs .tab').forEach(function(t) { t.classList.remove('active'); });
   el.classList.add('active');
   document.getElementById('ptc-project').style.display = tab === 'project' ? '' : 'none';
   document.getElementById('ptc-task').style.display = tab === 'task' ? '' : 'none';
+  document.getElementById('ptc-knowledge').style.display = tab === 'knowledge' ? '' : 'none';
 }
 
-function switchProjectView(el, view) {
-  document.querySelectorAll('#projectViewTabs .tab-bar-item').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('projectGrid').style.display = view === 'card' ? '' : 'none';
-  document.getElementById('projectListView').style.display = view === 'list' ? '' : 'none';
-  renderProjects();
-}
 
 function openTaskModal() {
   document.getElementById('modalContent').innerHTML = `
@@ -4777,7 +4683,6 @@ function editNotifTemplate(btn) {
   const textarea = row.querySelector('.notif-input');
   textarea.style.display = 'block';
   textarea.value = row.querySelector('.notif-text').textContent;
-  // Show English name input
   const enSpan = row.querySelector('.notif-row-en');
   const enInput = row.querySelector('.notif-en-input');
   enSpan.style.display = 'none';
@@ -4793,7 +4698,6 @@ function saveNotifTemplate(btn) {
   textDiv.textContent = textarea.value;
   textDiv.style.display = 'block';
   textarea.style.display = 'none';
-  // Save English name
   const enSpan = row.querySelector('.notif-row-en');
   const enInput = row.querySelector('.notif-en-input');
   enSpan.textContent = enInput.value;
@@ -4801,7 +4705,6 @@ function saveNotifTemplate(btn) {
   enSpan.style.display = 'block';
   enInput.style.display = 'none';
   row.querySelector('.notif-actions').style.display = 'none';
-  console.log('Template [' + row.dataset.type + '] saved:', textarea.value);
 }
 
 function cancelEditNotif(btn) {
@@ -4811,7 +4714,6 @@ function cancelEditNotif(btn) {
   textarea.value = textDiv.textContent;
   textDiv.style.display = 'block';
   textarea.style.display = 'none';
-  // Cancel English name edit
   const enSpan = row.querySelector('.notif-row-en');
   const enInput = row.querySelector('.notif-en-input');
   enInput.value = enSpan.dataset.en;
@@ -4836,14 +4738,16 @@ function toggleSkill(btn) {
 }
 
 function addConfigItem(type) {
-  const name = prompt('请输入' + (type === 'project' ? '项目' : '任务') + '类型名称（中文）：');
+  const label = type === 'project' ? '项目' : type === 'task' ? '任务' : '知识';
+  const name = prompt('请输入' + label + '类型名称（中文）：');
   if (!name || !name.trim()) return;
   const en = prompt('请输入英文名称：');
   if (!en || !en.trim()) return;
-  const tbody = document.getElementById(type === 'project' ? 'projectTypeTableBody' : 'taskTypeTableBody');
+  const tbodyId = type === 'project' ? 'projectTypeTableBody' : type === 'task' ? 'taskTypeTableBody' : 'knowledgeTypeTableBody';
+  const tbody = document.getElementById(tbodyId);
   const now = new Date().toISOString().slice(0, 10);
   const tr = document.createElement('tr');
-  tr.innerHTML = '<td>' + name.trim() + '</td><td>' + en.trim() + '</td><td>' + (type === 'project' ? '项目类型' : '任务类型') + '</td><td>' + now + '</td><td><button class="btn btn-sm btn-danger" onclick="this.closest(\'tr\').remove()">删除</button></td>';
+  tr.innerHTML = '<td>' + name.trim() + '</td><td>' + en.trim() + '</td><td>' + label + '类型</td><td>' + now + '</td><td><button class="btn btn-sm btn-danger" onclick="this.closest(\'tr\').remove()">删除</button></td>';
   tbody.appendChild(tr);
 }
 
@@ -5038,7 +4942,7 @@ function submitBonusRequest(projectId) {
   });
   closeProjectDetail();
   renderTodoItems();
-  renderMessages();
+  renderNotifMessages();
   renderNotificationMessages();
 }
 
@@ -5107,7 +5011,7 @@ function renderTodoItems() {
   filterTodoItems(currentType);
 }
 
-function renderMessages() {
+function renderNotifMessages() {
   const unreadContainer = document.getElementById('unreadMessages');
   const readContainer = document.getElementById('readMessages');
   if (!unreadContainer || !readContainer) return;
@@ -5213,7 +5117,7 @@ function doApproveBonus() {
   if (p) { p.spent += totalAmount; }
   closeProjectDetail();
   renderTodoItems();
-  renderMessages();
+  renderNotifMessages();
   renderNotificationMessages();
 }
 
@@ -5227,7 +5131,7 @@ function doRejectBonus() {
   r.opinion = opinion;
   closeProjectDetail();
   renderTodoItems();
-  renderMessages();
+  renderNotifMessages();
   renderNotificationMessages();
 }
 
@@ -5372,7 +5276,7 @@ document.addEventListener('DOMContentLoaded', function() {
     btn.textContent = lang === 'zh' ? '中' : 'EN';
   }
   renderTodoItems();
-  renderMessages();
+  renderNotifMessages();
   renderNotificationMessages();
 });
 
@@ -5574,6 +5478,7 @@ function renderPointsLineChart() {
 renderBacklogKanban();
 renderPointsLineChart();
 renderConversations();
+renderChat();
 function updateNotifBadge() {
   // no-op: placeholder for notification badge update
 }
