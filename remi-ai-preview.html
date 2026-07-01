@@ -900,51 +900,75 @@
       appearance: auto;
     }
     /* Detail panel */
-    .vm-detail-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; justify-content: space-between; }
-    .vm-detail-cancel { font-size: 12px; color: var(--text-muted); cursor: pointer; }
-    .vm-detail-label { font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .vm-detail-id { font-size: 13px; font-family: monospace; margin-bottom: 16px; word-break: break-all; }
-    .vm-vector-block {
-      font-family: monospace;
-      font-size: 12px;
-      color: var(--text);
-      background: var(--bg);
-      border-radius: var(--radius);
-      padding: 10px 12px;
-      line-height: 1.7;
-      margin-bottom: 16px;
-      word-break: break-all;
-    }
-    .vm-meta-card {
-      background: var(--bg);
-      border-radius: var(--radius);
-      padding: 14px;
-      margin-bottom: 16px;
-    }
-    .vm-meta-field { margin-bottom: 12px; }
-    .vm-meta-field:last-child { margin-bottom: 0; }
-    .vm-meta-field label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.3px; }
-    .vm-meta-field input, .vm-meta-field textarea, .vm-meta-field select {
-      width: 100%;
-      padding: 6px 10px;
-      font-size: 12px;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--card);
-      color: var(--text);
-      outline: none;
-      box-sizing: border-box;
-      font-family: inherit;
-    }
-    .vm-meta-field input:focus, .vm-meta-field textarea:focus, .vm-meta-field select:focus { border-color: var(--primary); }
-    .vm-meta-field textarea { resize: vertical; min-height: 50px; }
-    .vm-other-info { margin-bottom: 16px; }
-    .vm-other-row { display: flex; margin-bottom: 4px; font-size: 12px; align-items: baseline; }
-    .vm-other-key { width: 100px; flex-shrink: 0; color: var(--text-muted); word-break: break-all; }
-    .vm-other-val { flex: 1; color: var(--text); }
     @media (max-width: 900px) { .vm-split { flex-direction: column; height: auto; } .vm-right { width: 100%; } }
-
-    .setting-row {
+    .vm-doc-text { min-width: 0; overflow: hidden; }
+    .vm-doc-text-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .vm-doc-text-sub { font-size: 10px; color: var(--text-muted); margin-top: 1px; }
+    .vm-status-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 5px; vertical-align: middle; }
+    .vm-status-dot.s-indexed { background: var(--accent-emerald); }
+    .vm-status-dot.s-pending { background: var(--accent-amber); }
+    .vm-status-dot.s-review { background: var(--primary); }
+    .vm-modal-inner { width: 95%; max-width: 1400px; height: 90vh; margin: 5vh auto; background: #fff; border-radius: 16px; display: flex; flex-direction: column; box-shadow: 0 25px 60px rgba(0,0,0,0.25); overflow: hidden; }
+    .vm-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid #e5e7eb; flex-shrink: 0; }
+    .vm-modal-doc-name { font-size: 15px; font-weight: 700; color: #1f2937; }
+    .vm-modal-doc-sub { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+    .vm-modal-close { width: 32px; height: 32px; border: none; background: transparent; color: #9ca3af; cursor: pointer; border-radius: 8px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+    .vm-modal-close:hover { background: #f3f4f6; color: #374151; }
+    .vm-modal-body { display: flex; flex: 1; overflow: hidden; }
+    .vm-modal-left { flex: 1; display: flex; flex-direction: column; border-right: 1px solid #e5e7eb; min-width: 0; }
+    .vm-modal-right { width: 340px; flex-shrink: 0; overflow-y: auto; background: #f9fafb; }
+    .vm-modal-search-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid #f3f4f6; flex-shrink: 0; }
+    .vm-modal-filter { height: 28px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; color: #374151; font-size: 12px; padding: 0 8px; outline: none; }
+    .vm-modal-search { height: 28px; border: 1px solid #e5e7eb; border-radius: 6px; background: #fff; color: #374151; font-size: 12px; padding: 0 10px; outline: none; width: 120px; }
+    .vm-modal-search:focus { border-color: var(--primary); }
+    .vm-modal-list-toggle { width: 28px; height: 28px; border: 1px solid #e5e7eb; background: #fff; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #9ca3af; transition: all 0.15s; }
+    .vm-modal-list-toggle:hover { color: #374151; border-color: #d1d5db; }
+    .vm-modal-chunks { flex: 1; overflow-y: auto; padding: 0; }
+    .vm-chunk-row { padding: 12px 16px; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background 0.1s; }
+    .vm-chunk-row:hover { background: #f9fafb; }
+    .vm-chunk-row.vm-chunk-selected { background: #eff6ff; }
+    .vm-chunk-row-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+    .vm-chunk-row-left { display: flex; align-items: center; gap: 8px; }
+    .vm-chunk-check { width: 16px; height: 16px; accent-color: var(--primary); cursor: pointer; }
+    .vm-chunk-label { font-size: 12px; font-weight: 600; color: #374151; }
+    .vm-chunk-label .chunk-type { color: #9ca3af; font-weight: 400; }
+    .vm-chunk-meta-tags { display: flex; gap: 4px; }
+    .vm-chunk-tag { font-size: 10px; padding: 1px 6px; border-radius: 4px; background: #f3f4f6; color: #6b7280; }
+    .vm-chunk-tag.vm-tag-edited { background: #dbeafe; color: #3b82f6; }
+    .vm-chunk-status { display: flex; align-items: center; gap: 4px; font-size: 11px; }
+    .vm-chunk-status-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .vm-chunk-status-dot.on { background: #22c55e; }
+    .vm-chunk-status-dot.off { background: #d1d5db; }
+    .vm-chunk-text { font-size: 13px; color: #4b5563; line-height: 1.6; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .vm-chunk-children { margin-left: 24px; }
+    .vm-chunk-children .vm-chunk-row { border-bottom-color: #f9fafb; padding: 8px 16px 8px 12px; }
+    .vm-chunk-children .vm-chunk-label { font-size: 11px; color: #6b7280; }
+    .vm-chunk-children .vm-chunk-text { font-size: 12px; color: #9ca3af; }
+    .vm-chunk-expand { width: 18px; height: 18px; border: none; background: #f3f4f6; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #9ca3af; font-size: 10px; transition: all 0.15s; }
+    .vm-chunk-expand:hover { background: #e5e7eb; }
+    .vm-chunk-expand.expanded { background: #e5e7eb; color: #374151; }
+    /* 右侧元数据面板 */
+    .vm-meta-section { padding: 16px 20px; border-bottom: 1px solid #e5e7eb; }
+    .vm-meta-section:last-child { border-bottom: none; }
+    .vm-meta-section-title { font-size: 13px; font-weight: 700; color: #1f2937; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .vm-meta-section-title svg { width: 14px; height: 14px; color: #9ca3af; }
+    .vm-meta-row { display: flex; margin-bottom: 8px; align-items: baseline; }
+    .vm-meta-row:last-child { margin-bottom: 0; }
+    .vm-meta-key { font-size: 11px; color: #9ca3af; width: 90px; flex-shrink: 0; text-transform: uppercase; letter-spacing: 0.3px; }
+    .vm-meta-val { font-size: 12px; color: #374151; flex: 1; word-break: break-all; }
+    .vm-meta-val.editable { color: var(--primary); cursor: pointer; }
+    .vm-meta-val.editable:hover { text-decoration: underline; }
+    .vm-meta-textarea { width: 100%; padding: 8px 10px; border: 1px solid #e5e7eb; border-radius: 6px; font-size: 12px; color: #374151; outline: none; resize: vertical; min-height: 40px; margin-top: 6px; }
+    .vm-meta-textarea:focus { border-color: var(--primary); }
+    .vm-meta-text { font-size: 12px; color: #4b5563; line-height: 1.6; padding: 8px 10px; background: #fff; border-radius: 6px; border: 1px solid #e5e7eb; margin-top: 6px; }
+    .vm-switch { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; }
+    .vm-switch input { display: none; }
+    .vm-switch-slider { width: 32px; height: 18px; background: #d1d5db; border-radius: 9px; position: relative; transition: background 0.2s; }
+    .vm-switch-slider::after { content: ''; width: 14px; height: 14px; background: #fff; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: transform 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .vm-switch input:checked + .vm-switch-slider { background: #22c55e; }
+    .vm-switch input:checked + .vm-switch-slider::after { transform: translateX(14px); }
+  
+     .setting-row {
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -1872,42 +1896,85 @@
     </div>
     <div id="kb-vector" style="display:none;">
   <div class="vm-header">
-    <div class="vm-header-title">知识库向量集</div>
-    <div class="vm-header-count" id="vmTotalCount">显示 0 / 0</div>
+    <div class="vm-header-count" id="vmTotalCount">共 0 个文档</div>
   </div>
   <div class="vm-filter-bar">
-    <select class="vm-dp" id="vmPartitionFilter" onchange="vmRenderList()">
-      <option value="">全部分区</option><option value="0">Shard-0</option><option value="1">Shard-1</option><option value="2">Shard-2</option><option value="3">Shard-3</option><option value="4">Shard-4</option><option value="5">Shard-5</option><option value="6">Shard-6</option><option value="7">Shard-7</option>
+    <select class="vm-dp" id="vmTypeFilter" onchange="vmRenderList()">
+      <option value="">全部类型</option><option>技术文档</option><option>产品设计</option><option>案例分析</option><option>合规风控</option><option>模板</option><option>市场运营</option><option>未分类</option>
     </select>
-    <input class="vm-dp vm-text-input" id="vmIdSearch" placeholder="搜索 ID…">
-    <input class="vm-dp vm-text-input" id="vmMetaSearch" placeholder="搜索 Metadata…">
+    <select class="vm-dp" id="vmStatusFilter" onchange="vmRenderList()">
+      <option value="">全部状态</option><option value="indexed">已向量化</option><option value="pending">待向量化</option><option value="review">审核中</option>
+    </select>
+    <input class="vm-dp vm-text-input" id="vmDocSearch" placeholder="搜索文档名称…" oninput="vmRenderList()">
   </div>
-  <div class="vm-split">
-    <div class="vm-left">
+  <div style="display:flex;flex-direction:column;overflow:hidden;height:calc(100vh - 370px);min-height:400px;">
+    <div style="flex:1;overflow:auto;">
       <table class="vm-table">
-        <thead><tr><th style="width:28px;"><input type="checkbox" id="vmCheckAll" onchange="vmToggleAll()"></th><th>ID</th><th style="min-width:180px;">文本摘要</th><th style="width:60px;text-align:center;">维度</th><th style="width:60px;text-align:right;">分区</th><th style="width:100px;text-align:right;">更新于</th></tr></thead>
+        <thead><tr><th style="min-width:240px;">文档名称</th><th>类型</th><th style="width:50px;text-align:center;">分段</th><th style="width:60px;text-align:center;">维度</th><th>状态</th><th style="width:130px;text-align:right;">更新于</th><th style="width:80px;text-align:center;">操作</th></tr></thead>
         <tbody id="vmTbody"></tbody>
       </table>
-      <div class="vm-bottom-bar">
-        <div>
-          <button class="vm-page-btn" onclick="vmGoPage(vmCurrentPage-1)" id="vmPrevBtn" disabled>上一页</button>
-          <button class="vm-page-btn" onclick="vmGoPage(vmCurrentPage+1)" id="vmNextBtn">下一页</button>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <span style="font-size:12px;color:var(--text-muted);">每页</span>
-          <select class="vm-select-sm vm-page-size" onchange="vmRenderList()">
-            <option>20</option><option selected>50</option><option>100</option>
-          </select>
-        </div>
+    </div>
+    <div class="vm-bottom-bar">
+      <div>
+        <button class="vm-page-btn" onclick="vmGoPage(vmCurrentPage-1)" id="vmPrevBtn" disabled>上一页</button>
+        <button class="vm-page-btn" onclick="vmGoPage(vmCurrentPage+1)" id="vmNextBtn">下一页</button>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <span style="font-size:12px;color:var(--text-muted);">每页</span>
+        <select class="vm-select-sm vm-page-size" onchange="vmRenderList()">
+          <option>20</option><option selected>50</option><option>100</option>
+        </select>
       </div>
     </div>
-    <div class="vm-right" id="vmDetailPanel">
-      <div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin-bottom:8px;opacity:0.4;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><br>点击左侧列表行查看详情
+</div>
+</div>
+
+<!-- 文档分段详情弹窗 -->
+<div id="vmModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(0,0,0,0.45);backdrop-filter:blur(2px);">
+  <div class="vm-modal-inner">
+    <div class="vm-modal-header">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;">
+        <div style="min-width:0;">
+          <div class="vm-modal-doc-name" id="vmModalDocName">文档名称</div>
+          <div class="vm-modal-doc-sub" id="vmModalDocSub">父子 · 段落</div>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+        <button class="btn btn-sm" id="vmModalAddChunk">+ 添加分段</button>
+        <label class="vm-switch">
+          <input type="checkbox" id="vmModalEnabled" checked onchange="vmToggleEnabled()">
+          <span class="vm-switch-slider"></span>
+          <span id="vmModalEnabledLabel" style="font-size:12px;font-weight:600;">可用</span>
+        </label>
+        <button class="vm-modal-close" onclick="vmCloseModal()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="vm-modal-body">
+      <div class="vm-modal-left">
+        <div class="vm-modal-search-bar">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <select class="vm-modal-filter" id="vmModalFilterType" onchange="vmRenderModalChunks()">
+              <option value="all">全部</option>
+              <option value="parent">父分段</option>
+              <option value="child">子分段</option>
+            </select>
+            <input class="vm-modal-search" id="vmModalSearchInput" placeholder="搜索" oninput="vmRenderModalChunks()">
+          </div>
+          <button class="vm-modal-list-toggle" onclick="vmToggleListExpand()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="vm-modal-chunks" id="vmModalChunksList"></div>
+      </div>
+      <div class="vm-modal-right" id="vmModalMetaPanel">
+        <div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">点击分段查看详情</div>
       </div>
     </div>
   </div>
 </div>
+
 <div id="kb-types" style="display:none;">
   <div class="card">
     <div class="card-header">
@@ -4359,81 +4426,63 @@ function goToAdmin(tab) {
   switchAdminTab(_currentAdminTab);
 }
 
-// ===== VECTOR MANAGEMENT =====
+// ===== VECTOR MANAGEMENT (文档维度) =====
 const vmPageSize = 50;
-let vmAllData = [];
 let vmCurrentPage = 1;
-let vmSelected = {};
+var _vmCurrentDetailId = null;
 
-// Generate mock vector data
-(function() {
-  const partitions = ['Shard-0','Shard-1','Shard-2','Shard-3','Shard-4','Shard-5','Shard-6','Shard-7'];
-  const summaries = [
-    '高频量化交易策略在震荡市中的风控模型',
-    '中证 500 指数增强基金最新持仓分析报告',
-    '可转债双低策略回测结果与参数优化',
-    '期权隐含波动率曲面建模方法研究',
-    'FOF 组合配置中的风险平价模型实现',
-    '股票收益率预测的 LSTM 模型对比',
-    '机器学习因子选股策略实盘跟踪报告',
-    '市场微观结构与订单簿深度分析',
-    'CTA 趋势跟踪策略多品种配置方案',
-    'Alpha 因子库构建与 ICIR 分析'
-  ];
-  const sources = ['quant_report_2026Q1','fund_research','backtest_engine','risk_model','alpha_factory','ml_strategy','options_pricing','market_micro','cta_system','portfolio_opt'];
-  const categories = ['策略分析','基金调研','回测引擎','风险模型','Alpha 工厂','机器学习','期权定价','市场微观','CTA 系统','资产配置'];
-  const tagOptions = [
-    ['量化','对冲','震荡市'],
-    ['指数增强','被动投资','持仓分析'],
-    ['可转债','低波策略','回测'],
-    ['期权','波动率','曲面建模'],
-    ['FOF','风险平价','资产配置'],
-    ['LSTM','时序预测','深度学习'],
-    ['因子选股','机器学习','ICIR'],
-    ['订单簿','做市','流动性'],
-    ['趋势跟踪','CTA','多品种'],
-    ['Alpha','因子库','ICIR']
-  ];
-  for (let i = 0; i < 86; i++) {
-    const idx = i % summaries.length;
-    const shard = 'Shard-' + (i % 8);
-    const ts = new Date(Date.now() - Math.random() * 90 * 86400000);
-    vmAllData.push({
-      id: 'v' + String(38421 - i),
-      summary: summaries[idx],
-      dims: 768,
-      shard: parseInt(String(i % 8)),
-      updated: ts.toISOString().replace('T',' ').slice(0,19),
-      _vecFull: Array.from({length:768}, () => (Math.random()*2-1).toFixed(6)),
-      metadata: {
-        source: sources[idx] + '_' + (1 + (i % 4)),
-        category: categories[idx],
-        tags: tagOptions[idx].join(','),
-        description: summaries[idx] + '，含回测数据与参数说明'
-      },
-      sys: {
-        embedding_model: 'text-embedding-3-large',
-        normalization: 'L2',
-        created: new Date(Date.now() - 180 * 86400000 - Math.random() * 30 * 86400000).toISOString().replace('T',' ').slice(0,19),
-        chunk_size: 512,
-        overlap: 64
-      }
+// 知识文档数据
+const vmDocs = [
+  { id:'d1', name:'备孕饮食营养运动.txt', ext:'TXT', type:'技术文档', size:'12 KB', uploader:'张明远', status:'indexed', dims:768, aiCallable:true, updated:'2026-03-13 14:12', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:1024, avgLen:'70 characters', meta:{knowledgeType:'COMMON',origFileName:'备孕饮食营养运动.txt',origFileSize:'-',uploadDate:'2026-03-13 14:12',updateDate:'2026-03-13 14:12',source:'文件上传'}, tech:{segmentRule:'父子',segmentLen:1024,avgLen:'70 characters',chunkCount:24,recallRate:'120.83% (29/24)',embedTime:'1.15 sec',embedCost:'600 tokens'} },
+  { id:'d2', name:'Remi 平台 API 接口规范 V2.1', ext:'DOCX', type:'技术文档', size:'2.4 MB', uploader:'陈雨', status:'indexed', dims:768, aiCallable:true, updated:'2026-06-12 14:30', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:1024, avgLen:'85 characters', meta:{knowledgeType:'TECHNICAL',origFileName:'Remi平台API接口规范V2.1.docx',origFileSize:'2.4 MB',uploadDate:'2026-06-10 10:00',updateDate:'2026-06-12 14:30',source:'文件上传'}, tech:{segmentRule:'父子',segmentLen:1024,avgLen:'85 characters',chunkCount:46,recallRate:'115.22% (53/46)',embedTime:'2.3 sec',embedCost:'1200 tokens'} },
+  { id:'d3', name:'2026 Q2 财务分析报告', ext:'XLSX', type:'产品设计', size:'5.8 MB', uploader:'李晓华', status:'indexed', dims:768, aiCallable:true, updated:'2026-06-10 09:15', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:512, avgLen:'120 characters', meta:{knowledgeType:'FINANCE',origFileName:'2026Q2财务分析报告.xlsx',origFileSize:'5.8 MB',uploadDate:'2026-06-08 08:00',updateDate:'2026-06-10 09:15',source:'文件上传'}, tech:{segmentRule:'父子',segmentLen:512,avgLen:'120 characters',chunkCount:30,recallRate:'108.33% (32.5/30)',embedTime:'1.8 sec',embedCost:'900 tokens'} },
+  { id:'d4', name:'PRD - 智能对话模块', ext:'PDF', type:'产品设计', size:'3.2 MB', uploader:'王思远', status:'indexed', dims:768, aiCallable:true, updated:'2026-06-08 16:40', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:768, avgLen:'95 characters', meta:{knowledgeType:'PRD',origFileName:'PRD-智能对话模块.pdf',origFileSize:'3.2 MB',uploadDate:'2026-06-05 09:30',updateDate:'2026-06-08 16:40',source:'文件上传'}, tech:{segmentRule:'父子',segmentLen:768,avgLen:'95 characters',chunkCount:82,recallRate:'122.44% (100.4/82)',embedTime:'4.2 sec',embedCost:'2100 tokens'} },
+  { id:'d5', name:'数据安全合规政策 V3.0', ext:'DOCX', type:'合规风控', size:'856 KB', uploader:'赵明', status:'indexed', dims:768, aiCallable:true, updated:'2026-06-05 11:20', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:1024, avgLen:'78 characters', meta:{knowledgeType:'COMPLIANCE',origFileName:'数据安全合规政策V3.0.docx',origFileSize:'856 KB',uploadDate:'2026-06-01 14:00',updateDate:'2026-06-05 11:20',source:'文件上传'}, tech:{segmentRule:'父子',segmentLen:1024,avgLen:'78 characters',chunkCount:16,recallRate:'118.75% (19/16)',embedTime:'0.8 sec',embedCost:'450 tokens'} },
+  { id:'d6', name:'敏捷开发最佳实践案例集', ext:'PDF', type:'案例分析', size:'4.1 MB', uploader:'陈雨桐', status:'indexed', dims:768, aiCallable:true, updated:'2026-06-03 14:00', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:1024, avgLen:'88 characters', meta:{knowledgeType:'CASE_STUDY',origFileName:'敏捷开发最佳实践案例集.pdf',origFileSize:'4.1 MB',uploadDate:'2026-05-28 10:00',updateDate:'2026-06-03 14:00',source:'文件上传'}, tech:{segmentRule:'父子',segmentLen:1024,avgLen:'88 characters',chunkCount:24,recallRate:'112.50% (27/24)',embedTime:'1.2 sec',embedCost:'650 tokens'} },
+  { id:'d7', name:'前端组件设计规范 V1.0', ext:'PDF', type:'技术文档', size:'2.6 MB', uploader:'陈雨', status:'pending', dims:768, aiCallable:false, updated:'2026-06-15 09:00', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:1024, avgLen:'-', meta:{knowledgeType:'TECHNICAL',origFileName:'前端组件设计规范V1.0.pdf',origFileSize:'2.6 MB',uploadDate:'2026-06-15 09:00',updateDate:'2026-06-15 09:00',source:'文件上传'}, tech:{segmentRule:'-',segmentLen:1024,avgLen:'-',chunkCount:'-',recallRate:'-',embedTime:'-',embedCost:'-'} },
+  { id:'d8', name:'Q2 项目验收报告模板', ext:'DOCX', type:'模板', size:'245 KB', uploader:'李婷', status:'pending', dims:768, aiCallable:false, updated:'2026-06-14 15:30', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:1024, avgLen:'-', meta:{knowledgeType:'TEMPLATE',origFileName:'Q2项目验收报告模板.docx',origFileSize:'245 KB',uploadDate:'2026-06-14 15:30',updateDate:'2026-06-14 15:30',source:'文件上传'}, tech:{segmentRule:'-',segmentLen:1024,avgLen:'-',chunkCount:'-',recallRate:'-',embedTime:'-',embedCost:'-'} },
+  { id:'d9', name:'员工入职培训手册', ext:'MD', type:'未分类', size:'128 KB', uploader:'张明远', status:'review', dims:768, aiCallable:false, updated:'2026-06-13 11:00', model:'text-embedding-3-large', chunkRule:'父子', segmentRule:'段落', segmentLen:512, avgLen:'65 characters', meta:{knowledgeType:'COMMON',origFileName:'员工入职培训手册.md',origFileSize:'128 KB',uploadDate:'2026-06-13 11:00',updateDate:'2026-06-13 11:00',source:'文件上传'}, tech:{segmentRule:'父子',segmentLen:512,avgLen:'65 characters',chunkCount:6,recallRate:'133.33% (8/6)',embedTime:'0.3 sec',embedCost:'180 tokens'} }
+];
+
+// 父子分段模拟数据
+const vmParentChunks = {
+  'd1': [
+    { id:'p1', label:'父分段-01', text:'备孕饮食不用太紧张，记住这几点就够啦：均衡清淡、新鲜卫生、规律三餐，重点补好叶酸、蛋白质、铁和钙，少吃高糖高油，不喝酒、少熬夜，身体舒服、心情放松，就是最好的备孕。', chars:83, recalls:2, enabled:true, edited:true, children:[{id:'c1',text:'我现在在备孕，饮食上要注意什么？'}] },
+    { id:'p2', label:'父分段-02', text:'是的，叶酸非常关键。建议提前3个月就开始补充，能有效预防宝宝神经管畸形。你可以吃叶酸片或复合维生素，也搭配深绿色蔬菜、豆类、鸡蛋一起食补更稳。', chars:74, recalls:1, enabled:true, edited:true, children:[{id:'c2',text:'叶酸什么时候开始补？'}] },
+    { id:'p3', label:'父分段-03', text:'想让卵子质量更好，可以多吃：1、优质蛋白：鸡蛋、牛奶、鱼、瘦肉、豆制品... 2、富含铁的食物：菠菜、猪肝、红枣... 3、含钙丰富的：奶制品、虾皮、芝麻酱...', chars:105, recalls:8, enabled:true, edited:true, children:[{id:'c3',text:'如何提高卵子质量？'}] },
+    { id:'p4', label:'父分段-04', text:'推荐你日常多安排这些：1、主食：杂粮、糙米、燕麦、玉米、红薯... 2、蔬菜：菠菜、西兰花、胡萝卜、番茄... 3、水果：苹果、香蕉、猕猴桃、蓝莓...', chars:115, recalls:9, enabled:true, edited:true, children:[{id:'c4',text:'日常饮食推荐清单'}] },
+    { id:'p5', label:'父分段-05', text:'这几类尽量少碰或不碰：1、酒：备孕就建议不喝... 2、生食：生鱼片、半熟蛋等... 3、高糖高油：奶茶、蛋糕、油炸食品...', chars:102, recalls:1, enabled:true, edited:true, children:[{id:'c5',text:'哪些食物要避免？'}] }
+  ],
+  'd2': [
+    { id:'p1', label:'父分段-01', text:'本规范定义了 Remi 平台 V2.1 的全部 API 端点、请求/响应结构与认证流程，适用于前后端联调与第三方接入。', chars:48, recalls:5, enabled:true, edited:false, children:[{id:'c1',text:'API 端点概述'}] },
+    { id:'p2', label:'父分段-02', text:'用户认证模块采用 OAuth 2.0 + JWT 方案，access_token 有效期 2 小时，refresh_token 30 天，支持单点登录。', chars:58, recalls:3, enabled:true, edited:true, children:[{id:'c1',text:'认证方案选型'},{id:'c2',text:'Token 有效期配置'}] },
+    { id:'p3', label:'父分段-03', text:'任务创建接口 POST /api/v2/tasks，请求体需包含 title、description、points、deadline、projectId 等字段。', chars:62, recalls:4, enabled:true, edited:false, children:[{id:'c1',text:'POST /api/v2/tasks'}] }
+  ]
+};
+
+function vmGetDefaultChunks(doc) {
+  if (vmParentChunks[doc.id]) return vmParentChunks[doc.id];
+  var count = doc.tech.chunkCount === '-' ? 5 : Math.min(doc.tech.chunkCount, 8);
+  var chunks = [];
+  for (var i = 0; i < count; i++) {
+    chunks.push({
+      id:'p'+(i+1), label:'父分段-'+String(i+1).padStart(2,'0'),
+      text:'这是文档 "'+doc.name+'" 的第 '+(i+1)+' 个分段内容，包含相关业务描述与分析数据。',
+      chars:60+(i*13)%40, recalls:1+(i*3)%10, enabled:true, edited:i%3===0,
+      children:[{id:'c1',text:'子分段引用 '+(i+1)}]
     });
   }
-})();
+  return chunks;
+}
 
 function vmGetFiltered() {
-  var partition = document.getElementById('vmPartitionFilter').value;
-  var idQ = document.getElementById('vmIdSearch').value.trim().toLowerCase();
-  var metaQ = document.getElementById('vmMetaSearch').value.trim().toLowerCase();
-  return vmAllData.filter(function(d) {
-    if (partition && parseInt(d.shard) !== parseInt(partition)) return false;
-    if (idQ && d.id.indexOf(idQ) === -1) return false;
-    if (metaQ) {
-      var match = false;
-      for (var k in d.metadata) { if (String(d.metadata[k]).toLowerCase().indexOf(metaQ) !== -1) { match = true; break; } }
-      if (!match) return false;
-    }
+  var typeQ = document.getElementById('vmTypeFilter').value;
+  var statusQ = document.getElementById('vmStatusFilter').value;
+  var q = document.getElementById('vmDocSearch').value.trim().toLowerCase();
+  return vmDocs.filter(function(d) {
+    if (typeQ && d.type !== typeQ) return false;
+    if (statusQ && d.status !== statusQ) return false;
+    if (q && d.name.toLowerCase().indexOf(q) === -1) return false;
     return true;
   });
 }
@@ -4441,6 +4490,18 @@ function vmGetFiltered() {
 function vmGoPage(p) {
   vmCurrentPage = p;
   vmRenderList();
+}
+
+function vmExtClass(ext) {
+  return { DOCX:'ic-docx', PDF:'ic-pdf', XLSX:'ic-xlsx', MD:'ic-md' }[ext] || 'ic-md';
+}
+
+function vmStatusInfo(s) {
+  return {
+    indexed: { label:'已启用', cls:'s-indexed' },
+    pending: { label:'待处理', cls:'s-pending' },
+    review: { label:'审核中', cls:'s-review' }
+  }[s] || { label:s, cls:'s-review' };
 }
 
 function vmRenderList() {
@@ -4455,150 +4516,207 @@ function vmRenderList() {
   var tbody = document.getElementById('vmTbody');
   var html = '';
   pageData.forEach(function(d) {
-    var checked = vmSelected[d.id] ? ' checked' : '';
-    html += '<tr class="' + (checked ? 'vm-selected' : '') + '" onclick="vmShowDetail(\'' + d.id + '\')">';
-    html += '<td style="cursor:default;"><input type="checkbox" ' + checked + ' onclick="event.stopPropagation();vmToggleItem(\'' + d.id + '\')"></td>';
-    html += '<td style="font-family:monospace;font-size:11px;">' + d.id + '</td>';
-    html += '<td title="' + d.summary + '">' + d.summary.slice(0, 50) + (d.summary.length > 50 ? '…' : '') + '</td>';
+    var si = vmStatusInfo(d.status);
+    var chunkCount = d.tech.chunkCount === '-' ? '-' : d.tech.chunkCount;
+    html += '<tr data-doc-id="' + d.id + '">';
+    html += '<td><div class="vm-doc-name"><div class="vm-doc-text"><div class="vm-doc-text-name">' + d.name + '</div><div class="vm-doc-text-sub">' + d.size + ' · ' + d.uploader + '</div></div></div></td>';
+    html += '<td>' + d.type + '</td>';
+    html += '<td style="text-align:center;font-weight:600;color:var(--primary);">' + chunkCount + '</td>';
     html += '<td style="text-align:center;">' + d.dims + '</td>';
-    html += '<td style="text-align:right;">' + d.shard + '</td>';
+    html += '<td><span class="vm-status-dot ' + si.cls + '"></span>' + si.label + '</td>';
     html += '<td style="text-align:right;font-size:11px;color:var(--text-muted);white-space:normal;">' + d.updated + '</td>';
+    html += '<td style="text-align:center;"><button class="btn btn-sm" onclick="vmOpenModal(\'' + d.id + '\')" style="font-size:11px;">查看分段</button></td>';
     html += '</tr>';
   });
   tbody.innerHTML = html;
-  // Update pagination buttons
   document.getElementById('vmPrevBtn').disabled = vmCurrentPage <= 1;
   document.getElementById('vmNextBtn').disabled = vmCurrentPage >= totalPages;
-  // Update header count
-  var showStart = startIdx + 1;
-  var showEnd = Math.min(startIdx + pageSize, total);
-  document.getElementById('vmTotalCount').textContent = '显示 ' + showEnd + ' / ' + total.toLocaleString();
-  vmUpdateSelectedCount();
+  document.getElementById('vmTotalCount').textContent = '共 ' + total + ' 个文档';
 }
 
-function vmToggleAll() {
-  var checked = document.getElementById('vmCheckAll').checked;
-  var rows = document.querySelectorAll('#vmTbody tr');
-  rows.forEach(function(tr) {
-    var cb = tr.querySelector('input[type="checkbox"]');
-    if (cb) {
-      cb.checked = checked;
-      var id = tr.cells[1].textContent;
-      if (checked) vmSelected[id] = true; else delete vmSelected[id];
-      tr.className = checked ? 'vm-selected' : '';
+function vmExtClass(ext) { return { DOCX:'ic-docx', PDF:'ic-pdf', XLSX:'ic-xlsx', MD:'ic-md', TXT:'ic-md' }[ext] || 'ic-md'; }
+
+// ===== 弹窗相关 =====
+function vmOpenModal(docId) {
+  _vmCurrentDocId = docId;
+  _vmSelectedChunkId = null;
+  _vmExpandedParents = {};
+  var d = null;
+  for (var i = 0; i < vmDocs.length; i++) { if (vmDocs[i].id === docId) { d = vmDocs[i]; break; } }
+  if (!d) return;
+  _vmCurrentModalDoc = d;
+
+  document.getElementById('vmModalDocName').textContent = d.name;
+  document.getElementById('vmModalDocSub').textContent = d.chunkRule + ' · ' + d.segmentRule;
+  document.getElementById('vmModalEnabled').checked = d.aiCallable;
+  document.getElementById('vmModalEnabledLabel').textContent = d.aiCallable ? '可用' : '停用';
+  document.getElementById('vmModalSearchInput').value = '';
+  document.getElementById('vmModalFilterType').value = 'all';
+
+  vmRenderModalChunks();
+  vmRenderMetaPanel(null);
+  document.getElementById('vmModal').style.display = 'block';
+  document.body.style.overflow = 'hidden';
+}
+
+function vmCloseModal() {
+  document.getElementById('vmModal').style.display = 'none';
+  document.body.style.overflow = '';
+  _vmCurrentDocId = null;
+  _vmSelectedChunkId = null;
+}
+
+function vmToggleEnabled() {
+  var checked = document.getElementById('vmModalEnabled').checked;
+  document.getElementById('vmModalEnabledLabel').textContent = checked ? '可用' : '停用';
+  if (_vmCurrentModalDoc) _vmCurrentModalDoc.aiCallable = checked;
+}
+
+function vmRenderModalChunks() {
+  if (!_vmCurrentModalDoc) return;
+  var chunks = vmGetDefaultChunks(_vmCurrentModalDoc);
+  var filterType = document.getElementById('vmModalFilterType').value;
+  var searchQ = document.getElementById('vmModalSearchInput').value.trim().toLowerCase();
+  var container = document.getElementById('vmModalChunksList');
+  var html = '';
+
+  chunks.forEach(function(parent) {
+    var parentMatch = true;
+    if (searchQ) {
+      var pTextMatch = parent.text.toLowerCase().indexOf(searchQ) !== -1;
+      var cMatch = parent.children.some(function(c) { return c.text.toLowerCase().indexOf(searchQ) !== -1; });
+      if (!pTextMatch && !cMatch) parentMatch = false;
+    }
+    if (filterType === 'child' && parent.children.length === 0) parentMatch = false;
+
+    var isExpanded = _vmExpandedParents[parent.id];
+    var hasChildren = parent.children.length > 0;
+
+    html += '<div class="vm-chunk-row' + (_vmSelectedChunkId === parent.id ? ' vm-chunk-selected' : '') + '" onclick="vmSelectChunk(\'' + parent.id + '\')">';
+    html += '<div class="vm-chunk-row-header">';
+    html += '<div class="vm-chunk-row-left">';
+    html += '<input type="checkbox" class="vm-chunk-check" ' + (parent.enabled ? 'checked' : '') + ' onclick="event.stopPropagation();vmToggleChunkEnabled(\'' + parent.id + '\',this.checked)">';
+    html += '<span class="vm-chunk-label"> ' + parent.label + ' <span class="chunk-type">· ' + parent.chars + ' 字符 · ' + parent.recalls + ' 召回次数</span></span>';
+    html += '<div class="vm-chunk-meta-tags">';
+    if (parent.edited) html += '<span class="vm-chunk-tag vm-tag-edited">已编辑</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div style="display:flex;align-items:center;gap:6px;">';
+    if (hasChildren) {
+      html += '<button class="vm-chunk-expand' + (isExpanded ? ' expanded' : '') + '" onclick="event.stopPropagation();vmToggleExpand(\'' + parent.id + '\')">';
+      html += isExpanded ? '' : '▸';
+      html += '</button>';
+    }
+    html += '<div class="vm-chunk-status"><span class="vm-chunk-status-dot ' + (parent.enabled ? 'on' : 'off') + '"></span>已启用</div>';
+    html += '</div></div>';
+    html += '<div class="vm-chunk-text">' + parent.text + '</div>';
+    html += '</div>';
+
+    if (hasChildren && isExpanded) {
+      html += '<div class="vm-chunk-children">';
+      parent.children.forEach(function(child) {
+        var cMatch = !searchQ || child.text.toLowerCase().indexOf(searchQ) !== -1;
+        if (!cMatch) return;
+        html += '<div class="vm-chunk-row' + (_vmSelectedChunkId === child.id ? ' vm-chunk-selected' : '') + '" onclick="vmSelectChunk(\'' + child.id + '\')">';
+        html += '<div class="vm-chunk-row-left">';
+        html += '<span style="width:16px;display:inline-block;"></span>';
+        html += '<span class="vm-chunk-label"> ' + child.id.toUpperCase() + ' ' + child.text + '</span>';
+        html += '</div>';
+        html += '</div>';
+      });
+      html += '</div>';
     }
   });
-  vmUpdateSelectedCount();
+
+  if (!html) html = '<div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">无匹配结果</div>';
+  container.innerHTML = html;
 }
 
-function vmToggleItem(id) {
-  if (vmSelected[id]) delete vmSelected[id]; else vmSelected[id] = true;
-  vmRenderList();
+function vmToggleExpand(parentId) {
+  _vmExpandedParents[parentId] = !_vmExpandedParents[parentId];
+  vmRenderModalChunks();
 }
 
-function vmUpdateSelectedCount() {
-  var count = Object.keys(vmSelected).length;
-  // No longer showing selected count text, kept for internal tracking
-  var allCbs = document.querySelectorAll('#vmTbody input[type="checkbox"]');
-  var checkedCbs = document.querySelectorAll('#vmTbody input[type="checkbox"]:checked');
-  var checkAll = document.getElementById('vmCheckAll');
-  if (checkAll) checkAll.checked = allCbs.length > 0 && allCbs.length === checkedCbs.length;
+function vmToggleListExpand() {
+  if (!_vmCurrentModalDoc) return;
+  var chunks = vmGetDefaultChunks(_vmCurrentModalDoc);
+  var allExpanded = chunks.every(function(p) { return _vmExpandedParents[p.id]; });
+  chunks.forEach(function(p) { _vmExpandedParents[p.id] = !allExpanded; });
+  vmRenderModalChunks();
 }
 
-function vmBatchDelete() {
-  var ids = Object.keys(vmSelected);
-  if (ids.length === 0) { alert('请先选择要删除的向量'); return; }
-  if (!confirm('确定删除选中的 ' + ids.length + ' 条向量数据？此操作不可撤销。')) return;
-  idLoop: for (var i = 0; i < ids.length; i++) {
-    for (var j = 0; j < vmAllData.length; j++) {
-      if (vmAllData[j].id === ids[i]) { vmAllData.splice(j,1); continue idLoop; }
+function vmSelectChunk(id) {
+  _vmSelectedChunkId = id;
+  vmRenderModalChunks();
+  vmRenderMetaPanel(id);
+}
+
+function vmToggleChunkEnabled(id, enabled) {
+  if (!_vmCurrentModalDoc) return;
+  var chunks = vmGetDefaultChunks(_vmCurrentModalDoc);
+  for (var i = 0; i < chunks.length; i++) {
+    if (chunks[i].id === id) { chunks[i].enabled = enabled; break; }
+  }
+  vmRenderModalChunks();
+}
+
+function vmRenderMetaPanel(chunkId) {
+  var panel = document.getElementById('vmModalMetaPanel');
+  if (!chunkId || !_vmCurrentModalDoc) {
+    panel.innerHTML = '<div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">点击分段查看详情</div>';
+    return;
+  }
+
+  var d = _vmCurrentModalDoc;
+  var chunks = vmGetDefaultChunks(d);
+  var chunk = null;
+  var isParent = true;
+
+  for (var i = 0; i < chunks.length; i++) {
+    if (chunks[i].id === chunkId) { chunk = chunks[i]; break; }
+    for (var j = 0; j < chunks[i].children.length; j++) {
+      if (chunks[i].children[j].id === chunkId) {
+        chunk = chunks[i].children[j];
+        isParent = false;
+        break;
+      }
     }
+    if (chunk) break;
   }
-  vmSelected = {};
-  vmRenderList();
-  document.getElementById('vmDetailPanel').innerHTML =
-    '<div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">' +
-    '已删除</div>';
-}
 
-var _vmCurrentDetailId = null;
+  if (!chunk) { panel.innerHTML = ''; return; }
 
-function vmShowDetail(id) {
-  _vmCurrentDetailId = id;
-  var d = null;
-  for (var i = 0; i < vmAllData.length; i++) { if (vmAllData[i].id === id) { d = vmAllData[i]; break; } }
-  if (!d) return;
-  var rows = document.querySelectorAll('#vmTbody tr');
-  rows.forEach(function(r) {
-    r.className = r.cells[1].textContent === id ? 'vm-selected' : '';
-    if (r.cells[1].textContent === id) r.scrollIntoView({block:'nearest'});
-  });
-  // Build metadata fields
-  var metaHtml = '';
-  for (var k in d.metadata) {
-    var val = d.metadata[k];
-    if (k === 'category') {
-      metaHtml += '<div class="vm-meta-field"><label>' + k + '</label><select id="vmMeta_' + k + '">' + ['策略分析','基金调研','回测引擎','风险模型','Alpha 工厂','机器学习','期权定价','市场微观','CTA 系统','资产配置'].map(function(o){return '<option' + (val===o?' selected':'') + '>' + o + '</option>';}).join('') + '</select></div>';
-    } else if (k === 'tags') {
-      metaHtml += '<div class="vm-meta-field"><label>' + k + '（逗号分隔）</label><input id="vmMeta_' + k + '" value="' + val + '"></div>';
-    } else if (k === 'description') {
-      metaHtml += '<div class="vm-meta-field"><label>' + k + '</label><textarea id="vmMeta_' + k + '" rows="3">' + val + '</textarea></div>';
-    } else {
-      metaHtml += '<div class="vm-meta-field"><label>' + k + '</label><input id="vmMeta_' + k + '" value="' + val + '"></div>';
-    }
-  }
-  var vecPreview = '[' + d._vecFull.slice(0, 8).map(function(v){return parseFloat(v).toFixed(3);}).join(', ') + '...]';
-  var html =
-    '<div class="vm-detail-title">向量详情 · 编辑模式 <span class="vm-detail-cancel" onclick="vmCancelDetail()">取消</span></div>' +
-    '<div class="vm-detail-label">向量 ID</div>' +
-    '<div class="vm-detail-id">' + d.id + '</div>' +
-    '<div class="vm-detail-label">向量值（只读）</div>' +
-    '<div class="vm-vector-block">' + vecPreview + ']</div>' +
-    '<div class="vm-detail-label">关联 Metadata（可编辑）</div>' +
-    '<div class="vm-meta-card">' + metaHtml + '</div>' +
-    '<div class="vm-other-info">' +
-      '<div class="vm-detail-label">其他信息（只读）</div>' +
-      '<div class="vm-other-row"><span class="vm-other-key">embed_model:</span><span class="vm-other-val">' + d.sys.embedding_model + '</span></div>' +
-      '<div class="vm-other-row"><span class="vm-other-key">创建时间:</span><span class="vm-other-val">' + d.sys.created + '</span></div>' +
-      '<div class="vm-other-row"><span class="vm-other-key">L2 归一化:</span><span class="vm-other-val">是</span></div>' +
-    '</div>' +
-    '<div style="display:flex;gap:8px;justify-content:flex-end;padding-bottom:20px;">' +
-      '<button class="btn btn-sm btn-primary" onclick="vmSaveMetadata()">保存</button>' +
-      '<button class="btn btn-sm" style="color:var(--accent-rose);" onclick="vmDeleteSingle()">删除</button>' +
-    '</div>';
-  document.getElementById('vmDetailPanel').innerHTML = html;
-}
+  var m = d.meta;
+  var t = d.tech;
 
-function vmCancelDetail() {
-  _vmCurrentDetailId = null;
-  document.getElementById('vmDetailPanel').innerHTML =
-    '<div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">' +
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin-bottom:8px;opacity:0.4;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg><br>点击左侧列表行查看详情</div>';
-}
+  var html = '<div class="vm-meta-section">';
+  html += '<div class="vm-meta-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>分段内容</div>';
+  html += '<div class="vm-meta-text">' + chunk.text + '</div>';
+  html += '</div>';
 
-function vmSaveMetadata() {
-  if (!_vmCurrentDetailId) return;
-  var d = null;
-  for (var i = 0; i < vmAllData.length; i++) { if (vmAllData[i].id === _vmCurrentDetailId) { d = vmAllData[i]; break; } }
-  if (!d) return;
-  for (var k in d.metadata) {
-    var el = document.getElementById('vmMeta_' + k);
-    if (el) d.metadata[k] = el.value;
-  }
-  alert('Metadata 已保存（仅更新 Metadata，未修改向量值）');
-}
+  html += '<div class="vm-meta-section">';
+  html += '<div class="vm-meta-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>元数据</div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">knowledge_type</span><span class="vm-meta-val">' + m.knowledgeType + '</span></div>';
+  html += '<div style="font-size:11px;color:#9ca3af;margin:10px 0 6px;font-weight:600;">文档信息</div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">原始文件名称</span><span class="vm-meta-val">' + m.origFileName + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">原始文件大小</span><span class="vm-meta-val">' + m.origFileSize + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">上传日期</span><span class="vm-meta-val">' + m.uploadDate + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">最后更新日期</span><span class="vm-meta-val">' + m.updateDate + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">来源</span><span class="vm-meta-val">' + m.source + '</span></div>';
+  html += '</div>';
 
-function vmDeleteSingle() {
-  if (!_vmCurrentDetailId) return;
-  if (!confirm('确定删除向量 ' + _vmCurrentDetailId + '？')) return;
-  for (var j = 0; j < vmAllData.length; j++) {
-    if (vmAllData[j].id === _vmCurrentDetailId) { vmAllData.splice(j, 1); break; }
-  }
-  delete vmSelected[_vmCurrentDetailId];
-  _vmCurrentDetailId = null;
-  vmRenderList();
-  document.getElementById('vmDetailPanel').innerHTML =
-    '<div style="padding:30px;text-align:center;color:var(--text-muted);font-size:13px;">已删除</div>';
+  html += '<div class="vm-meta-section">';
+  html += '<div class="vm-meta-section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>技术参数</div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">分段规则</span><span class="vm-meta-val">' + t.segmentRule + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">段落长度</span><span class="vm-meta-val">' + t.segmentLen + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">平均段落长度</span><span class="vm-meta-val">' + t.avgLen + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">段落数量</span><span class="vm-meta-val">' + t.chunkCount + ' paragraphs</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">召回次数</span><span class="vm-meta-val">' + t.recallRate + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">嵌入时间</span><span class="vm-meta-val">' + t.embedTime + '</span></div>';
+  html += '<div class="vm-meta-row"><span class="vm-meta-key">嵌入花费</span><span class="vm-meta-val">' + t.embedCost + '</span></div>';
+  html += '</div>';
+
+  panel.innerHTML = html;
 }
 
 // Init vector list when tab is shown
