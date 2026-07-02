@@ -101,6 +101,8 @@
     }
     #page-dashboard .page-inner {
       max-width: 100%;
+      background: linear-gradient(145deg, #f0f4f8 0%, #e8f0f7 25%, #f5f7fa 50%, #eef4f9 75%, #f8fafc 100%);
+      min-height: 100vh;
     }
     #page-users .page-inner {
       max-width: 100%;
@@ -430,6 +432,42 @@
       overflow: hidden;
     }
     .artifact-panel.open { width: 480px; }
+    .artifact-browser { display: grid; grid-template-columns: 240px 1fr; height: 100%; min-height: 0; }
+    .artifact-file-list { border-right: 1px solid var(--border-light); background: var(--bg); overflow-y: auto; padding: 8px; }
+    .artifact-file-item { display: flex; align-items: center; gap: 10px; padding: 12px; border-radius: 8px; margin-bottom: 6px; cursor: pointer; border: 1px solid transparent; transition: var(--transition); }
+    .artifact-file-item:hover { background: var(--card); border-color: var(--border-light); }
+    .artifact-file-item.active { background: var(--primary-light); border-color: var(--primary-border); }
+    .artifact-file-icon { width: 32px; height: 36px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+    .filetype-xlsx { background: #0f9d58; }
+    .filetype-docx { background: #2b579a; }
+    .filetype-pdf { background: #d93025; }
+    .filetype-md { background: #6b7280; }
+    .filetype-html { background: #e8642c; }
+    .filetype-txt { background: #4b5563; }
+    .artifact-file-info { min-width: 0; flex: 1; }
+    .artifact-file-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .artifact-file-meta { font-size: 10px; color: var(--text-muted); margin-top: 2px; }
+    .artifact-preview-area { display: flex; flex-direction: column; min-height: 0; background: linear-gradient(180deg, #fafafa, #f6f7fb); }
+    .artifact-preview-header { height: 48px; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: rgba(255,255,255,0.85); }
+    .artifact-preview-title { font-size: 14px; font-weight: 600; color: var(--text); }
+    .artifact-preview-actions { display: flex; gap: 8px; }
+    .artifact-preview-actions button { width: 28px; height: 28px; border: none; background: transparent; color: var(--text-muted); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .artifact-preview-actions button:hover { background: var(--card); color: var(--text); }
+    .artifact-preview-actions button svg { width: 16px; height: 16px; }
+    .artifact-preview-content { flex: 1; overflow: auto; padding: 16px; display: flex; justify-content: center; align-items: flex-start; }
+    .artifact-preview-sheet { min-width: 700px; background: #fff; border: 1px solid #e7e5e4; border-radius: 12px; overflow: hidden; box-shadow: 0 14px 40px rgba(15,23,42,0.08); }
+    .artifact-preview-sheet-header { height: 32px; background: #f8fafc; border-bottom: 1px solid #e5e7eb; display: grid; grid-template-columns: 40px repeat(3,1fr); color: #64748b; font-size: 12px; }
+    .artifact-preview-sheet-header div, .artifact-preview-sheet-row div { display: flex; align-items: center; justify-content: center; border-right: 1px solid rgba(148,163,184,0.18); }
+    .artifact-preview-sheet-row { height: 32px; display: grid; grid-template-columns: 40px repeat(3,1fr); border-bottom: 1px solid rgba(148,163,184,0.14); font-size: 12px; color: var(--text); }
+    .artifact-preview-sheet-row .row-no { background: #f8fafc; color: #94a3b8; }
+    .artifact-preview-doc { width: 680px; background: #fff; border-radius: 12px; border: 1px solid #e7e5e4; box-shadow: 0 14px 40px rgba(15,23,42,0.08); padding: 32px 36px; color: var(--text); }
+    .artifact-preview-doc h1 { font-size: 20px; margin-bottom: 16px; }
+    .artifact-preview-doc h2 { font-size: 14px; margin: 18px 0 8px; }
+    .artifact-preview-doc p { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+    .artifact-preview-md { width: 680px; background: #fff; border-radius: 12px; border: 1px solid #e7e5e4; box-shadow: 0 14px 40px rgba(15,23,42,0.08); padding: 24px 28px; color: var(--text); }
+    .artifact-preview-md h1, .artifact-preview-md h2 { color: var(--text); margin-bottom: 10px; }
+    .artifact-preview-md p { font-size: 13px; line-height: 1.7; color: var(--text-secondary); }
+    .artifact-preview-md code { background: #f1f5f9; padding: 2px 6px; border-radius: 6px; }
     #projectDetailPanel.open { width: 640px; }
     .artifact-panel-header {
       padding: 16px 20px;
@@ -1038,7 +1076,14 @@
     /* ===== PROJECTS ===== */
     .project-kanban { display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
     .project-kanban-col {
-      background: var(--bg); border-radius: var(--radius-lg); padding: 12px; min-width: 0;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: 14px;
+      padding: 12px;
+      min-width: 0;
+      box-shadow: 0 2px 12px rgba(31,38,135,0.06);
     }
     .project-kanban-col-header {
       display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;
@@ -1048,16 +1093,23 @@
       font-size: 12px; background: var(--border); color: var(--text-muted); padding: 1px 8px; border-radius: var(--radius-full); font-weight: 600;
     }
     .project-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,1);
+      border-radius: 12px;
       padding: 14px;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       margin-bottom: 8px;
+      box-shadow: 0 2px 8px rgba(31,38,135,0.06);
     }
     .project-card:last-child { margin-bottom: 0; }
-    .project-card:hover { box-shadow: var(--shadow-md); }
+    .project-card:hover {
+      box-shadow: 0 8px 24px rgba(31,38,135,0.12);
+      transform: translateY(-2px);
+      border-color: rgba(249,115,22,0.3);
+    }
     .project-card-name { font-size: 13px; font-weight: 700; margin-bottom: 4px; display:flex;align-items:center;gap:6px; }
     .project-card-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.4; display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden; }
     .project-card-meta { display: flex; gap: 8px; font-size: 11px; color: var(--text-secondary); margin-bottom: 6px; flex-wrap: wrap; }
@@ -1071,7 +1123,14 @@
     /* ===== TASK KANBAN ===== */
     .kanban-board { display: grid; grid-template-columns: repeat(8, 1fr); gap: 12px; overflow-x: auto; }
     .kanban-col {
-      background: var(--bg); border-radius: var(--radius-lg); padding: 12px; min-width: 220px;
+      background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.95);
+      border-radius: 14px;
+      padding: 12px;
+      min-width: 220px;
+      box-shadow: 0 2px 12px rgba(31,38,135,0.06);
     }
     .kanban-col-header {
       display: flex; align-items: center; justify-content: space-between;
@@ -1079,11 +1138,22 @@
     }
     .kanban-col-count { font-size: 11px; color: var(--text-muted); background: var(--card); padding: 2px 8px; border-radius: var(--radius-full); }
     .task-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 12px 14px; margin-bottom: 8px;
-      cursor: pointer; transition: var(--transition);
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,1);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(31,38,135,0.06);
     }
-    .task-card:hover { box-shadow: var(--shadow); border-color: var(--primary-border); }
+    .task-card:hover {
+      box-shadow: 0 8px 24px rgba(31,38,135,0.12);
+      transform: translateY(-2px);
+      border-color: rgba(249,115,22,0.3);
+    }
     .task-card-title { font-size: 13px; font-weight: 600; margin-bottom: 6px; }
     .task-card-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; line-height: 1.5; }
     .task-card-footer {
@@ -1115,8 +1185,18 @@
     .points-label { font-size: 14px; opacity: 0.85; margin-top: 4px; }
     .points-rules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
     .points-rule-card {
-      background: var(--card); border: 1px solid var(--border);
-      border-radius: var(--radius-lg); padding: 18px;
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.98);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 4px 24px rgba(31,38,135,0.08);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .points-rule-card:hover {
+      box-shadow: 0 8px 40px rgba(31,38,135,0.15);
+      transform: translateY(-3px);
     }
     .points-rule-icon { font-size: 28px; margin-bottom: 8px; }
     .points-rule-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
@@ -1200,10 +1280,19 @@
 
     /* ===== COMPONENTS ===== */
     .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.97);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,0.98);
+      border-radius: 16px;
       padding: 20px;
+      box-shadow: 0 4px 24px rgba(31,38,135,0.08);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+    .card:hover {
+      box-shadow: 0 8px 40px rgba(31,38,135,0.15);
+      transform: translateY(-2px);
     }
     .card-header {
       display: flex;
@@ -1455,18 +1544,27 @@
     .chart-bar-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
 
     .stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      background: rgba(255,255,255,0.98);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border: 1px solid rgba(255,255,255,1);
+      border-radius: 16px;
       padding: 18px 20px;
-      transition: var(--transition);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 32px rgba(31,38,135,0.15);
+      position: relative;
     }
-    .stat-card:hover { box-shadow: var(--shadow-md); }
+    .stat-card:hover {
+      box-shadow: 0 16px 48px rgba(31,38,135,0.25);
+      transform: translateY(-4px);
+    }
+    .stat-card-top, .stat-icon, .stat-value, .stat-label { position: relative; z-index: 1; }
     .stat-card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
     .stat-icon {
       width: 40px; height: 40px;
-      border-radius: var(--radius);
+      border-radius: 12px;
       display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
     .stat-icon svg { width: 20px; height: 20px; }
     .stat-value { font-size: 22px; font-weight: 800; color: var(--text); line-height: 1.2; }
@@ -1482,7 +1580,11 @@
       font-size: 16px;
       font-weight: 700;
       margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
+    .page-section-title svg { width: 18px; height: 18px; color: var(--primary); flex-shrink: 0; }
 
     /* ===== SCROLLBAR ===== */
     ::-webkit-scrollbar { width: 4px; }
@@ -1663,7 +1765,10 @@
             <div>
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;gap:12px;">
-                  <div class="page-section-title" style="margin-bottom:0;">📊 Backlog 看板</div>
+                  <div class="page-section-title" style="margin-bottom:0;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+                    <span>Backlog 看板</span>
+                  </div>
                   <div class="tab-bar" style="margin-bottom:0;" id="backlogTabs">
                     <button class="tab-bar-item active" onclick="switchBacklogTab(this,'project')">项目</button>
                     <button class="tab-bar-item" onclick="switchBacklogTab(this,'task')">任务</button>
@@ -1710,7 +1815,10 @@
           </div>
 
           <!-- 积分概况 -->
-          <div class="page-section-title" style="margin-bottom:14px;">💰 积分概况</div>
+          <div class="page-section-title" style="margin-bottom:14px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    <span>积分概况</span>
+                  </div>
           <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:24px;">
             <div class="card" style="padding:24px;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;">
               <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">我的总积分</div>
@@ -2831,32 +2939,43 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
-    <div class="artifact-panel-body" id="artifactBody">
-      <div class="artifact-card">
-        <div class="artifact-card-title">📊 销售数据分析报告</div>
-        <div class="artifact-card-content">
-          <p><strong>Q1 关键数据总览</strong></p>
-          <ul style="padding-left:16px;margin:8px 0;">
-            <li>总销售额：¥12,847,000（同比增长 23.5%）</li>
-            <li>环比增长：8.2%</li>
-            <li>华东地区贡献 38% 销售额</li>
-            <li>新产品线 C 增长 312%</li>
-          </ul>
-          <pre>{
-  "period": "2026-Q1",
-  "revenue": 12847000,
-  "yoy_growth": 23.5,
-  "top_region": "华东",
-  "top_product": "产品线C",
-  "product_growth": 312
-}</pre>
+    <div class="artifact-panel-body" id="artifactBody" style="padding:0;">
+      <div class="artifact-browser">
+        <div class="artifact-file-list">
+          <div class="artifact-file-item active" data-type="xlsx" onclick="selectArtifactFile('xlsx',this)">
+            <div class="artifact-file-icon filetype-xlsx">XLS</div>
+            <div class="artifact-file-info"><div class="artifact-file-name">事故复盘数据记录模板.xlsx</div><div class="artifact-file-meta">328 KB</div></div>
+          </div>
+          <div class="artifact-file-item" data-type="docx" onclick="selectArtifactFile('docx',this)">
+            <div class="artifact-file-icon filetype-docx">DOC</div>
+            <div class="artifact-file-info"><div class="artifact-file-name">产品事故复盘事项表.docx</div><div class="artifact-file-meta">156 KB</div></div>
+          </div>
+          <div class="artifact-file-item" data-type="pdf" onclick="selectArtifactFile('pdf',this)">
+            <div class="artifact-file-icon filetype-pdf">PDF</div>
+            <div class="artifact-file-info"><div class="artifact-file-name">销售数据分析报告.pdf</div><div class="artifact-file-meta">2.4 MB</div></div>
+          </div>
+          <div class="artifact-file-item" data-type="md" onclick="selectArtifactFile('md',this)">
+            <div class="artifact-file-icon filetype-md">MD</div>
+            <div class="artifact-file-info"><div class="artifact-file-name">API 接口设计文档.md</div><div class="artifact-file-meta">18 KB</div></div>
+          </div>
+          <div class="artifact-file-item" data-type="html" onclick="selectArtifactFile('html',this)">
+            <div class="artifact-file-icon filetype-html">HTML</div>
+            <div class="artifact-file-info"><div class="artifact-file-name">数据可视化看板.html</div><div class="artifact-file-meta">42 KB</div></div>
+          </div>
+          <div class="artifact-file-item" data-type="txt" onclick="selectArtifactFile('txt',this)">
+            <div class="artifact-file-icon filetype-txt">TXT</div>
+            <div class="artifact-file-info"><div class="artifact-file-name">会议纪要.txt</div><div class="artifact-file-meta">6 KB</div></div>
+          </div>
         </div>
-      </div>
-      <div class="artifact-card">
-        <div class="artifact-card-title">📈 趋势可视化</div>
-        <div class="artifact-card-content" style="text-align:center;padding:12px 0;">
-          <div style="font-size:48px;margin-bottom:8px;">📊</div>
-          <p>Q1 销售额趋势图表已生成<br><span style="font-size:11px;color:var(--text-muted);">包含月度同比、环比数据对比</span></p>
+        <div class="artifact-preview-area">
+          <div class="artifact-preview-header">
+            <div class="artifact-preview-title" id="artifactPreviewTitle">事故复盘数据记录模板.xlsx</div>
+            <div class="artifact-preview-actions">
+              <button onclick="alert('打开文件')" title="打开"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></button>
+              <button onclick="alert('下载文件')" title="下载"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></button>
+            </div>
+          </div>
+          <div class="artifact-preview-content" id="artifactPreviewContent"></div>
         </div>
       </div>
     </div>
@@ -3622,11 +3741,46 @@ function toggleMaximize() {
 function openArtifact(idx) {
   document.getElementById('artifactPanel').classList.add('open');
   document.querySelector('.chat-content-wrap')?.classList.add('artifact-open');
+  renderArtifactPreview('xlsx');
 }
 
 function closeArtifact() {
   document.getElementById('artifactPanel').classList.remove('open');
   document.querySelector('.chat-content-wrap')?.classList.remove('artifact-open');
+}
+
+function selectArtifactFile(type, el) {
+  document.querySelectorAll('.artifact-file-item').forEach(function(item) { item.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  renderArtifactPreview(type);
+}
+
+function renderArtifactPreview(type) {
+  const content = document.getElementById('artifactPreviewContent');
+  const title = document.getElementById('artifactPreviewTitle');
+  if (!content || !title) return;
+
+  const fileNames = {
+    xlsx: '事故复盘数据记录模板.xlsx',
+    docx: '产品事故复盘事项表.docx',
+    pdf: '销售数据分析报告.pdf',
+    md: 'API 接口设计文档.md',
+    html: '数据可视化看板.html',
+    txt: '会议纪要.txt'
+  };
+  title.textContent = fileNames[type] || '未知文件';
+
+  if (type === 'xlsx') {
+    content.innerHTML = '<div class="artifact-preview-sheet"><div class="artifact-preview-sheet-header"><div></div><div>A</div><div>B</div><div>C</div></div>' + Array.from({length:12}).map(function(_,i){ return '<div class="artifact-preview-sheet-row"><div class="row-no">' + (i+1) + '</div><div></div><div></div><div></div></div>'; }).join('') + '</div>';
+  } else if (type === 'docx' || type === 'pdf') {
+    content.innerHTML = '<div class="artifact-preview-doc"><h1>' + (type === 'docx' ? '产品事故复盘事项表' : '销售数据分析报告') + '</h1><p>本文档为 AI 生成的分析报告，包含关键数据总览、趋势分析、问题诊断与改进建议等内容。</p><h2>一、概述</h2><p>文档内容已自动生成，可通过预览查看详细内容。</p></div>';
+  } else if (type === 'md') {
+    content.innerHTML = '<div class="artifact-preview-md"><h1># API 接口设计文档</h1><p>本文档定义了核心接口规范。</p><h2>## 认证</h2><p>采用 <code>OAuth 2.0 + JWT</code> 方案。</p></div>';
+  } else if (type === 'html') {
+    content.innerHTML = '<div style="width:680px;height:320px;background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:12px;display:flex;align-items:center;justify-content:center;color:#e2e8f0;font-size:14px;">数据可视化看板预览</div>';
+  } else {
+    content.innerHTML = '<div class="artifact-preview-doc" style="font-family:monospace;white-space:pre-wrap;">会议纪要\n\n1. 本周上线节奏确认\n2. 事故复盘模板统一\n3. 下周排期确认</div>';
+  }
 }
 
 function openProjectDetail(projectId) {
@@ -5425,11 +5579,11 @@ function renderBacklogProjectView(project) {
   if (taskView) taskView.style.display = 'none';
 
   const projectStages = [
-    { key:'research', label:'调研阶段', icon:'🔍' },
-    { key:'initiation', label:'立项阶段', icon:'📋' },
-    { key:'execution', label:'项目执行', icon:'🔄' },
-    { key:'review', label:'项目验收', icon:'✅' },
-    { key:'closed', label:'项目结项', icon:'📦' },
+    { key:'research', label:'调研阶段', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>' },
+    { key:'initiation', label:'立项阶段', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M16 3h4v4"/><path d="M21 3 9 15"/><path d="M12 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/></svg>' },
+    { key:'execution', label:'项目执行', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M21 3v6h-6"/><path d="M12 8v4l2.5 2.5"/></svg>' },
+    { key:'review', label:'项目验收', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M20 6 9 17l-5-5"/></svg>' },
+    { key:'closed', label:'项目结项', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 8v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8"/><path d="M3 8V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M12 12v4"/><path d="M10 12h4"/></svg>' },
   ];
 
   const currentUser = '张明远';
@@ -5499,10 +5653,10 @@ function renderBacklogTaskView(project) {
   const pct = Math.round((project.spent + project.frozen) / project.budget * 100);
 
   const taskStatuses = [
-    { key:'todo', label:'待开始', icon:'📋' },
-    { key:'in_progress', label:'进行中', icon:'🔄' },
-    { key:'pending_review', label:'待审核', icon:'👁' },
-    { key:'done', label:'已验收/已关闭', icon:'✅' },
+    { key:'todo', label:'待开始', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12h6"/><path d="M12 9v6"/></svg>' },
+    { key:'in_progress', label:'进行中', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M21 12a9 9 0 1 1-6.219-8.56"/><path d="M21 3v6h-6"/><path d="M12 8v4l2.5 2.5"/></svg>' },
+    { key:'pending_review', label:'待审核', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>' },
+    { key:'done', label:'已验收/已关闭', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M20 6 9 17l-5-5"/></svg>' },
   ];
 
   taskView.innerHTML = `
