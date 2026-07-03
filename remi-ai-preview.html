@@ -2462,6 +2462,8 @@
               创建项目
             </button>
           </div>
+          <!-- 项目统计指标卡片 -->
+          <div class="stats-grid" id="projectStatsGrid" style="margin-bottom:20px;"></div>
           <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
             <div class="conv-search" style="margin-top:0;flex:1;max-width:280px;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -3892,6 +3894,43 @@ function renderProjects() {
 
   if (sortBy === 'budget') filtered.sort((a, b) => b.budget - a.budget);
   else if (sortBy === 'progress') filtered.sort((a, b) => (b.spent + b.frozen) / b.budget - (a.spent + a.frozen) / a.budget);
+
+  // 渲染项目统计指标卡片
+  const statsGrid = document.getElementById('projectStatsGrid');
+  if (statsGrid) {
+    const totalBudget = projects.reduce((s, p) => s + p.budget, 0);
+    const totalSpent = projects.reduce((s, p) => s + p.spent, 0);
+    const totalFrozen = projects.reduce((s, p) => s + p.frozen, 0);
+    const totalRemaining = totalBudget - totalSpent - totalFrozen;
+    const activeProjects = projects.filter(p => p.stage === 'execution' || p.stage === 'research' || p.stage === 'initiation').length;
+    const totalTasks = tasks.length;
+    const completedTasks = tasks.filter(t => t.status === 'done').length;
+    const budgetUsage = totalBudget > 0 ? Math.round((totalSpent + totalFrozen) / totalBudget * 100) : 0;
+
+    const cardColors = [
+      { bg: 'linear-gradient(135deg, #f97316 0%, #fb923c 100%)', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="M9 9h6v6H9z"/></svg>' },
+      { bg: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' },
+      { bg: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' },
+      { bg: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h4v4"/><path d="M21 3 9 15"/><path d="M12 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/></svg>' }
+    ];
+
+    const stats = [
+      { label: '活跃项目', value: activeProjects, sub: '个', color: cardColors[0] },
+      { label: '总预算', value: totalBudget.toLocaleString(), sub: ' RP', color: cardColors[1] },
+      { label: '已验收任务', value: completedTasks + '/' + totalTasks, sub: ' 个', color: cardColors[2] },
+      { label: '预算使用率', value: budgetUsage, sub: '%', color: cardColors[3] }
+    ];
+
+    statsGrid.innerHTML = stats.map(s => `
+      <div class="stat-card" style="background:${s.color.bg};">
+        <div class="stat-card-top">
+          <div class="stat-icon" style="background:rgba(255,255,255,0.2);">${s.color.icon}</div>
+        </div>
+        <div class="stat-value" style="color:white;">${s.value}<span style="font-size:14px;font-weight:500;opacity:0.8;">${s.sub}</span></div>
+        <div class="stat-label" style="color:rgba(255,255,255,0.85);">${s.label}</div>
+      </div>
+    `).join('');
+  }
 
   const listBody = document.getElementById('projectListBody');
   if (listBody) {
