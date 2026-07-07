@@ -1763,21 +1763,32 @@
           <div style="display:grid;grid-template-columns:3fr 1fr;gap:16px;margin-bottom:24px;">
             <!-- Backlog 看板 -->
             <div>
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                <div style="display:flex;align-items:center;gap:12px;">
-                  <div class="page-section-title" style="margin-bottom:0;">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              <!-- 看板工具栏 -->
+              <div style="background:rgba(255,255,255,0.95);border:1px solid var(--border-light);border-radius:12px;padding:12px 16px;margin-bottom:14px;">
+                <div style="display:flex;align-items:center;gap:16px;">
+                  <!-- 标题 -->
+                  <div style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:700;color:var(--text);">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     <span>Backlog 看板</span>
                   </div>
-                  <div class="tab-bar" style="margin-bottom:0;" id="backlogTabs">
-                    <button class="tab-bar-item active" onclick="switchBacklogTab(this,'project')">项目</button>
-                    <button class="tab-bar-item" onclick="switchBacklogTab(this,'task')">任务</button>
+                  <!-- 分隔线 -->
+                  <div style="width:1px;height:20px;background:var(--border-light);"></div>
+                  <!-- 搜索框 -->
+                  <div class="conv-search" style="margin-top:0;flex:1;max-width:220px;background:var(--bg);border-radius:8px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                    <input type="text" id="backlogSearch" placeholder="搜索项目/任务..." oninput="renderBacklogKanban()" style="background:transparent;">
                   </div>
-                </div>
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <span style="font-size:12px;color:var(--text-muted);">筛选项目：</span>
-                  <div class="select-wrap">
-                    <select id="dashboardProjectFilter" onchange="renderBacklogKanban()"></select>
+                  <!-- Tab切换 -->
+                  <div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;">
+                    <button class="tab-bar-item active" id="backlogTabProject" onclick="switchBacklogTab(this,'project')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button>
+                    <button class="tab-bar-item" id="backlogTabTask" onclick="switchBacklogTab(this,'task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button>
+                  </div>
+                  <!-- 筛选项目 -->
+                  <div style="display:flex;align-items:center;gap:6px;">
+                    <span style="font-size:12px;color:var(--text-muted);">筛选</span>
+                    <div class="select-wrap" style="min-width:140px;">
+                      <select id="dashboardProjectFilter" onchange="renderBacklogKanban()"></select>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -5458,8 +5469,22 @@ let currentBacklogTab = 'project';
 
 function switchBacklogTab(el, tab) {
   currentBacklogTab = tab;
-  document.querySelectorAll('#backlogTabs .tab-bar-item').forEach(t => t.classList.remove('active'));
-  el.classList.add('active');
+  // 更新按钮样式
+  var projectBtn = document.getElementById('backlogTabProject');
+  var taskBtn = document.getElementById('backlogTabTask');
+  if (projectBtn && taskBtn) {
+    if (tab === 'project') {
+      projectBtn.style.background = 'var(--card)';
+      projectBtn.style.color = 'var(--text)';
+      taskBtn.style.background = 'transparent';
+      taskBtn.style.color = 'var(--text-muted)';
+    } else {
+      taskBtn.style.background = 'var(--card)';
+      taskBtn.style.color = 'var(--text)';
+      projectBtn.style.background = 'transparent';
+      projectBtn.style.color = 'var(--text-muted)';
+    }
+  }
   renderBacklogKanban();
 }
 
@@ -5607,6 +5632,9 @@ function renderBacklogProjectView(project) {
   projView.style.display = 'block';
   if (taskView) taskView.style.display = 'none';
 
+  // 获取搜索关键字
+  const searchKeyword = (document.getElementById('backlogSearch')?.value || '').toLowerCase();
+
   const projectStages = [
     { key:'research', label:'调研阶段', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/><path d="M11 8v6"/><path d="M8 11h6"/></svg>' },
     { key:'initiation', label:'立项阶段', icon:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;flex-shrink:0;"><path d="M16 3h4v4"/><path d="M21 3 9 15"/><path d="M12 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/></svg>' },
@@ -5616,7 +5644,12 @@ function renderBacklogProjectView(project) {
   ];
 
   const currentUser = '张明远';
-  const projectTasks = tasks.filter(t => t.projectId === project.id);
+  // 根据搜索关键字过滤任务
+  const projectTasks = tasks.filter(t => {
+    if (t.projectId !== project.id) return false;
+    if (searchKeyword && !t.title.toLowerCase().includes(searchKeyword) && !t.desc.toLowerCase().includes(searchKeyword)) return false;
+    return true;
+  });
   const remaining = project.budget - project.spent - project.frozen;
   const pct = Math.round((project.spent + project.frozen) / project.budget * 100);
 
@@ -5676,8 +5709,16 @@ function renderBacklogTaskView(project) {
   taskView.style.display = 'block';
   if (projView) projView.style.display = 'none';
 
+  // 获取搜索关键字
+  const searchKeyword = (document.getElementById('backlogSearch')?.value || '').toLowerCase();
+
   const currentUser = '张明远';
-  const projectTasks = tasks.filter(t => t.projectId === project.id);
+  // 根据搜索关键字过滤任务
+  const projectTasks = tasks.filter(t => {
+    if (t.projectId !== project.id) return false;
+    if (searchKeyword && !t.title.toLowerCase().includes(searchKeyword) && !t.desc.toLowerCase().includes(searchKeyword)) return false;
+    return true;
+  });
   const remaining = project.budget - project.spent - project.frozen;
   const pct = Math.round((project.spent + project.frozen) / project.budget * 100);
 
