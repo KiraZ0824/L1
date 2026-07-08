@@ -1777,12 +1777,12 @@
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
                 <div style="display:flex;align-items:center;gap:8px;">
                   <!-- 标题 -->
-                  <div id="kanbanTitleWithProject" style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--text);">
+                  <div id="kanbanTitleWithProject" style="display:none;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--text);">
                     <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     <span>看板</span>
                   </div>
                   <!-- 任务看板标题（仅任务看板显示） -->
-                  <div id="kanbanTitleTaskOnly" style="display:none;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--text);">
+                  <div id="kanbanTitleTaskOnly" style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--text);">
                     <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
                     <span>看板</span>
                     <span style="font-size:12px;color:var(--text-muted);font-weight:400;margin-left:4px;">全部项目任务</span>
@@ -1790,8 +1790,8 @@
                 </div>
                 <!-- Tab切换 -->
                 <div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;">
-                  <button class="tab-bar-item active" id="backlogTabProject" onclick="switchBacklogTab(this,'project')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button>
-                  <button class="tab-bar-item" id="backlogTabTask" onclick="switchBacklogTab(this,'task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button>
+                  <button class="tab-bar-item" id="backlogTabProject" onclick="switchBacklogTab(this,'project')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">项目</button>
+                  <button class="tab-bar-item active" id="backlogTabTask" onclick="switchBacklogTab(this,'task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">任务</button>
                 </div>
               </div>
               <div id="backlogProjectView"></div>
@@ -5467,7 +5467,7 @@ function switchMsgTab(tab) {
 }
 
 // ===== BACKLOG KANBAN =====
-let currentBacklogTab = 'project';
+let currentBacklogTab = 'task';
 
 function switchBacklogTab(el, tab) {
   currentBacklogTab = tab;
