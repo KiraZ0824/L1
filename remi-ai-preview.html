@@ -5688,19 +5688,17 @@ function renderBacklogProjectView(project) {
           <div style="background:${isCurrent ? 'var(--primary-light)' : 'var(--bg)'};border-radius:var(--radius-sm);padding:10px;border:2px solid ${isCurrent ? 'var(--primary-border)' : 'transparent'};">
             <div style="font-size:11px;font-weight:700;margin-bottom:6px;display:flex;align-items:center;gap:4px;">${s.icon} ${s.label} <span style="font-weight:400;font-size:10px;color:var(--text-muted);">(${stageTasks.length})</span></div>
             ${stageTasks.length === 0 ? '<div style="font-size:11px;color:var(--text-muted);text-align:center;padding:10px 0;">暂无任务</div>' : stageTasks.map(t => {
-              const isMine = t.assignee === currentUser;
               const priorityClass = t.priority.toLowerCase();
               return `
-              <div style="padding:6px 8px;background:${isMine ? 'var(--primary-light)' : 'var(--card)'};border-radius:4px;margin-bottom:4px;font-size:12px;border:1px solid ${isMine ? 'var(--primary-border)' : 'transparent'};">
-                <div style="display:flex;align-items:center;gap:4px;font-weight:600;">
-                  <span class="task-priority ${priorityClass}"></span>
-                  <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.title}</span>
-                  ${isMine ? '<span style="font-size:10px;color:var(--primary);flex-shrink:0;">我的</span>' : ''}
+              <div style="padding:8px 10px;background:var(--card);border-radius:6px;margin-bottom:6px;font-size:12px;border:1px solid var(--border-light);">
+                <div style="font-weight:600;line-height:1.45;color:var(--text);margin-bottom:8px;word-break:break-word;">${t.title}</div>
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:6px;">
+                  <span style="padding:2px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${project.name}</span>
+                  <span style="display:flex;align-items:center;gap:4px;"><span class="task-priority ${priorityClass}"></span>${t.priority}</span>
                 </div>
-                <div style="font-size:10px;color:var(--text-muted);margin-top:2px;display:flex;align-items:center;gap:4px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted);gap:8px;">
                   <span>${t.assignee}</span>
-                  <span style="font-size:9px;background:var(--border-light);padding:1px 5px;border-radius:3px;">${statusLabels[t.status] || t.status}</span>
-                  <span style="margin-left:auto;">${t.reward} RP</span>
+                  <span>${t.deadline || '-'}</span>
                 </div>
               </div>`;
             }).join('')}
@@ -5761,17 +5759,19 @@ function renderBacklogTaskView(project) {
           <div style="background:var(--bg);border-radius:var(--radius-sm);padding:10px;">
             <div style="font-size:11px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">${s.icon} ${s.label} <span style="font-weight:400;">(${items.length})</span></div>
             ${items.length === 0 ? '<div style="font-size:11px;color:var(--text-muted);text-align:center;padding:8px 0;">暂无任务</div>' : items.map(t => {
-              const isMine = t.assignee === currentUser;
               const priorityClass = t.priority.toLowerCase();
               const projName = getProjectName(t.projectId);
               return `
-              <div style="padding:6px 8px;background:${isMine ? 'var(--primary-light)' : 'var(--card)'};border-radius:4px;margin-bottom:4px;font-size:12px;border:1px solid ${isMine ? 'var(--primary-border)' : 'transparent'};">
-                <div style="display:flex;align-items:center;gap:4px;font-weight:600;">
-                  <span class="task-priority ${priorityClass}"></span>
-                  <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.title}</span>
-                  ${isMine ? '<span style="font-size:10px;color:var(--primary);flex-shrink:0;">我的</span>' : ''}
+              <div style="padding:8px 10px;background:var(--card);border-radius:6px;margin-bottom:6px;font-size:12px;border:1px solid var(--border-light);">
+                <div style="font-weight:600;line-height:1.45;color:var(--text);margin-bottom:8px;word-break:break-word;">${t.title}</div>
+                <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:6px;">
+                  <span style="padding:2px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${projName}</span>
+                  <span style="display:flex;align-items:center;gap:4px;"><span class="task-priority ${priorityClass}"></span>${t.priority}</span>
                 </div>
-                <div style="font-size:10px;color:var(--text-muted);margin-top:2px;">${projName} · ${t.assignee} · ${t.reward} RP</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted);gap:8px;">
+                  <span>${t.assignee}</span>
+                  <span>${t.deadline || '-'}</span>
+                </div>
               </div>`;
             }).join('')}
           </div>`;
