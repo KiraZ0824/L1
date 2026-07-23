@@ -15,6 +15,10 @@
       --accent-amber: #f59e0b;
       --accent-rose: #ef4444;
       --accent-violet: #8b5cf6;
+      --accent-blue: #3b82f6;
+      --accent-blue-bg: rgba(59,130,246,0.12);
+      --accent-rose-bg: rgba(239,68,68,0.12);
+      --accent-amber-bg: rgba(245,158,11,0.12);
       --bg: #f5f5f4;
       --card: #ffffff;
       --border: #e7e5e4;
@@ -1600,6 +1604,102 @@
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
 
+    /* ===== WORKBENCH TABS ===== */
+    .wb-tabs {
+      display: flex;
+      gap: 0;
+      background: var(--card);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-lg);
+      padding: 3px;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+    .wb-tab {
+      flex: 1;
+      padding: 10px 12px;
+      border: none;
+      border-radius: var(--radius);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .wb-tab:hover { color: var(--text); background: var(--bg); }
+    .wb-tab.active { background: var(--primary); color: #fff; box-shadow: 0 2px 8px rgba(249,115,22,0.25); }
+    .wb-tab svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .wb-panel { display: none; }
+    .wb-panel.active { display: block; animation: fadeIn 0.25s ease; }
+    .wb-panel-scroll { max-height: 748px; overflow-y: auto; }
+    .backlog-container { display: flex; flex-direction: column; }
+    .backlog-header {
+      display: flex; align-items: center; padding: 8px 16px;
+      font-size: 11px; font-weight: 600; color: var(--text-muted);
+      border-bottom: 1px solid var(--border-light);
+      background: var(--bg); border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .backlog-header-col { flex: 1; min-width: 0; }
+    .backlog-header-col.col-key { flex: 0 0 70px; }
+    .backlog-header-col.col-title { flex: 3; }
+    .backlog-header-col.col-project { flex: 0 0 120px; }
+    .backlog-header-col.col-rp { flex: 0 0 60px; text-align: center; }
+    .backlog-header-col.col-status { flex: 0 0 90px; text-align: center; }
+    .backlog-header-col.col-assignee { flex: 0 0 90px; text-align: center; }
+    .backlog-list { flex: 1; }
+    .backlog-item {
+      display: flex; align-items: center; padding: 10px 16px;
+      background: var(--card); border-bottom: 1px solid var(--border-light);
+      transition: var(--transition); cursor: pointer; font-size: 12px;
+    }
+    .backlog-item:hover { background: var(--bg); }
+    .backlog-item:last-child { border-bottom: none; }
+    .backlog-col { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
+    .backlog-col.col-key { flex: 0 0 70px; font-size: 11px; font-weight: 500; color: var(--primary); }
+    .backlog-col.col-title { flex: 3; font-weight: 500; color: var(--text); }
+    .backlog-col.col-project { flex: 0 0 120px; }
+    .backlog-col.col-rp { flex: 0 0 60px; justify-content: center; font-weight: 600; color: var(--accent-amber); }
+    .backlog-col.col-status { flex: 0 0 90px; justify-content: center; }
+    .backlog-col.col-assignee { flex: 0 0 90px; justify-content: center; color: var(--text-secondary); }
+    .backlog-count { font-size: 12px; color: var(--text-muted); padding: 8px 16px; border-bottom: 1px solid var(--border-light); }
+    .backlog-count strong { color: var(--text); }
+    .bl-tag { padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bl-tag-project { background: var(--primary-light); color: var(--primary); }
+    .bl-status { display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; }
+    .bl-status.status-todo { background: var(--bg); color: var(--text-muted); }
+    .bl-status.status-in_progress { background: var(--accent-blue-bg); color: var(--accent-blue); }
+    .bl-status.status-pending_review { background: var(--accent-amber-bg); color: var(--accent-amber); }
+    .bl-status.status-rejected { background: var(--accent-rose-bg); color: var(--accent-rose); }
+    .bl-status-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .bl-status-dot.status-todo { background: var(--text-muted); }
+    .bl-status-dot.status-in_progress { background: var(--accent-blue); }
+    .bl-status-dot.status-pending_review { background: var(--accent-amber); }
+    .bl-status-dot.status-rejected { background: var(--accent-rose); }
+    .burndown-header { margin-bottom: 16px; }
+    .burndown-legend { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+    .burndown-chart { position: relative; display: grid; grid-template-columns: 40px 1fr; gap: 12px; min-height: 320px; }
+    .burndown-y-axis { display: flex; flex-direction: column; justify-content: space-between; font-size: 10px; color: var(--text-muted); text-align: right; padding-right: 8px; }
+    .burndown-bars-area { display: flex; align-items: flex-end; gap: 0; position: relative; padding-bottom: 50px; }
+    .burndown-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+    .burndown-bar-stack { display: flex; flex-direction: column; align-items: center; position: relative; border-radius: 4px 4px 0 0; overflow: hidden; min-height: 20px; }
+    .burndown-bar-seg { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: #fff; width: 100%; }
+    .burndown-bar-seg.completed { background: var(--accent-emerald); }
+    .burndown-bar-seg.remaining { background: var(--primary); }
+    .burndown-bar-seg.added { background: var(--accent-blue); }
+    .burndown-bar-seg.forecast { background: var(--bg); border: 1px dashed var(--border-light); border-top: none; }
+    .burndown-bar-label { font-size: 11px; font-weight: 600; color: var(--text); margin-top: 8px; white-space: nowrap; }
+    .burndown-bar-date { font-size: 10px; color: var(--text-muted); }
+    .burndown-grid { position: absolute; top: 0; left: 0; right: 0; bottom: 50px; display: flex; flex-direction: column; justify-content: space-between; pointer-events: none; }
+    .burndown-grid-line { width: 100%; height: 1px; background: var(--border-light); }
+    .tl-bar { height: 24px; border-radius: 4px; position: relative; min-width: 20px; }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1751,58 +1851,54 @@
       <!-- ===== DASHBOARD ===== -->
       <div class="page active" id="page-dashboard">
         <div class="page-inner">
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
-            <div>
-              <h1 style="font-size:20px;font-weight:700;">工作台</h1>
-              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">你好，张明远 · 今日待办 <strong style="color:var(--primary);">5</strong> 项</p>
-            </div>
-            <div style="display:flex;gap:8px;">
-              <button class="btn btn-sm" id="langToggleBtn" onclick="toggleLanguage()" style="min-width:40px;font-size:13px;font-weight:600;background:var(--bg-card);border:1px solid var(--border-light);border-radius:6px;padding:4px 10px;cursor:pointer;color:var(--text);">中</button>
-              <button class="btn btn-outline btn-sm" onclick="navigateTo('projects');setTimeout(openProjectModal,300);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                创建项目
-              </button>
-              <button class="btn btn-primary btn-sm" onclick="navigateTo('tasks');setTimeout(openTaskModal,300);">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                创建任务
-              </button>
+          <div style="display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;gap:10px;width:100%;max-width:720px;">
+              <div style="flex:1;position:relative;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="globalSearch" placeholder="搜索任务、项目、知识库..." style="width:100%;padding:10px 14px 10px 40px;border:1px solid var(--border-light);border-radius:10px;font-size:14px;background:var(--card);color:var(--text);outline:none;box-shadow:var(--shadow-sm);transition:var(--transition);box-sizing:border-box;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border-light)'">
+              </div>
+              <div style="display:flex;gap:8px;flex-shrink:0;">
+                <button class="btn btn-sm" id="langToggleBtn" onclick="toggleLanguage()" style="min-width:40px;font-size:13px;font-weight:600;background:var(--bg-card);border:1px solid var(--border-light);border-radius:6px;padding:4px 10px;cursor:pointer;color:var(--text);">中</button>
+                <button class="btn btn-outline btn-sm" onclick="openProjectModal()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  创建项目
+                </button>
+                <button class="btn btn-primary btn-sm" onclick="openTaskModal()">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  创建任务
+                </button>
+              </div>
             </div>
           </div>
 
-          <!-- Backlog 看板 + 待办中心 -->
+          <!-- 左右分栏：左=看板Tab，右=审批+消息 -->
           <div style="display:grid;grid-template-columns:3fr 1fr;gap:16px;margin-bottom:24px;">
-            <!-- Backlog 看板 -->
             <div>
-              <!-- 看板区域 -->
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
-                <div style="display:flex;align-items:center;gap:8px;">
-                  <!-- 标题 -->
-                  <div id="kanbanTitleWithProject" style="display:none;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--text);">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                    <span>看板</span>
-                  </div>
-                  <!-- 任务看板标题（仅任务看板显示） -->
-                  <div id="kanbanTitleTaskOnly" style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;color:var(--text);">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-                    <span>看板</span>
-                    <span style="font-size:12px;color:var(--text-muted);font-weight:400;margin-left:4px;">全部项目任务</span>
-                  </div>
-                </div>
-                <!-- Tab切换 -->
-                <div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;">
-                  <button class="tab-bar-item" id="backlogTabProject" onclick="switchBacklogTab(this,'project')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">项目</button>
-                  <button class="tab-bar-item active" id="backlogTabTask" onclick="switchBacklogTab(this,'task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">任务</button>
-                </div>
+              <div class="wb-tabs">
+                <button class="wb-tab active" onclick="switchWbTab('backlog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>Backlog</button>
+                <button class="wb-tab" onclick="switchWbTab('project')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>项目</button>
+                <button class="wb-tab" onclick="switchWbTab('task')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>任务</button>
+                <button class="wb-tab" onclick="switchWbTab('list')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>列表</button>
+                <button class="wb-tab" onclick="switchWbTab('timeline')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><polyline points="8 5 3 12 8 19"/></svg>时间线</button>
+                <button class="wb-tab" onclick="switchWbTab('burndown')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>燃尽图</button>
               </div>
-              <div id="backlogProjectView"></div>
-              <div id="backlogTaskView" style="display:none;"></div>
+              <div class="wb-panel active" id="wb-panel-backlog"><div class="card wb-panel-scroll" style="padding:0;"><div id="backlogItemsContainer"></div></div></div>
+              <div class="wb-panel" id="wb-panel-project"><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div></div>
+              <div class="wb-panel" id="wb-panel-task">
+                <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;">
+                  <div class="select-wrap"><select id="wbTaskProjectFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div>
+                  <div class="select-wrap"><select id="wbTaskPriorityFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div>
+                </div>
+                <div class="card wb-panel-scroll" style="padding:12px;"><div id="wbKanbanBoard"></div></div>
+              </div>
+              <div class="wb-panel" id="wb-panel-list"><div class="card wb-panel-scroll" style="padding:12px;"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="conv-search" style="margin-top:0;flex:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="wbListSearch" placeholder="搜索任务..." oninput="renderWbList()" style="font-size:12px;"></div></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg);border-bottom:1px solid var(--border-light);"><th style="padding:8px 10px;text-align:left;">标题</th><th style="padding:8px 10px;text-align:left;">项目</th><th style="padding:8px 10px;text-align:left;">优先级</th><th style="padding:8px 10px;text-align:left;">负责人</th><th style="padding:8px 10px;text-align:left;">状态</th><th style="padding:8px 10px;text-align:left;">截止日期</th></tr></thead><tbody id="wbListBody"></tbody></table></div></div>
+              <div class="wb-panel" id="wb-panel-timeline"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;"><button class="tab-bar-item active" id="tlModeProject" onclick="switchTimelineMode('project')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button><button class="tab-bar-item" id="tlModeTask" onclick="switchTimelineMode('task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button></div><div id="tlProjectFilterWrap" style="display:none;"><select id="timelineProjectFilter" onchange="renderWbTimeline()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div class="timeline-container" id="timelineContainer"></div></div></div>
+              <div class="wb-panel" id="wb-panel-burndown"><div class="card wb-panel-scroll" style="padding:16px;"><div class="burndown-container" id="burndownContainer"></div></div></div>
             </div>
-
-            <!-- 待办中心 + 最新消息 -->
             <div style="display:flex;flex-direction:column;gap:10px;">
               <div class="card" style="padding:12px;">
                 <div class="card-header" style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
-                  <div class="card-title" style="font-size:13px;">待办中心 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">（5 项）</span></div>
+                  <div class="card-title" style="font-size:13px;">审批中心 <span style="font-size:11px;color:var(--text-muted);font-weight:400;">（5 项）</span></div>
                   <div style="display:flex;gap:4px;">
                     <button class="btn btn-xs btn-outline active" id="todoFilterAll" onclick="filterTodoItems('all')" style="font-size:11px;padding:2px 8px;">全部</button>
                     <button class="btn btn-xs btn-outline" id="todoFilterReview" onclick="filterTodoItems('review')" style="font-size:11px;padding:2px 8px;">待审核</button>
@@ -1811,11 +1907,9 @@
                 </div>
                 <div style="display:flex;flex-direction:column;" id="todoItemsList"></div>
               </div>
-
-              <!-- 最新消息 -->
               <div class="card" style="padding:12px;flex:1;">
                 <div class="card-header" style="margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
-                  <div class="card-title" style="font-size:13px;">最新消息</div>
+                  <div class="card-title" style="font-size:13px;">消息中心</div>
                   <div style="display:flex;gap:4px;background:var(--bg);border-radius:var(--radius-sm);padding:2px;">
                     <button class="btn btn-xs btn-outline active" id="msgTabUnread" onclick="switchMsgTab('unread')" style="font-size:11px;padding:2px 10px;border:none;background:transparent;">未读 <span style="font-size:10px;color:var(--primary);font-weight:600;">3</span></button>
                     <button class="btn btn-xs btn-outline" id="msgTabRead" onclick="switchMsgTab('read')" style="font-size:11px;padding:2px 10px;border:none;background:transparent;">已读</button>
@@ -4605,7 +4699,7 @@ navigateTo = function(page) {
   if (page === 'projects') renderProjects();
   if (page === 'tasks') { renderKanban(); }
   if (page === 'points') renderProjectBudgetTable();
-  if (page === 'dashboard') { renderBacklogKanban(); renderPointsLineChart(); renderNotificationMessages(); }
+  if (page === 'dashboard') { renderWbBacklog(); renderPointsLineChart(); renderNotificationMessages(); }
   if (page === 'project-task-config') renderAdminData();
 };
 
@@ -5499,7 +5593,7 @@ function switchBacklogTab(el, tab) {
       titleTaskOnly.style.display = 'flex';
     }
   }
-  renderBacklogKanban();
+  renderWbBacklog();
 }
 
 // 语言切换
@@ -5790,6 +5884,225 @@ function renderBacklogTaskView(project) {
     </div>`;
 }
 
+// ===== WORKBENCH TAB SWITCHING =====
+function switchWbTab(tab) {
+  document.querySelectorAll('.wb-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.wb-panel').forEach(p => p.classList.remove('active'));
+  const btn = document.querySelector(`.wb-tab[onclick="switchWbTab('${tab}')"]`);
+  if (btn) btn.classList.add('active');
+  const panel = document.getElementById(`wb-panel-${tab}`);
+  if (panel) panel.classList.add('active');
+  if (tab === 'backlog') renderWbBacklog();
+  if (tab === 'project') renderWbProjects();
+  if (tab === 'task') renderWbKanban();
+  if (tab === 'list') renderWbList();
+  if (tab === 'timeline') renderWbTimeline();
+  if (tab === 'burndown') renderBurndown();
+}
+
+function openTaskByStatus(taskId) {
+  const t = tasks.find(x => x.id === taskId);
+  if (!t) return;
+  if (t.status === 'done' || t.status === 'closed') { openTaskDetail(taskId); return; }
+  if (t.status === 'todo') { editTask(taskId); return; }
+  if (t.status === 'in_progress') { processTask(taskId); return; }
+  if (t.status === 'pending_review') { auditTask(taskId); return; }
+  if (t.status === 'rejected') { resubmitTask(taskId); return; }
+  openTaskDetail(taskId);
+}
+
+function wbGetProjectName(projectId) {
+  const proj = projects.find(p => p.id === projectId);
+  return proj ? proj.name : '未知项目';
+}
+
+function renderWbBacklog() {
+  const container = document.getElementById('backlogItemsContainer');
+  if (!container) return;
+  const allItems = tasks.filter(t => t.status !== 'done' && t.status !== 'closed');
+  const priorityOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
+  allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
+  const statusLabels = { todo: '待开始', in_progress: '进行中', pending_review: '待审核', rejected: '驳回' };
+  let html = '<div class="backlog-count">Backlog <strong>(' + allItems.length + ' 个任务)</strong></div>';
+  html += '<div class="backlog-header"><div class="backlog-header-col col-key">编号</div><div class="backlog-header-col col-title">标题</div><div class="backlog-header-col col-project">项目</div><div class="backlog-header-col col-rp">RP</div><div class="backlog-header-col col-status">状态</div><div class="backlog-header-col col-assignee">负责人</div></div>';
+  html += '<div class="backlog-list">';
+  allItems.forEach(t => {
+    const projName = wbGetProjectName(t.projectId);
+    html += `<div class="backlog-item" onclick="openTaskByStatus('${t.id}')"><div class="backlog-col col-key">${t.id.toUpperCase()}</div><div class="backlog-col col-title">${t.title}</div><div class="backlog-col col-project"><span class="bl-tag bl-tag-project">${projName}</span></div><div class="backlog-col col-rp">${t.reward || 0}</div><div class="backlog-col col-status"><span class="bl-status status-${t.status}"><span class="bl-status-dot status-${t.status}"></span>${statusLabels[t.status] || t.status}</span></div><div class="backlog-col col-assignee">${t.assignee}</div></div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderWbProjects() {
+  const container = document.getElementById('wbProjectCards');
+  if (!container) return;
+  const stages = [
+    { key:'research', label:'调研阶段' },
+    { key:'initiation', label:'立项阶段' },
+    { key:'execution', label:'项目执行' },
+    { key:'review', label:'项目验收' },
+    { key:'closed', label:'项目结项' }
+  ];
+  let html = '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">';
+  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已验收', closed:'已关闭' };
+  const statusColors = { todo:'var(--text-muted)', in_progress:'var(--accent-blue)', pending_review:'var(--accent-amber)', rejected:'var(--accent-rose)', done:'var(--accent-emerald)', closed:'var(--text-muted)' };
+  const today = '2026-07-23';
+  stages.forEach(stage => {
+    const items = tasks.filter(t => t.stage === stage.key);
+    html += `<div style="background:var(--bg);border-radius:8px;padding:12px;"><div style="font-size:13px;font-weight:700;white-space:nowrap;margin-bottom:8px;">${stage.label}</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">${items.length} 个任务</div>${items.map(t => {
+      const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
+      const border = isOverdue ? 'border:1px solid var(--accent-rose);box-shadow:0 0 0 1px var(--accent-rose);' : 'border:1px solid var(--border-light);';
+      return `<div style="padding:8px 10px;background:var(--card);border-radius:6px;margin-bottom:6px;font-size:12px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="font-weight:600;line-height:1.45;color:var(--text);margin-bottom:6px;word-break:break-word;">${t.title}</div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:999px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${statusLabels[t.status]}</span></div><div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted);gap:8px;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
+    }).join('')}</div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderWbKanban() {
+  const board = document.getElementById('wbKanbanBoard');
+  if (!board) return;
+  const statusList = [
+    { key:'todo', label:'待开始' },
+    { key:'in_progress', label:'进行中' },
+    { key:'pending_review', label:'待审核' },
+    { key:'rejected', label:'驳回' },
+    { key:'done', label:'已验收' },
+    { key:'closed', label:'已关闭' }
+  ];
+  const projFilter = document.getElementById('wbTaskProjectFilter')?.value || 'all';
+  const priFilter = document.getElementById('wbTaskPriorityFilter')?.value || 'all';
+  let filtered = tasks;
+  if (projFilter !== 'all') filtered = filtered.filter(t => t.projectId === projFilter);
+  if (priFilter !== 'all') filtered = filtered.filter(t => t.priority === priFilter);
+  const statusColors = { todo:'var(--text-muted)', in_progress:'var(--accent-blue)', pending_review:'var(--accent-amber)', rejected:'var(--accent-rose)', done:'var(--accent-emerald)', closed:'var(--text-muted)' };
+  const today = '2026-07-23';
+  board.innerHTML = `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;">${statusList.map(s => { const items = filtered.filter(t => t.status === s.key); return `<div style="background:var(--bg);border-radius:8px;padding:10px;"><div style="font-size:12px;font-weight:700;margin-bottom:8px;white-space:nowrap;">${s.label} <span style="color:var(--text-muted);font-weight:400;">(${items.length})</span></div>${items.map(t => {
+    const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
+    const border = isOverdue ? 'border:1px solid var(--accent-rose);box-shadow:0 0 0 1px var(--accent-rose);' : 'border:1px solid var(--border-light);';
+    return `<div style="padding:10px;background:var(--card);border-radius:8px;margin-bottom:8px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="font-size:12px;font-weight:600;line-height:1.4;margin-bottom:6px;">${t.title}</div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:999px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${s.label}</span></div><div style="font-size:10px;color:var(--text-muted);display:flex;justify-content:space-between;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
+  }).join('')}</div>`; }).join('')}</div>`;
+}
+
+function renderWbList() {
+  const body = document.getElementById('wbListBody');
+  if (!body) return;
+  const keyword = (document.getElementById('wbListSearch')?.value || '').toLowerCase();
+  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已验收', closed:'已关闭' };
+  let filtered = tasks;
+  if (keyword) filtered = filtered.filter(t => t.title.toLowerCase().includes(keyword) || t.desc.toLowerCase().includes(keyword));
+  const today = '2026-07-23';
+  body.innerHTML = filtered.map(t => {
+    const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
+    return `<tr onclick="openTaskByStatus('${t.id}')" style="cursor:pointer;"><td style="padding:8px 10px;font-weight:600;">${t.title}</td><td style="padding:8px 10px;color:var(--text-muted);">${wbGetProjectName(t.projectId)}</td><td style="padding:8px 10px;">${t.priority}</td><td style="padding:8px 10px;">${t.assignee}</td><td style="padding:8px 10px;">${statusLabels[t.status] || t.status}</td><td style="padding:8px 10px;${isOverdue ? 'color:var(--accent-rose);font-weight:600;' : 'color:var(--text-muted);'}">${t.deadline || '-'}</td></tr>`;
+  }).join('');
+}
+
+function switchTimelineMode(mode) {
+  document.getElementById('tlModeProject').style.background = mode === 'project' ? 'var(--card)' : 'transparent';
+  document.getElementById('tlModeProject').style.color = mode === 'project' ? 'var(--text)' : 'var(--text-muted)';
+  document.getElementById('tlModeTask').style.background = mode === 'task' ? 'var(--card)' : 'transparent';
+  document.getElementById('tlModeTask').style.color = mode === 'task' ? 'var(--text)' : 'var(--text-muted)';
+  document.getElementById('tlProjectFilterWrap').style.display = mode === 'task' ? '' : 'none';
+  renderWbTimeline();
+}
+
+function renderWbTimeline() {
+  const container = document.getElementById('timelineContainer');
+  if (!container) return;
+  const isProject = document.getElementById('tlModeProject').style.background === 'var(--card)' || !document.getElementById('tlModeTask').style.background.includes('card');
+  if (isProject) {
+    const months = ['2026-03','2026-04','2026-05','2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+    const mWidth = 100 / months.length;
+    let html = '<div style="display:flex;min-height:300px;">';
+    html += '<div style="width:280px;flex-shrink:0;border-right:1px solid var(--border-light);">';
+    html += '<div style="padding:8px 12px;font-size:11px;font-weight:600;color:var(--text-muted);border-bottom:1px solid var(--border-light);">项目</div>';
+    projects.forEach(p => {
+      html += `<div style="padding:10px 12px;font-size:12px;border-bottom:1px solid var(--border-light);font-weight:500;">${p.name}</div>`;
+    });
+    html += '</div>';
+    html += '<div style="flex:1;overflow-x:auto;position:relative;">';
+    html += '<div style="display:flex;border-bottom:1px solid var(--border-light);min-width:' + (months.length * 120) + 'px;">';
+    months.forEach((m, i) => {
+      const label = m.substring(5);
+      html += `<div style="flex:1;min-width:120px;text-align:center;padding:8px 0;font-size:11px;color:var(--text-muted);font-weight:500;border-right:1px solid var(--border-light);">${label}月</div>`;
+    });
+    html += '</div>';
+    projects.forEach(p => {
+      const start = p.startDate ? p.startDate.substring(0,7) : '2026-03';
+      const end = p.endDate ? p.endDate.substring(0,7) : '2026-12';
+      const si = Math.max(0, months.indexOf(start));
+      const ei = Math.min(months.length - 1, months.indexOf(end));
+      const left = si * mWidth;
+      const width = (ei - si + 1) * mWidth;
+      html += '<div style="min-width:' + (months.length * 120) + 'px;position:relative;height:48px;border-bottom:1px solid var(--border-light);">';
+      html += `<div class="tl-bar" style="position:absolute;left:${left}%;width:${width}%;top:12px;height:24px;background:var(--primary);display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;border-radius:4px;">${p.name}</div>`;
+      html += '</div>';
+    });
+    html += '</div></div>';
+    container.innerHTML = html;
+  } else {
+    const months = ['2026-06','2026-07','2026-08','2026-09','2026-10','2026-11','2026-12'];
+    const mWidth = 100 / months.length;
+    const filtered = tasks.filter(t => t.status !== 'done' && t.status !== 'closed');
+    const statusMap = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已完成', closed:'已关闭' };
+    let html = '<div style="display:flex;min-height:400px;">';
+    html += '<div style="width:340px;flex-shrink:0;border-right:1px solid var(--border-light);">';
+    html += '<div style="display:grid;grid-template-columns:100px 1fr 70px;padding:8px 12px;font-size:11px;font-weight:600;color:var(--text-muted);border-bottom:1px solid var(--border-light);"><span>任务</span><span>状态</span><span>经办人</span></div>';
+    filtered.forEach(t => {
+      html += `<div style="display:grid;grid-template-columns:100px 1fr 70px;padding:8px 12px;font-size:12px;border-bottom:1px solid var(--border-light);align-items:center;"><span style="color:var(--primary);font-weight:500;">${t.id.toUpperCase()}</span><span style="padding:2px 8px;border-radius:4px;font-size:10px;text-align:center;background:var(--accent-emerald)20;color:var(--accent-emerald);">${statusMap[t.status] || t.status}</span><span style="color:var(--text-muted);">${t.assignee}</span></div>`;
+    });
+    html += '</div>';
+    html += '<div style="flex:1;overflow-x:auto;position:relative;">';
+    html += '<div style="display:flex;border-bottom:1px solid var(--border-light);min-width:' + (months.length * 100) + 'px;">';
+    months.forEach(m => {
+      html += `<div style="flex:1;min-width:100px;text-align:center;padding:8px 0;font-size:11px;color:var(--text-muted);font-weight:500;border-right:1px solid var(--border-light);">${m.substring(5)}月</div>`;
+    });
+    html += '</div>';
+    filtered.forEach(t => {
+      const idx = months.indexOf(t.deadline ? t.deadline.substring(0,7) : months[0]);
+      const left = idx >= 0 ? idx * mWidth : 0;
+      const width = mWidth * 0.8;
+      const color = t.priority === 'P0' ? 'var(--accent-rose)' : t.priority === 'P1' ? 'var(--accent-amber)' : 'var(--primary)';
+      html += '<div style="min-width:' + (months.length * 100) + 'px;position:relative;height:40px;border-bottom:1px solid var(--border-light);">';
+      html += `<div class="tl-bar" style="position:absolute;left:${left}%;width:${width}%;top:8px;height:24px;background:${color};display:flex;align-items:center;padding:0 6px;font-size:10px;font-weight:600;color:#fff;border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.title}</div>`;
+      html += '</div>';
+    });
+    html += '</div></div>';
+    container.innerHTML = html;
+  }
+}
+
+function renderBurndown() {
+  const container = document.getElementById('burndownContainer');
+  if (!container) return;
+  const sprints = [
+    { label:'Sprint 7', remaining:13, completed:2, added:0 },
+    { label:'Sprint 8', remaining:13, completed:0, added:4 },
+    { label:'Sprint 9', remaining:10, completed:3, added:4 },
+    { label:'Sprint 10', remaining:6, completed:4, added:0 },
+    { label:'Next', remaining:6, completed:0, added:0, forecast:6 }
+  ];
+  const maxVal = 16;
+  let html = '<div class="burndown-header"><div style="font-size:14px;font-weight:600;">Epic Burndown</div></div>';
+  html += '<div class="burndown-legend"><span class="legend-item"><span class="legend-dot" style="background:var(--accent-emerald);"></span>已完成</span><span class="legend-item"><span class="legend-dot" style="background:var(--bg);border:1px solid var(--border-light);"></span>预测</span><span class="legend-item"><span class="legend-dot" style="background:var(--primary);"></span>剩余工作</span><span class="legend-item"><span class="legend-dot" style="background:var(--accent-blue);"></span>新增工作</span></div>';
+  html += '<div class="burndown-chart"><div class="burndown-y-axis">';
+  for (let v = 16; v >= 0; v -= 2) html += '<span>' + v + '</span>';
+  html += '</div><div class="burndown-bars-area">';
+  sprints.forEach(sp => {
+    html += '<div class="burndown-bar-wrap"><div class="burndown-bar-stack">';
+    if (sp.added) html += '<div class="burndown-bar-seg added" style="height:' + (sp.added / maxVal * 300) + 'px;">+' + sp.added + '</div>';
+    html += '<div class="burndown-bar-seg remaining" style="height:' + (sp.remaining / maxVal * 300) + 'px;">' + sp.remaining + '</div>';
+    if (sp.completed) html += '<div class="burndown-bar-seg completed" style="height:' + (sp.completed / maxVal * 300) + 'px;">-' + sp.completed + '</div>';
+    html += '</div>';
+    if (sp.forecast) html += '<div class="burndown-bar-seg forecast" style="height:' + (sp.forecast / maxVal * 300) + 'px;"></div>';
+    html += '<div class="burndown-bar-label">' + sp.label + '</div></div>';
+  });
+  html += '</div></div>';
+  container.innerHTML = html;
+}
+
 // ===== POINTS LINE CHART =====
 function renderPointsLineChart() {
   const container = document.getElementById('pointsLineChart');
@@ -5835,7 +6148,7 @@ function renderPointsLineChart() {
 }
 
 // ===== INIT =====
-renderBacklogKanban();
+renderWbBacklog();
 renderPointsLineChart();
 renderConversations();
 renderChat();
