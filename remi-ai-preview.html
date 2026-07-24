@@ -1915,7 +1915,6 @@
               <div class="wb-tabs">
                 <button class="wb-tab active" onclick="switchWbTab('backlog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>Backlog</button>
                 <button class="wb-tab" onclick="switchWbTab('task')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>任务</button>
-                <button class="wb-tab" onclick="switchWbTab('list')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/></svg>列表</button>
                 <button class="wb-tab" onclick="switchWbTab('project')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>项目</button>
                 <button class="wb-tab" onclick="switchWbTab('timeline')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><polyline points="8 5 3 12 8 19"/></svg>时间线</button>
                 <button class="wb-tab" onclick="switchWbTab('burndown')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>燃尽图</button>
@@ -1925,10 +1924,11 @@
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;">
                   <div class="select-wrap"><select id="wbTaskProjectFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div>
                   <div class="select-wrap"><select id="wbTaskPriorityFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div>
+                  <div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;"><button class="tab-bar-item active" id="tvKanban" onclick="switchWbTaskView('kanban')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">看板</button><button class="tab-bar-item" id="tvList" onclick="switchWbTaskView('list')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">列表</button></div></div>
                 </div>
-                <div class="card wb-panel-scroll" style="padding:12px;"><div id="wbKanbanBoard"></div></div>
+                <div id="wbTaskKanbanWrap"><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbKanbanBoard"></div></div></div>
+                <div id="wbTaskListWrap" style="display:none;"><div class="card wb-panel-scroll" style="padding:12px;"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="conv-search" style="margin-top:0;flex:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="wbListSearch" placeholder="搜索任务..." oninput="renderWbList()" style="font-size:12px;"></div></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg);border-bottom:1px solid var(--border-light);"><th style="padding:8px 10px;text-align:left;">标题</th><th style="padding:8px 10px;text-align:left;">项目</th><th style="padding:8px 10px;text-align:left;">优先级</th><th style="padding:8px 10px;text-align:left;">负责人</th><th style="padding:8px 10px;text-align:left;">状态</th><th style="padding:8px 10px;text-align:left;">截止日期</th></tr></thead><tbody id="wbListBody"></tbody></table></div></div>
               </div>
-              <div class="wb-panel" id="wb-panel-list"><div class="card wb-panel-scroll" style="padding:12px;"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="conv-search" style="margin-top:0;flex:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="wbListSearch" placeholder="搜索任务..." oninput="renderWbList()" style="font-size:12px;"></div></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg);border-bottom:1px solid var(--border-light);"><th style="padding:8px 10px;text-align:left;">标题</th><th style="padding:8px 10px;text-align:left;">项目</th><th style="padding:8px 10px;text-align:left;">优先级</th><th style="padding:8px 10px;text-align:left;">负责人</th><th style="padding:8px 10px;text-align:left;">状态</th><th style="padding:8px 10px;text-align:left;">截止日期</th></tr></thead><tbody id="wbListBody"></tbody></table></div></div>
               <div class="wb-panel" id="wb-panel-project"><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div></div>
               <div class="wb-panel" id="wb-panel-timeline" style="overflow:hidden;width:100%"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;"><button class="tab-bar-item active" id="tlModeProject" onclick="switchTimelineMode('project')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button><button class="tab-bar-item" id="tlModeTask" onclick="switchTimelineMode('task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button></div><div id="tlProjectFilterWrap" style="display:none;"><select id="timelineProjectFilter" onchange="renderWbTimeline()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div class="timeline-container" id="timelineContainer"></div></div></div>
               <div class="wb-panel" id="wb-panel-burndown"><div class="card wb-panel-scroll" style="padding:16px;"><div class="burndown-container" id="burndownContainer"></div></div></div>
@@ -6028,10 +6028,26 @@ function switchWbTab(tab) {
   if (panel) panel.classList.add('active');
   if (tab === 'backlog') renderWbBacklog();
   if (tab === 'project') renderWbProjects();
-  if (tab === 'task') renderWbKanban();
-  if (tab === 'list') renderWbList();
+  if (tab === 'task') { renderWbKanban(); }
   if (tab === 'timeline') renderWbTimeline();
   if (tab === 'burndown') renderBurndown();
+}
+
+var taskViewMode = 'kanban';
+
+function switchWbTaskView(mode) {
+  taskViewMode = mode;
+  var kanbanBtn = document.getElementById('tvKanban');
+  var listBtn = document.getElementById('tvList');
+  if (!kanbanBtn || !listBtn) return;
+  kanbanBtn.style.background = mode === 'kanban' ? 'var(--card)' : 'transparent';
+  kanbanBtn.style.color = mode === 'kanban' ? 'var(--text)' : 'var(--text-muted)';
+  listBtn.style.background = mode === 'list' ? 'var(--card)' : 'transparent';
+  listBtn.style.color = mode === 'list' ? 'var(--text)' : 'var(--text-muted)';
+  document.getElementById('wbTaskKanbanWrap').style.display = mode === 'kanban' ? '' : 'none';
+  document.getElementById('wbTaskListWrap').style.display = mode === 'list' ? '' : 'none';
+  if (mode === 'kanban') renderWbKanban();
+  else renderWbList();
 }
 
 function openTaskByStatus(taskId) {
