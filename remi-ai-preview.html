@@ -5626,12 +5626,13 @@ function openMessageCenter() {
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>\n      消息中心',
     '<div style="padding:16px;display:flex;flex-direction:column;">' +
-      '<div style="display:flex;gap:4px;margin-bottom:12px;"><button class="btn btn-xs btn-outline active" id="mcUnreadTab" onclick="switchMcTab(\'unread\')" style="font-size:11px;padding:4px 12px;">未读 <span style="font-size:10px;color:var(--primary);font-weight:600;">3</span></button><button class="btn btn-xs btn-outline" id="mcReadTab" onclick="switchMcTab(\'read\')" style="font-size:11px;padding:4px 12px;">已读</button></div>' +
+      '<div style="display:flex;gap:4px;margin-bottom:12px;"><button class="btn btn-xs btn-outline active" id="mcUnreadTab" onclick="switchMcTab(\'unread\')" style="font-size:11px;padding:4px 12px;">未读 <span id="mcUnreadBadge" style="font-size:10px;color:var(--primary);font-weight:600;">' + notifMessages.filter(function(m) { return m.unread; }).length + '</span></button><button class="btn btn-xs btn-outline" id="mcReadTab" onclick="switchMcTab(\'read\')" style="font-size:11px;padding:4px 12px;">已读</button></div>' +
       '<div id="mcUnreadList"></div>' +
       '<div id="mcReadList" style="display:none;"></div>' +
     '</div>'
   );
   renderNotifMessages();
+  renderNotificationMessages();
 }
 
 function switchMcTab(tab) {
@@ -5718,7 +5719,8 @@ const notifMessages = [
     title: '任务分配通知',
     content: '您已被分配任务「Q3 市场调研报告」，请在 2026-06-20 前完成。',
     time: '10 分钟前',
-    unread: true
+    unread: true,
+    action: "switchWbTab('backlog')"
   },
   {
     id: 'n2',
@@ -5726,7 +5728,8 @@ const notifMessages = [
     title: '审核通知',
     content: '任务「API 接口文档编写」已完成，请审核。',
     time: '1 小时前',
-    unread: true
+    unread: true,
+    action: "openTaskByStatus('t1')"
   },
   {
     id: 'n3',
@@ -5734,7 +5737,8 @@ const notifMessages = [
     title: '验收通知',
     content: '任务「前端页面优化」已完成并提交验收，请验收。',
     time: '3 小时前',
-    unread: true
+    unread: true,
+    action: "openTaskByStatus('t2')"
   },
   {
     id: 'n4',
@@ -5742,7 +5746,8 @@ const notifMessages = [
     title: '审核结果通知',
     content: '任务「Q2 财报分析」审核通过，奖励 800 积分已到账。',
     time: '昨天 14:23',
-    unread: false
+    unread: false,
+    action: "openTaskDetail('t5')"
   },
   {
     id: 'n5',
@@ -5750,7 +5755,8 @@ const notifMessages = [
     title: '奖励到账通知',
     content: '您获得奖励 500 积分（优秀贡献），当前余额 12,580 积分。',
     time: '昨天 09:15',
-    unread: false
+    unread: false,
+    action: "switchWbTab('backlog')"
   },
   {
     id: 'n6',
@@ -5758,7 +5764,8 @@ const notifMessages = [
     title: '任务分配通知',
     content: '您已被分配任务「合规风控升级方案」，优先级：高。',
     time: '2026-06-13 16:40',
-    unread: false
+    unread: false,
+    action: "openTaskByStatus('t9')"
   },
   {
     id: 'n7',
@@ -5766,24 +5773,48 @@ const notifMessages = [
     title: '审核结果通知',
     content: '任务「智能对话模块 PRD」审核未通过，请修改后重新提交。',
     time: '2026-06-12 11:00',
-    unread: false
+    unread: false,
+    action: "openTaskByStatus('t21')"
+  },
+  {
+    id: 'n8',
+    type: 'task',
+    title: '项目里程碑提醒',
+    content: '项目「技术文档平台」进入验收阶段，请准备验收材料。',
+    time: '2026-06-11 09:30',
+    unread: false,
+    action: "switchWbTab('project')"
+  },
+  {
+    id: 'n9',
+    type: 'review',
+    title: '代码评审邀请',
+    content: '王思远 邀请您评审「用户权限模块」的代码，截止日期 2026-06-25。',
+    time: '2026-06-10 15:20',
+    unread: false,
+    action: "openTaskByStatus('t7')"
+  },
+  {
+    id: 'n10',
+    type: 'system',
+    title: '系统通知',
+    content: '知识库存储使用量已达 78%，建议清理过期文档释放空间。',
+    time: '2026-06-09 11:00',
+    unread: false,
+    action: "switchKbTab('knowledge')"
   }
 ];
 
 function renderNotificationMessages() {
-  var unreadEl = document.getElementById('unreadMessages');
-  var readEl = document.getElementById('readMessages');
+  var unreadEl = document.getElementById('mcUnreadList') || document.getElementById('unreadMessages');
+  var readEl = document.getElementById('mcReadList') || document.getElementById('readMessages');
   if (!unreadEl || !readEl) return;
 
   var unreadItems = notifMessages.filter(function(m) { return m.unread; });
   var readItems = notifMessages.filter(function(m) { return !m.unread; });
 
-  // Update badge count
-  var badge = document.querySelector('#msgTabUnread span');
-  if (badge) badge.textContent = unreadItems.length;
-
   unreadEl.innerHTML = unreadItems.map(function(m) {
-    return '<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-light);">' +
+    return '<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-light);cursor:pointer;" onclick="' + (m.action || '') + ';closeProjectDetail();">' +
       '<div style="width:6px;height:6px;border-radius:50%;background:var(--primary);margin-top:6px;flex-shrink:0;"></div>' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-size:12px;font-weight:600;line-height:1.4;">' + m.title + '</div>' +
@@ -5794,7 +5825,7 @@ function renderNotificationMessages() {
   }).join('') || '<div style="padding:12px;text-align:center;font-size:12px;color:var(--text-muted);">暂无未读消息</div>';
 
   readEl.innerHTML = readItems.map(function(m) {
-    return '<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-light);opacity:0.65;">' +
+    return '<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--border-light);opacity:0.65;cursor:pointer;" onclick="' + (m.action || '') + ';closeProjectDetail();">' +
       '<div style="width:6px;height:6px;border-radius:50%;background:var(--border);margin-top:6px;flex-shrink:0;"></div>' +
       '<div style="flex:1;min-width:0;">' +
         '<div style="font-size:12px;font-weight:600;line-height:1.4;">' + m.title + '</div>' +
