@@ -6076,6 +6076,7 @@ function renderWbBacklog() {
   const priorityOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
   allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
   const statusLabels = { todo: '待开始', in_progress: '进行中', pending_review: '待审核', rejected: '驳回' };
+  const today = '2026-07-23';
   let html = '<div class="backlog-count">Backlog <strong>(' + allItems.length + ' 个任务)</strong></div>';
   html += '<div style="min-width:840px;"><div class="backlog-header"><div class="backlog-header-col col-key">编号</div><div class="backlog-header-col col-title">标题</div><div class="backlog-header-col col-priority">优先级</div><div class="backlog-header-col col-project">项目</div><div class="backlog-header-col col-status">状态</div><div class="backlog-header-col col-rp">RP</div><div class="backlog-header-col col-start">开始时间</div><div class="backlog-header-col col-deadline">截止时间</div><div class="backlog-header-col col-updated">更新时间</div><div class="backlog-header-col col-assignee">负责人</div></div>';
   html += '<div class="backlog-list">';
@@ -6090,7 +6091,7 @@ function renderWbBacklog() {
       '<div class="backlog-col col-status"><span class="bl-status status-' + t.status + '"><span class="bl-status-dot status-' + t.status + '"></span>' + (statusLabels[t.status] || t.status) + '</span></div>' +
       '<div class="backlog-col col-rp">' + (t.reward || 0) + '</div>' +
       '<div class="backlog-col col-start">' + (t.createdAt || '-') + '</div>' +
-      '<div class="backlog-col col-deadline">' + (t.deadline || '-') + '</div>' +
+      '<div class="backlog-col col-deadline' + (t.status !== 'done' && t.status !== 'closed' && t.deadline && t.deadline < today ? '" style="color:var(--accent-rose);font-weight:600;"' : '"') + '>' + (t.deadline || '-') + '</div>' +
       '<div class="backlog-col col-updated">' + (t.updatedAt || '-') + '</div>' +
       '<div class="backlog-col col-assignee">' + t.assignee + '</div></div>';
   });
