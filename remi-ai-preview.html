@@ -1904,7 +1904,7 @@
                 <button class="wb-tab" onclick="switchWbTab('timeline')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><polyline points="8 5 3 12 8 19"/></svg>时间线</button>
                 <button class="wb-tab" onclick="switchWbTab('burndown')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>燃尽图</button>
               </div>
-              <div class="wb-panel active" id="wb-panel-backlog"><div class="card wb-panel-scroll" style="padding:0;"><div id="backlogItemsContainer"></div></div></div>
+              <div class="wb-panel active" id="wb-panel-backlog"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;"><button class="tab-bar-item active" id="blFilterTask" onclick="switchBlFilter('task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">任务</button><button class="tab-bar-item" id="blFilterReview" onclick="switchBlFilter('review')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">审核</button></div></div><div class="card wb-panel-scroll" style="padding:0;"><div id="backlogItemsContainer"></div></div></div>
               <div class="wb-panel" id="wb-panel-task">
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;">
                   <div class="select-wrap"><select id="wbTaskProjectFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div>
@@ -5989,10 +5989,25 @@ function wbGetProjectName(projectId) {
   return proj ? proj.name : '未知项目';
 }
 
+var blFilterMode = 'task';
+
+function switchBlFilter(mode) {
+  blFilterMode = mode;
+  var taskBtn = document.getElementById('blFilterTask');
+  var reviewBtn = document.getElementById('blFilterReview');
+  if (!taskBtn || !reviewBtn) return;
+  taskBtn.style.background = mode === 'task' ? 'var(--card)' : 'transparent';
+  taskBtn.style.color = mode === 'task' ? 'var(--text)' : 'var(--text-muted)';
+  reviewBtn.style.background = mode === 'review' ? 'var(--card)' : 'transparent';
+  reviewBtn.style.color = mode === 'review' ? 'var(--text)' : 'var(--text-muted)';
+  renderWbBacklog();
+}
+
 function renderWbBacklog() {
   const container = document.getElementById('backlogItemsContainer');
   if (!container) return;
-  const allItems = tasks.filter(t => t.status !== 'done' && t.status !== 'closed');
+  var allItems = tasks.filter(t => t.status !== 'done' && t.status !== 'closed');
+  if (blFilterMode === 'review') allItems = allItems.filter(t => t.status === 'pending_review');
   const priorityOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
   allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
   const statusLabels = { todo: '待开始', in_progress: '进行中', pending_review: '待审核', rejected: '驳回' };
