@@ -1637,6 +1637,13 @@
     .wb-panel { display: none; }
     .wb-panel.active { display: block; animation: fadeIn 0.25s ease; overflow: hidden; }
     .wb-panel-scroll { height: 748px; overflow: auto; }
+    .task-menu-wrap { position: relative; display: inline-flex; }
+    .task-menu-dots { cursor: pointer; padding: 0 4px; font-size: 16px; color: var(--text-muted); border-radius: 4px; line-height: 1; user-select: none; }
+    .task-menu-dots:hover { background: var(--bg); }
+    .task-menu-wrap:hover .task-menu-dropdown { display: block !important; }
+    .task-menu-dropdown { display: none; position: absolute; right: 0; top: 100%; background: var(--card); border: 1px solid var(--border-light); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); z-index: 1000; min-width: 110px; padding: 4px 0; }
+    .task-menu-dropdown div { padding: 7px 14px; font-size: 12px; cursor: pointer; color: var(--text); white-space: nowrap; }
+    .task-menu-dropdown div:hover { background: var(--bg); color: var(--primary); }
     .backlog-container { display: flex; flex-direction: column; }
     .backlog-header {
       display: flex; align-items: center; padding: 8px 16px;
@@ -5991,7 +5998,9 @@ function renderWbKanban() {
   board.innerHTML = `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;">${statusList.map(s => { const items = filtered.filter(t => t.status === s.key); return `<div style="background:var(--bg);border-radius:8px;padding:10px;"><div style="font-size:12px;font-weight:700;margin-bottom:8px;white-space:nowrap;">${s.label} <span style="color:var(--text-muted);font-weight:400;">(${items.length})</span></div>${items.map(t => {
     const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
     const border = isOverdue ? 'border:1px solid var(--accent-rose);box-shadow:0 0 0 1px var(--accent-rose);' : 'border:1px solid var(--border-light);';
-    return `<div style="padding:10px;background:var(--card);border-radius:8px;margin-bottom:8px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="font-size:12px;font-weight:600;line-height:1.4;margin-bottom:6px;">${t.title}</div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:999px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${s.label}</span></div><div style="font-size:10px;color:var(--text-muted);display:flex;justify-content:space-between;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
+    const mAct = t.status === 'todo' ? 'editTask' : t.status === 'in_progress' ? 'processTask' : t.status === 'pending_review' ? 'auditTask' : t.status === 'rejected' ? 'resubmitTask' : 'openTaskDetail';
+    const mLbl = t.status === 'todo' ? '编辑' : t.status === 'in_progress' ? '提交审核' : t.status === 'pending_review' ? '审核' : t.status === 'rejected' ? '重新提交' : '查看详情';
+    return `<div style="padding:10px;background:var(--card);border-radius:8px;margin-bottom:8px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:4px;"><span style="font-size:12px;font-weight:600;line-height:1.4;flex:1;word-break:break-word;">${t.title}</span><div class="task-menu-wrap" onclick="event.stopPropagation();"><span class="task-menu-dots">⋮</span><div class="task-menu-dropdown"><div onclick="${mAct}('${t.id}');event.stopPropagation();">${mLbl}</div></div></div></div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:999px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${s.label}</span></div><div style="font-size:10px;color:var(--text-muted);display:flex;justify-content:space-between;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
   }).join('')}</div>`; }).join('')}</div>`;
 }
 
