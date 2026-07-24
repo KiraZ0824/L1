@@ -1687,6 +1687,17 @@
     .bl-status-dot.status-in_progress { background: var(--accent-blue); }
     .bl-status-dot.status-pending_review { background: var(--accent-amber); }
     .bl-status-dot.status-rejected { background: var(--accent-rose); }
+    .contributor-wrap { position: relative; flex: 1; }
+    .contributor-trigger { width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 8px; font-size: 13px; box-sizing: border-box; cursor: pointer; background: var(--card); color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; user-select: none; }
+    .contributor-trigger.has-value { color: var(--text); }
+    .contributor-trigger:after { content: '▾'; font-size: 10px; color: var(--text-muted); margin-left: 4px; }
+    .contributor-dropdown { display: none; position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--card); border: 1px solid var(--border-light); border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); z-index: 1000; max-height: 260px; overflow-y: auto; padding: 4px 0; }
+    .contributor-dropdown.open { display: block; }
+    .contributor-search { width: 100%; padding: 8px 10px; border: none; border-bottom: 1px solid var(--border-light); font-size: 13px; outline: none; background: transparent; color: var(--text); box-sizing: border-box; }
+    .contributor-dept { font-size: 11px; font-weight: 600; color: var(--text-muted); padding: 6px 12px 2px; }
+    .contributor-item { padding: 6px 12px 6px 20px; font-size: 13px; cursor: pointer; color: var(--text); }
+    .contributor-item:hover { background: var(--bg); color: var(--primary); }
+    .contributor-empty { padding: 12px; text-align: center; font-size: 12px; color: var(--text-muted); }
     .burndown-header { margin-bottom: 16px; }
     .burndown-legend { display: flex; gap: 16px; margin-bottom: 16px; flex-wrap: wrap; }
     .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-secondary); }
@@ -3766,13 +3777,10 @@ function openUploadDocModal() {
   const projectOpts = projects.map(function(p) {
     return '<option value="' + p.id + '">' + p.name + '</option>';
   }).join('');
-  const userOpts = ['张明远','李晓华','赵明','王思远','陈雨桐'].map(function(u) {
-    return '<option value="' + u + '">' + u + '</option>';
-  }).join('');
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传知识',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
-      '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">贡献者 *</label><select id="uploadDocContributor" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择贡献者</option>' + userOpts + '</select></div></div>' +
+      '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 *</label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()">请选择知识贡献者</div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><input type="file" id="uploadDocFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目 *</label><select id="uploadDocProject" onchange="onUploadProjectChange()" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目</option>' + projectOpts + '</select></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关联 Backlog 任务（可选）</label><select id="uploadDocTask" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">不关联任务</option></select></div>' +
@@ -3792,7 +3800,67 @@ function openUploadDocModal() {
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitUploadDoc()">确认上传</button></div>' +
     '</div>'
   );
+  // Reset contributor dropdown
+  document.getElementById('uploadDocContributor').value = '';
+  var trigger = document.getElementById('contributorTrigger');
+  if (trigger) { trigger.textContent = '请选择知识贡献者'; trigger.classList.remove('has-value'); }
 }
+
+var _deptUsers = [
+  { dept: '技术部', users: ['张明远', '王思远'] },
+  { dept: '产品部', users: ['李晓华'] },
+  { dept: '合规部', users: ['赵明'] },
+  { dept: '财务部', users: ['刘思琪'] },
+  { dept: 'BD', users: ['陈雨桐'] }
+];
+
+function renderContributorList(filter) {
+  var list = document.getElementById('contributorList');
+  if (!list) return;
+  var html = '';
+  var f = (filter || '').toLowerCase();
+  _deptUsers.forEach(function(g) {
+    var matched = g.users.filter(function(u) { return !f || u.includes(f) || g.dept.includes(f); });
+    if (matched.length === 0) return;
+    html += '<div class="contributor-dept">' + g.dept + '</div>';
+    matched.forEach(function(u) {
+      html += '<div class="contributor-item" onclick="selectContributor(\'' + u + '\')">' + u + '</div>';
+    });
+  });
+  if (!html) html = '<div class="contributor-empty">无匹配结果</div>';
+  list.innerHTML = html;
+}
+
+function toggleContributorDropdown() {
+  var dd = document.getElementById('contributorDropdown');
+  var isOpen = dd.classList.contains('open');
+  document.querySelectorAll('.contributor-dropdown.open').forEach(function(el) { el.classList.remove('open'); });
+  if (!isOpen) {
+    dd.classList.add('open');
+    document.getElementById('contributorSearch').value = '';
+    renderContributorList('');
+    setTimeout(function() { document.getElementById('contributorSearch').focus(); }, 50);
+  }
+}
+
+function selectContributor(name) {
+  document.getElementById('uploadDocContributor').value = name;
+  var trigger = document.getElementById('contributorTrigger');
+  trigger.textContent = name;
+  trigger.classList.add('has-value');
+  document.getElementById('contributorDropdown').classList.remove('open');
+}
+
+function filterContributors(val) {
+  renderContributorList(val);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.contributor-wrap')) {
+    document.querySelectorAll('.contributor-dropdown.open').forEach(function(el) { el.classList.remove('open'); });
+  }
+});
 
 function onUploadProjectChange() {
   const projectId = document.getElementById('uploadDocProject').value;
