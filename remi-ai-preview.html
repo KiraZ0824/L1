@@ -2003,7 +2003,7 @@
       <button class="tab active" onclick="switchKbTab(this,'vector')">向量数据管理</button>
       <button class="tab" onclick="switchKbTab(this,'types')">知识类型设置</button>
     </div>
-    <div id="kb-vector" style="display:none;">
+    <div id="kb-vector">
   <div class="vm-header">
     <div class="vm-header-count" id="vmTotalCount">共 0 个文档</div>
   </div>
@@ -4972,7 +4972,6 @@ function vmRenderMetaPanel(chunkId) {
 function switchKbTab(el, tab) {
   document.querySelectorAll('#page-knowledge .tabs .tab').forEach(function(t) { t.classList.remove('active'); });
   el.classList.add('active');
-  document.getElementById('kb-mgmt').style.display = tab === 'mgmt' ? '' : 'none';
   document.getElementById('kb-vector').style.display = tab === 'vector' ? '' : 'none';
   document.getElementById('kb-types').style.display = tab === 'types' ? '' : 'none';
   if (tab === 'vector') { vmCurrentPage = 1; vmRenderList(); }
