@@ -1929,7 +1929,7 @@
                 <div id="wbTaskKanbanWrap"><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbKanbanBoard"></div></div></div>
                 <div id="wbTaskListWrap" style="display:none;"><div class="card wb-panel-scroll" style="padding:12px;"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="conv-search" style="margin-top:0;flex:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="wbListSearch" placeholder="搜索任务..." oninput="renderWbList()" style="font-size:12px;"></div></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg);border-bottom:1px solid var(--border-light);"><th style="padding:8px 10px;text-align:left;">标题</th><th style="padding:8px 10px;text-align:left;">项目</th><th style="padding:8px 10px;text-align:left;">优先级</th><th style="padding:8px 10px;text-align:left;">负责人</th><th style="padding:8px 10px;text-align:left;">状态</th><th style="padding:8px 10px;text-align:left;">截止日期</th></tr></thead><tbody id="wbListBody"></tbody></table></div></div>
               </div>
-              <div class="wb-panel" id="wb-panel-project"><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div></div>
+              <div class="wb-panel" id="wb-panel-project"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div class="select-wrap"><select id="wbProjectFilter" onchange="renderWbProjects()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div></div>
               <div class="wb-panel" id="wb-panel-timeline" style="overflow:hidden;width:100%"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;"><button class="tab-bar-item active" id="tlModeProject" onclick="switchTimelineMode('project')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button><button class="tab-bar-item" id="tlModeTask" onclick="switchTimelineMode('task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button></div><div id="tlProjectFilterWrap" style="display:none;"><select id="timelineProjectFilter" onchange="renderWbTimeline()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div class="timeline-container" id="timelineContainer"></div></div></div>
               <div class="wb-panel" id="wb-panel-burndown"><div class="card wb-panel-scroll" style="padding:16px;"><div class="burndown-container" id="burndownContainer"></div></div></div>
             </div>
@@ -6118,6 +6118,17 @@ function renderWbBacklog() {
 function renderWbProjects() {
   const container = document.getElementById('wbProjectCards');
   if (!container) return;
+  // 动态填充项目筛选下拉框
+  const filterEl = document.getElementById('wbProjectFilter');
+  if (filterEl) {
+    const currentVal = filterEl.value;
+    filterEl.innerHTML = '<option value="all">全部项目</option>';
+    projects.forEach(p => {
+      filterEl.innerHTML += '<option value="' + p.id + '">' + p.name + '</option>';
+    });
+    filterEl.value = currentVal;
+  }
+  const projFilter = document.getElementById('wbProjectFilter')?.value || 'all';
   const stages = [
     { key:'research', label:'调研阶段' },
     { key:'initiation', label:'立项阶段' },
@@ -6130,7 +6141,8 @@ function renderWbProjects() {
   const statusColors = { todo:'var(--text-muted)', in_progress:'var(--accent-blue)', pending_review:'var(--accent-amber)', rejected:'var(--accent-rose)', done:'var(--accent-emerald)', closed:'var(--text-muted)' };
   const today = '2026-07-23';
   stages.forEach(stage => {
-    const items = tasks.filter(t => t.stage === stage.key);
+    var items = tasks.filter(t => t.stage === stage.key);
+    if (projFilter !== 'all') items = items.filter(t => t.projectId === projFilter);
     html += `<div style="background:var(--bg);border-radius:8px;padding:12px;"><div style="font-size:13px;font-weight:700;white-space:nowrap;margin-bottom:8px;">${stage.label}</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">${items.length} 个任务</div>${items.map(t => {
       const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
       const border = isOverdue ? 'border:1px solid var(--accent-rose);box-shadow:0 0 0 1px var(--accent-rose);' : 'border:1px solid var(--border-light);';
