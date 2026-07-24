@@ -3766,9 +3766,13 @@ function openUploadDocModal() {
   const projectOpts = projects.map(function(p) {
     return '<option value="' + p.id + '">' + p.name + '</option>';
   }).join('');
+  const userOpts = ['张明远','李晓华','赵明','王思远','陈雨桐'].map(function(u) {
+    return '<option value="' + u + '">' + u + '</option>';
+  }).join('');
   _showTaskPanel(
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传文档',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传知识',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">贡献者 *</label><select id="uploadDocContributor" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择贡献者</option>' + userOpts + '</select></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><input type="file" id="uploadDocFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目 *</label><select id="uploadDocProject" onchange="onUploadProjectChange()" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目</option>' + projectOpts + '</select></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关联 Backlog 任务（可选）</label><select id="uploadDocTask" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">不关联任务</option></select></div>' +
@@ -3783,13 +3787,6 @@ function openUploadDocModal() {
             '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">知识类型</span>' +
             '<select id="uploadDocType" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);"><option>方法论</option><option>案例分析</option><option>技术文档</option><option>模板</option><option>会议纪要</option><option>产品文档</option><option>需求文档</option><option>测试用例</option><option>其他</option></select>' +
           '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div>' +
-        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">文档属性</label>' +
-        '<div style="display:flex;gap:16px;background:var(--bg);border-radius:8px;padding:10px;border:1px solid var(--border-light);">' +
-          '<label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" id="uploadDocPublic" style="accent-color:var(--primary);"> 允许公开引用</label>' +
-          '<label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox" id="uploadDocAiCall" checked style="accent-color:var(--primary);"> 允许AI调用</label>' +
         '</div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitUploadDoc()">确认上传</button></div>' +
@@ -3809,16 +3806,17 @@ function onUploadProjectChange() {
 function submitUploadDoc() {
   const file = document.getElementById('uploadDocFile');
   const projectId = document.getElementById('uploadDocProject').value;
+  const contributor = document.getElementById('uploadDocContributor').value;
   if (!file.files || file.files.length === 0) { alert('请选择要上传的文件'); return; }
   if (!projectId) { alert('请选择所属项目'); return; }
+  if (!contributor) { alert('请选择贡献者'); return; }
   const project = projects.find(function(p) { return p.id === projectId; });
   const taskId = document.getElementById('uploadDocTask').value;
   const source = document.getElementById('uploadDocSource').value;
   const type = document.getElementById('uploadDocType').value;
-  const isPublic = document.getElementById('uploadDocPublic').checked;
-  const isAiCall = document.getElementById('uploadDocAiCall').checked;
+  const uploader = document.getElementById('uploadDocUploader').value;
   const taskLabel = taskId ? '（关联任务）' : '';
-  alert('文档「' + file.files[0].name + '」上传成功！\n所属项目：' + (project ? project.name : '') + '\n知识来源：' + source + '\n知识类型：' + type + '\n公开引用：' + (isPublic ? '是' : '否') + '\nAI调用：' + (isAiCall ? '是' : '否') + ' ' + taskLabel);
+  alert('知识「' + file.files[0].name + '」上传成功！\n上传人：' + uploader + '\n贡献者：' + contributor + '\n所属项目：' + (project ? project.name : '') + '\n知识来源：' + source + '\n知识类型：' + type + ' ' + taskLabel);
   closeProjectDetail();
 }
 
