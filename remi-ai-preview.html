@@ -1651,13 +1651,17 @@
       border-bottom: 1px solid var(--border-light);
       background: var(--bg); border-radius: var(--radius) var(--radius) 0 0;
     }
-    .backlog-header-col { flex: 1; min-width: 0; }
-    .backlog-header-col.col-key { flex: 0 0 70px; }
+    .backlog-header-col { flex: 1; min-width: 0; white-space: nowrap; }
+    .backlog-header-col.col-key { flex: 0 0 85px; }
     .backlog-header-col.col-title { flex: 3; }
-    .backlog-header-col.col-project { flex: 0 0 120px; }
-    .backlog-header-col.col-rp { flex: 0 0 60px; text-align: center; }
-    .backlog-header-col.col-status { flex: 0 0 90px; text-align: center; }
-    .backlog-header-col.col-assignee { flex: 0 0 90px; text-align: center; }
+    .backlog-header-col.col-priority { flex: 0 0 55px; text-align: center; }
+    .backlog-header-col.col-project { flex: 0 0 110px; }
+    .backlog-header-col.col-rp { flex: 0 0 55px; text-align: center; }
+    .backlog-header-col.col-status { flex: 0 0 80px; text-align: center; }
+    .backlog-header-col.col-start { flex: 0 0 95px; text-align: center; }
+    .backlog-header-col.col-deadline { flex: 0 0 95px; text-align: center; }
+    .backlog-header-col.col-updated { flex: 0 0 95px; text-align: center; }
+    .backlog-header-col.col-assignee { flex: 0 0 75px; text-align: center; }
     .backlog-list { flex: 1; }
     .backlog-item {
       display: flex; align-items: center; padding: 10px 16px;
@@ -1667,12 +1671,20 @@
     .backlog-item:hover { background: var(--bg); }
     .backlog-item:last-child { border-bottom: none; }
     .backlog-col { flex: 1; min-width: 0; display: flex; align-items: center; gap: 6px; }
-    .backlog-col.col-key { flex: 0 0 70px; font-size: 11px; font-weight: 500; color: var(--primary); }
+    .backlog-col.col-key { flex: 0 0 85px; font-size: 11px; font-weight: 500; color: var(--primary); white-space: nowrap; }
     .backlog-col.col-title { flex: 3; font-weight: 500; color: var(--text); }
-    .backlog-col.col-project { flex: 0 0 120px; }
-    .backlog-col.col-rp { flex: 0 0 60px; justify-content: center; font-weight: 600; color: var(--accent-amber); }
-    .backlog-col.col-status { flex: 0 0 90px; justify-content: center; }
-    .backlog-col.col-assignee { flex: 0 0 90px; justify-content: center; color: var(--text-secondary); }
+    .backlog-col.col-priority { flex: 0 0 55px; justify-content: center; font-weight: 600; font-size: 11px; }
+    .backlog-col.col-priority.p0 { color: var(--accent-rose); }
+    .backlog-col.col-priority.p1 { color: var(--accent-amber); }
+    .backlog-col.col-priority.p2 { color: #3b82f6; }
+    .backlog-col.col-priority.p3 { color: var(--text-muted); }
+    .backlog-col.col-project { flex: 0 0 110px; }
+    .backlog-col.col-rp { flex: 0 0 55px; justify-content: center; font-weight: 600; color: var(--accent-amber); font-size: 11px; }
+    .backlog-col.col-status { flex: 0 0 80px; justify-content: center; }
+    .backlog-col.col-start { flex: 0 0 95px; justify-content: center; font-size: 11px; color: var(--text-muted); }
+    .backlog-col.col-deadline { flex: 0 0 95px; justify-content: center; font-size: 11px; color: var(--text-muted); }
+    .backlog-col.col-updated { flex: 0 0 95px; justify-content: center; font-size: 11px; color: var(--text-muted); }
+    .backlog-col.col-assignee { flex: 0 0 75px; justify-content: center; color: var(--text-secondary); font-size: 11px; }
     .backlog-count { font-size: 12px; color: var(--text-muted); padding: 8px 16px; border-bottom: 1px solid var(--border-light); }
     .backlog-count strong { color: var(--text); }
     .bl-tag { padding: 2px 8px; border-radius: 999px; font-size: 10px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -3211,6 +3223,20 @@ const tasks = [
   { id:'t21', title:'审批流程设计文档', desc:'设计任务验收审批流程的完整文档', projectId:'p1', stage:'execution', status:'pending_review', priority:'P1', assignee:'张明远', reward:450, deadline:'2026-06-22', backlog:'项目执行', delivery:'文档链接' },
   { id:'t22', title:'结算模块代码审查', desc:'审查结算模块的代码质量和安全漏洞', projectId:'p2', stage:'execution', status:'rejected', priority:'P0', assignee:'李晓华', reward:600, deadline:'2026-06-18', backlog:'项目执行', delivery:'附件' },
 ];
+
+// Auto-generate time fields for backlog display
+tasks.forEach(function(t, i) {
+  if (!t.createdAt) {
+    var d = new Date(t.deadline || '2026-07-30');
+    d.setDate(d.getDate() - ((i % 20) + 24));
+    t.createdAt = d.toISOString().substring(0, 10);
+  }
+  if (!t.updatedAt) {
+    var d2 = t.completedAt ? new Date(t.completedAt) : new Date(t.deadline || '2026-07-30');
+    if (!t.completedAt) d2.setDate(d2.getDate() - ((i % 5) + 1));
+    t.updatedAt = d2.toISOString().substring(0, 10);
+  }
+});
 
 const conversations = [
   { id:'c1', title:'2026 Q2 财务数据分析', preview:'根据最新的财务报表...', time:'10分钟前', star:true },
@@ -6012,13 +6038,24 @@ function renderWbBacklog() {
   allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
   const statusLabels = { todo: '待开始', in_progress: '进行中', pending_review: '待审核', rejected: '驳回' };
   let html = '<div class="backlog-count">Backlog <strong>(' + allItems.length + ' 个任务)</strong></div>';
-  html += '<div class="backlog-header"><div class="backlog-header-col col-key">编号</div><div class="backlog-header-col col-title">标题</div><div class="backlog-header-col col-project">项目</div><div class="backlog-header-col col-rp">RP</div><div class="backlog-header-col col-status">状态</div><div class="backlog-header-col col-assignee">负责人</div></div>';
+  html += '<div style="min-width:840px;"><div class="backlog-header"><div class="backlog-header-col col-key">编号</div><div class="backlog-header-col col-title">标题</div><div class="backlog-header-col col-priority">优先级</div><div class="backlog-header-col col-project">项目</div><div class="backlog-header-col col-status">状态</div><div class="backlog-header-col col-rp">RP</div><div class="backlog-header-col col-start">开始时间</div><div class="backlog-header-col col-deadline">截止时间</div><div class="backlog-header-col col-updated">更新时间</div><div class="backlog-header-col col-assignee">负责人</div></div>';
   html += '<div class="backlog-list">';
-  allItems.forEach(t => {
+  allItems.forEach(function(t, idx) {
     const projName = wbGetProjectName(t.projectId);
-    html += `<div class="backlog-item" onclick="openTaskByStatus('${t.id}')"><div class="backlog-col col-key">${t.id.toUpperCase()}</div><div class="backlog-col col-title">${t.title}</div><div class="backlog-col col-project"><span class="bl-tag bl-tag-project">${projName}</span></div><div class="backlog-col col-rp">${t.reward || 0}</div><div class="backlog-col col-status"><span class="bl-status status-${t.status}"><span class="bl-status-dot status-${t.status}"></span>${statusLabels[t.status] || t.status}</span></div><div class="backlog-col col-assignee">${t.assignee}</div></div>`;
+    const keyId = 'RemiBD' + String(idx + 1).padStart(3, '0');
+    html += '<div class="backlog-item" onclick="openTaskByStatus(\'' + t.id + '\')">' +
+      '<div class="backlog-col col-key">' + keyId + '</div>' +
+      '<div class="backlog-col col-title">' + t.title + '</div>' +
+      '<div class="backlog-col col-priority ' + t.priority.toLowerCase() + '">' + t.priority + '</div>' +
+      '<div class="backlog-col col-project"><span class="bl-tag bl-tag-project">' + projName + '</span></div>' +
+      '<div class="backlog-col col-status"><span class="bl-status status-' + t.status + '"><span class="bl-status-dot status-' + t.status + '"></span>' + (statusLabels[t.status] || t.status) + '</span></div>' +
+      '<div class="backlog-col col-rp">' + (t.reward || 0) + '</div>' +
+      '<div class="backlog-col col-start">' + (t.createdAt || '-') + '</div>' +
+      '<div class="backlog-col col-deadline">' + (t.deadline || '-') + '</div>' +
+      '<div class="backlog-col col-updated">' + (t.updatedAt || '-') + '</div>' +
+      '<div class="backlog-col col-assignee">' + t.assignee + '</div></div>';
   });
-  html += '</div>';
+  html += '</div></div>';
   container.innerHTML = html;
 }
 
