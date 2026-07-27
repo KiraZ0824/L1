@@ -1706,6 +1706,9 @@
     .bl-status-dot.status-done { background: #10b981; }
     .bl-status-dot.status-closed { background: #475569; }
     .contributor-wrap { position: relative; flex: 1; }
+    .kb-subtag-chip { display:inline-block; padding:4px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; cursor:pointer; color:var(--text-muted); background:var(--card); transition:all .15s; user-select:none; }
+    .kb-subtag-chip:hover { border-color:var(--primary); color:var(--primary); }
+    .kb-subtag-chip.selected { background:var(--primary); color:#fff; border-color:var(--primary); }
     .contributor-trigger { width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 8px; font-size: 13px; box-sizing: border-box; cursor: pointer; background: var(--card); color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; user-select: none; }
     .contributor-trigger.has-value { color: var(--text); }
     .contributor-trigger:after { content: '▾'; font-size: 10px; color: var(--text-muted); margin-left: 4px; }
@@ -3685,14 +3688,8 @@ function openUploadDocModal() {
   for (var i = 0; i < knowledgeTypeData.length; i++) {
     typeOpts += '<option value="' + i + '">' + knowledgeTypeData[i].cn + '</option>';
   }
-  // Build initial secondary tag options (for the first type)
-  var subTagOpts = '';
-  if (knowledgeTypeData.length > 0) {
-    var first = knowledgeTypeData[0].subTags || [];
-    for (var j = 0; j < first.length; j++) {
-      subTagOpts += '<option value="' + first[j] + '">' + first[j] + '</option>';
-    }
-  }
+  // Reset selected sub-tags
+  _selectedSubTags = [];
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传知识',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
@@ -3710,9 +3707,9 @@ function openUploadDocModal() {
             '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">一级类型</span>' +
             '<select id="uploadDocType" onchange="updateSubTagSelect()" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);">' + typeOpts + '</select>' +
           '</div>' +
-          '<div style="display:flex;align-items:center;gap:8px;">' +
-            '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">二级标签</span>' +
-            '<select id="uploadDocSubTag" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);">' + subTagOpts + '</select>' +
+          '<div style="display:flex;align-items:flex-start;gap:8px;">' +
+            '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;padding-top:4px;">二级标签</span>' +
+            '<div id="uploadDocSubTagContainer" style="flex:1;display:flex;flex-wrap:wrap;gap:6px;"></div>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -3725,19 +3722,33 @@ function openUploadDocModal() {
   if (trigger) { trigger.textContent = '请选择知识贡献者'; trigger.classList.remove('has-value'); }
 }
 
+var _selectedSubTags = [];
+
 function updateSubTagSelect() {
   var typeSelect = document.getElementById('uploadDocType');
-  var subTagSelect = document.getElementById('uploadDocSubTag');
-  if (!typeSelect || !subTagSelect) return;
+  var container = document.getElementById('uploadDocSubTagContainer');
+  if (!typeSelect || !container) return;
   var idx = parseInt(typeSelect.value);
   var type = knowledgeTypeData[idx];
-  if (!type || !type.subTags) { subTagSelect.innerHTML = '<option value="">暂无标签</option>'; return; }
+  _selectedSubTags = [];
+  if (!type || !type.subTags) { container.innerHTML = '<span style="font-size:12px;color:var(--text-muted);">暂无标签</span>'; return; }
   var tags = type.subTags;
   var html = '';
   for (var i = 0; i < tags.length; i++) {
-    html += '<option value="' + tags[i] + '">' + tags[i] + '</option>';
+    html += '<span class="kb-subtag-chip" data-tag="' + tags[i] + '" onclick="toggleSubTag(this,\'' + tags[i] + '\')">' + tags[i] + '</span>';
   }
-  subTagSelect.innerHTML = html;
+  container.innerHTML = html;
+}
+
+function toggleSubTag(el, tag) {
+  var idx = _selectedSubTags.indexOf(tag);
+  if (idx !== -1) {
+    _selectedSubTags.splice(idx, 1);
+    el.classList.remove('selected');
+  } else {
+    _selectedSubTags.push(tag);
+    el.classList.add('selected');
+  }
 }
 
 var _deptUsers = [
@@ -3920,9 +3931,9 @@ function submitUploadDoc() {
   const source = document.getElementById('uploadDocSource').value;
   const typeIdx = parseInt(document.getElementById('uploadDocType').value);
   const typeName = knowledgeTypeData[typeIdx] ? knowledgeTypeData[typeIdx].cn : '未知';
-  const subTag = document.getElementById('uploadDocSubTag').value;
+  const subTags = _selectedSubTags.length > 0 ? _selectedSubTags.join('、') : '未选择';
   const uploader = document.getElementById('uploadDocUploader').value;
-  alert('知识「' + fileNames + '」上传成功！\n上传人：' + uploader + '\n贡献者：' + contributor + '\n所属项目：' + (project ? project.name : '未指定') + '\n知识来源：' + source + '\n一级类型：' + typeName + '\n二级标签：' + subTag);
+  alert('知识「' + fileNames + '」上传成功！\n上传人：' + uploader + '\n贡献者：' + contributor + '\n所属项目：' + (project ? project.name : '未指定') + '\n知识来源：' + source + '\n一级类型：' + typeName + '\n二级标签：' + subTags);
   _uploadFiles = [];
   closeProjectDetail();
 }
@@ -4096,6 +4107,7 @@ function openProjectDetail(projectId) {
 
 function closeProjectDetail() {
   _uploadFiles = [];
+  _selectedSubTags = [];
   document.getElementById('projectDetailPanel').classList.remove('open');
   // Reset panel title back to project detail default
   const panel = document.getElementById('projectDetailPanel');
