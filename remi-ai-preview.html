@@ -3691,7 +3691,7 @@ function openUploadDocModal() {
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传知识',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
       '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门</label><select id="uploadDocDept" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);">' + getDeptOptions(getUserDept('张明远')) + '</select></div><div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 *</label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()">请选择知识贡献者</div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div></div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><input type="file" id="uploadDocFile" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx,.xls,.xlsx,.md,.csv" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;"><div style="font-size:11px;color:var(--text-muted);margin-top:4px;">支持格式：DOC、DOCX、PDF、TXT、PPT、PPTX、XLS、XLSX、MD、CSV</div></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><div style="display:flex;align-items:center;gap:8px;"><input type="file" id="uploadDocFile" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx,.xls,.xlsx,.md,.csv" multiple onchange="onUploadFileChange(this)" style="display:none;"><button class="btn btn-sm btn-outline" onclick="document.getElementById(\'uploadDocFile\').click()" style="white-space:nowrap;">选择文件</button><span style="font-size:12px;color:var(--text-muted);">支持格式：DOC、DOCX、PDF、TXT、PPT、PPTX、XLS、XLSX、MD、CSV</span></div><div id="uploadFileList" style="display:flex;flex-direction:column;gap:4px;margin-top:8px;"></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="uploadDocProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目（可选）</option>' + projectOpts + '</select></div>' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识标签</label>' +
@@ -3799,11 +3799,58 @@ function onUploadProjectChange() {
     relatedTasks.map(function(t) { return '<option value="' + t.id + '">' + t.title + '</option>'; }).join('');
 }
 
+var _uploadFiles = [];
+
+function onUploadFileChange(input) {
+  for (var i = 0; i < input.files.length; i++) {
+    _uploadFiles.push(input.files[i]);
+  }
+  input.value = '';
+  renderUploadFileList();
+}
+
+function renderUploadFileList() {
+  var container = document.getElementById('uploadFileList');
+  if (!container) return;
+  if (_uploadFiles.length === 0) { container.innerHTML = ''; return; }
+  var html = '';
+  for (var i = 0; i < _uploadFiles.length; i++) {
+    var f = _uploadFiles[i];
+    var icon = f.type.indexOf('pdf') !== -1 ? '📄' : f.type.indexOf('word') !== -1 || f.name.indexOf('.doc') !== -1 ? '📝' : f.type.indexOf('sheet') !== -1 || f.name.indexOf('.xls') !== -1 ? '📊' : f.type.indexOf('presentation') !== -1 || f.name.indexOf('.ppt') !== -1 ? '📽️' : f.name.indexOf('.md') !== -1 ? '📋' : '📄';
+    html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border-radius:6px;font-size:13px;">' +
+      '<span>' + icon + '</span>' +
+      '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</span>' +
+      '<span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">' + formatFileSize(f.size) + '</span>' +
+      '<button class="btn btn-xs" onclick="previewUploadFile(' + i + ')" style="font-size:11px;padding:2px 6px;">预览</button>' +
+      '<button class="btn btn-xs btn-danger" onclick="removeUploadFile(' + i + ')" style="font-size:11px;padding:2px 6px;">删除</button>' +
+    '</div>';
+  }
+  container.innerHTML = html;
+}
+
+function formatFileSize(bytes) {
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / 1048576).toFixed(1) + ' MB';
+}
+
+function removeUploadFile(index) {
+  _uploadFiles.splice(index, 1);
+  renderUploadFileList();
+}
+
+function previewUploadFile(index) {
+  var f = _uploadFiles[index];
+  if (!f) return;
+  var url = URL.createObjectURL(f);
+  window.open(url, '_blank');
+}
+
 function submitUploadDoc() {
-  const file = document.getElementById('uploadDocFile');
+  if (_uploadFiles.length === 0) { alert('请选择要上传的文件'); return; }
+  const fileNames = _uploadFiles.map(function(f) { return f.name; }).join(', ');
   const projectId = document.getElementById('uploadDocProject').value;
   const contributor = document.getElementById('uploadDocContributor').value;
-  if (!file.files || file.files.length === 0) { alert('请选择要上传的文件'); return; }
   if (!contributor) { alert('请选择知识贡献者'); return; }
   const project = projects.find(function(p) { return p.id === projectId; });
   const source = document.getElementById('uploadDocSource').value;
@@ -3811,7 +3858,8 @@ function submitUploadDoc() {
   const typeName = knowledgeTypeData[typeIdx] ? knowledgeTypeData[typeIdx].cn : '未知';
   const subTag = document.getElementById('uploadDocSubTag').value;
   const uploader = document.getElementById('uploadDocUploader').value;
-  alert('知识「' + file.files[0].name + '」上传成功！\n上传人：' + uploader + '\n贡献者：' + contributor + '\n所属项目：' + (project ? project.name : '未指定') + '\n知识来源：' + source + '\n一级类型：' + typeName + '\n二级标签：' + subTag);
+  alert('知识「' + fileNames + '」上传成功！\n上传人：' + uploader + '\n贡献者：' + contributor + '\n所属项目：' + (project ? project.name : '未指定') + '\n知识来源：' + source + '\n一级类型：' + typeName + '\n二级标签：' + subTag);
+  _uploadFiles = [];
   closeProjectDetail();
 }
 
@@ -3983,6 +4031,7 @@ function openProjectDetail(projectId) {
 }
 
 function closeProjectDetail() {
+  _uploadFiles = [];
   document.getElementById('projectDetailPanel').classList.remove('open');
   // Reset panel title back to project detail default
   const panel = document.getElementById('projectDetailPanel');
