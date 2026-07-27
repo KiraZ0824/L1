@@ -3659,6 +3659,19 @@ function openUploadDocModal() {
   const projectOpts = projects.map(function(p) {
     return '<option value="' + p.id + '">' + p.name + '</option>';
   }).join('');
+  // Build knowledge type options from the L1 document data
+  var typeOpts = '';
+  for (var i = 0; i < knowledgeTypeData.length; i++) {
+    typeOpts += '<option value="' + i + '">' + knowledgeTypeData[i].cn + '</option>';
+  }
+  // Build initial secondary tag options (for the first type)
+  var subTagOpts = '';
+  if (knowledgeTypeData.length > 0) {
+    var first = knowledgeTypeData[0].subTags || [];
+    for (var j = 0; j < first.length; j++) {
+      subTagOpts += '<option value="' + first[j] + '">' + first[j] + '</option>';
+    }
+  }
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传知识',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
@@ -3673,8 +3686,12 @@ function openUploadDocModal() {
             '<select id="uploadDocSource" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);"><option>员工创作</option><option>APEX专家</option><option>AI辅助</option><option>外部资料</option></select>' +
           '</div>' +
           '<div style="display:flex;align-items:center;gap:8px;">' +
-            '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">知识类型</span>' +
-            '<select id="uploadDocType" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);"><option>方法论</option><option>案例分析</option><option>技术文档</option><option>模板</option><option>会议纪要</option><option>产品文档</option><option>需求文档</option><option>测试用例</option><option>其他</option></select>' +
+            '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">一级类型</span>' +
+            '<select id="uploadDocType" onchange="updateSubTagSelect()" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);">' + typeOpts + '</select>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:8px;">' +
+            '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">二级标签</span>' +
+            '<select id="uploadDocSubTag" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);">' + subTagOpts + '</select>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -3685,6 +3702,21 @@ function openUploadDocModal() {
   document.getElementById('uploadDocContributor').value = '';
   var trigger = document.getElementById('contributorTrigger');
   if (trigger) { trigger.textContent = '请选择知识贡献者'; trigger.classList.remove('has-value'); }
+}
+
+function updateSubTagSelect() {
+  var typeSelect = document.getElementById('uploadDocType');
+  var subTagSelect = document.getElementById('uploadDocSubTag');
+  if (!typeSelect || !subTagSelect) return;
+  var idx = parseInt(typeSelect.value);
+  var type = knowledgeTypeData[idx];
+  if (!type || !type.subTags) { subTagSelect.innerHTML = '<option value="">暂无标签</option>'; return; }
+  var tags = type.subTags;
+  var html = '';
+  for (var i = 0; i < tags.length; i++) {
+    html += '<option value="' + tags[i] + '">' + tags[i] + '</option>';
+  }
+  subTagSelect.innerHTML = html;
 }
 
 var _deptUsers = [
@@ -3760,9 +3792,11 @@ function submitUploadDoc() {
   if (!contributor) { alert('请选择知识贡献者'); return; }
   const project = projects.find(function(p) { return p.id === projectId; });
   const source = document.getElementById('uploadDocSource').value;
-  const type = document.getElementById('uploadDocType').value;
+  const typeIdx = parseInt(document.getElementById('uploadDocType').value);
+  const typeName = knowledgeTypeData[typeIdx] ? knowledgeTypeData[typeIdx].cn : '未知';
+  const subTag = document.getElementById('uploadDocSubTag').value;
   const uploader = document.getElementById('uploadDocUploader').value;
-  alert('知识「' + file.files[0].name + '」上传成功！\n上传人：' + uploader + '\n贡献者：' + contributor + '\n所属项目：' + (project ? project.name : '未指定') + '\n知识来源：' + source + '\n知识类型：' + type);
+  alert('知识「' + file.files[0].name + '」上传成功！\n上传人：' + uploader + '\n贡献者：' + contributor + '\n所属项目：' + (project ? project.name : '未指定') + '\n知识来源：' + source + '\n一级类型：' + typeName + '\n二级标签：' + subTag);
   closeProjectDetail();
 }
 
