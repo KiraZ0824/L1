@@ -2514,7 +2514,7 @@
           <div id="taskViewList" style="display:none;">
             <div class="table-wrap">
               <table>
-                <thead><tr><th>任务</th><th>项目</th><th>优先级</th><th>负责人</th><th>所属Backlog</th><th>奖励</th><th>截止日期</th><th>操作</th></tr></thead>
+                <thead><tr><th>任务</th><th>项目</th><th>优先级</th><th>项目阶段</th><th>任务状态</th><th>负责人</th><th>奖励</th><th>截止日期</th><th>操作</th></tr></thead>
                 <tbody id="taskListBody"></tbody>
               </table>
             </div>
@@ -4716,14 +4716,20 @@ function renderTaskList() {
   });
   tbody.innerHTML = filtered.map(t => {
     const project = projects.find(p => p.id === t.projectId);
+    const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
+    const stageTags = { research:'tag-amber', initiation:'tag-violet', execution:'tag-green', review:'tag-green', closed:'tag-slate' };
+    const statusLabels = { draft:'草稿', todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中', done:'已验收', closed:'已关闭' };
+    const statusTags = { draft:'tag-slate', todo:'tag-slate', in_progress:'tag-amber', pending_review:'tag-violet', rejected:'tag-rose', done:'tag-green', closed:'tag-slate' };
     const isOverdue = t.status === 'in_progress' && t.deadline < '2026-06-10';
+    const stageName = stageLabels[t.stage] || t.backlog || '-';
     return `
     <tr>
       <td style="font-weight:600;cursor:pointer;color:var(--primary);" onclick="openTaskDetail('${t.id}')">${t.title}${isOverdue ? ' <span style="color:var(--accent-rose);font-weight:600;font-size:12px;">延期</span>' : ''}</td>
       <td>${project ? project.name : '-'}</td>
       <td><span class="task-priority ${t.priority.toLowerCase()}" style="display:inline-block;margin-right:4px;"></span>${t.priority}</td>
+      <td><span class="tag ${stageTags ? stageTags[t.stage] || 'tag-slate' : 'tag-slate'}" style="font-size:11px;">${stageName}</span></td>
+      <td><span class="tag ${statusTags[t.status] || 'tag-slate'}" style="font-size:11px;">${statusLabels[t.status] || t.status}</span></td>
       <td>${t.assignee}</td>
-      <td style="font-size:12px;color:var(--text-secondary);">${t.backlog || '-'}</td>
       <td style="color:var(--primary);font-weight:600;">${t.reward} RP</td>
       <td style="font-size:12px;color:${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? 'var(--accent-rose)' : 'var(--text-secondary)'};">${t.deadline}${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? ' <span style="color:var(--accent-rose);font-weight:600;font-size:12px;">延期</span>' : ''}</td>
       <td>${renderActionMenu(getTaskButtons(t), 'task_' + t.id)}</td>
