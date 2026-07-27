@@ -3152,6 +3152,7 @@ function navigateTo(page) {
   const target = document.getElementById(`page-${page}`);
   if (target) target.classList.add('active');
   if (page === 'remi-ai') renderChat();
+  if (page === 'knowledge') { vmCurrentPage = 1; vmRenderList(); }
 }
 
 // ===== CHAT =====
