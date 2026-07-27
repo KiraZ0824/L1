@@ -4727,8 +4727,8 @@ function renderTaskList() {
       <td style="font-weight:600;cursor:pointer;color:var(--primary);" onclick="openTaskDetail('${t.id}')">${t.title}${isOverdue ? ' <span style="color:var(--accent-rose);font-weight:600;font-size:12px;">延期</span>' : ''}</td>
       <td>${project ? project.name : '-'}</td>
       <td><span class="task-priority ${t.priority.toLowerCase()}" style="display:inline-block;margin-right:4px;"></span>${t.priority}</td>
-      <td><span class="tag ${stageTags ? stageTags[t.stage] || 'tag-slate' : 'tag-slate'}" style="font-size:11px;">${stageName}</span></td>
-      <td><span class="tag ${statusTags[t.status] || 'tag-slate'}" style="font-size:11px;">${statusLabels[t.status] || t.status}</span></td>
+      <td style="font-size:12px;color:var(--text-muted);">${stageName}</td>
+      <td style="font-size:12px;color:var(--text-secondary);">${statusLabels[t.status] || t.status}</td>
       <td>${t.assignee}</td>
       <td style="color:var(--primary);font-weight:600;">${t.reward} RP</td>
       <td style="font-size:12px;color:${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? 'var(--accent-rose)' : 'var(--text-secondary)'};">${t.deadline}${t.deadline < '2026-06-10' && t.status !== 'done' && t.status !== 'closed' ? ' <span style="color:var(--accent-rose);font-weight:600;font-size:12px;">延期</span>' : ''}</td>
