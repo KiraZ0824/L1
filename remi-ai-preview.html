@@ -5034,7 +5034,7 @@ function renderKnowledgeTypes() {
       '<td><strong>' + t.cn + '</strong></td>' +
       '<td>' + t.en + '</td>' +
       '<td style="font-size:12px;color:var(--text-muted);max-width:260px;">' + t.desc + '</td>' +
-      '<td><button class="btn btn-xs btn-outline" onclick="manageKbSubTags(' + i + ')" style="font-size:11px;padding:2px 8px;">' + subCount + ' 个</button></td>' +
+      '<td style="text-align:center;"><a href="javascript:void(0)" onclick="manageKbSubTags(' + i + ')" style="color:var(--primary);text-decoration:none;font-size:13px;">' + subCount + ' 个</a></td>' +
       '<td style="white-space:nowrap;"><span class="tag ' + (t.enabled ? 'tag-green' : 'tag-amber') + '">' + (t.enabled ? '启用' : '停用') + '</span></td>' +
       '<td>' +
         '<button class="btn btn-xs" onclick="manageKbSubTags(' + i + ')" style="margin-right:4px;font-size:11px;padding:2px 8px;">管理标签</button>' +
