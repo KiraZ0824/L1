@@ -2096,23 +2096,16 @@
       <table>
         <thead>
           <tr>
-            <th>类型名称</th>
-            <th>英文名称</th>
+            <th style="min-width:100px;">类型名称</th>
+            <th style="min-width:140px;">英文名称</th>
             <th>描述</th>
-            <th>文档数</th>
-            <th>状态</th>
-            <th>操作</th>
+            <th style="width:80px;">二级标签</th>
+            <th style="width:60px;">文档数</th>
+            <th style="width:55px;">状态</th>
+            <th style="min-width:130px;">操作</th>
           </tr>
         </thead>
-        <tbody id="kbTypeTableBody">
-          <tr><td>技术文档</td><td>Technical Docs</td><td>API 规范、架构设计、开发指南等技术相关文档</td><td>15</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-          <tr><td>案例分析</td><td>Case Study</td><td>业务案例、项目复盘、最佳实践分析</td><td>8</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-          <tr><td>模板</td><td>Template</td><td>报告模板、合同模板、项目验收模板等标准化文档</td><td>6</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-          <tr><td>产品文档</td><td>Product Docs</td><td>PRD、产品手册、功能规格说明</td><td>12</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-          <tr><td>需求文档</td><td>Requirements</td><td>用户需求、业务需求、功能需求文档</td><td>10</td><td><span class="tag tag-amber">停用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-          <tr><td>会议纪要</td><td>Meeting Notes</td><td>项目会议、评审会议、周会纪要</td><td>4</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-          <tr><td>市场运营</td><td>Marketing</td><td>市场调研、运营策略、推广方案</td><td>8</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm('确定删除？'))this.closest('tr').remove()">删除</button></td></tr>
-        </tbody>
+        <tbody id="kbTypeTableBody"></tbody>
       </table>
     </div>
   </div>
@@ -4978,6 +4971,95 @@ function switchKbTab(el, tab) {
   document.getElementById('kb-vector').style.display = tab === 'vector' ? '' : 'none';
   document.getElementById('kb-types').style.display = tab === 'types' ? '' : 'none';
   if (tab === 'vector') { vmCurrentPage = 1; vmRenderList(); }
+  if (tab === 'types') { renderKnowledgeTypes(); }
+}
+
+// ===== Knowledge Type Data (12 types from L1 doc) =====
+const knowledgeTypeData = [
+  { cn:'规范与标准', en:'Standards & Policies', desc:'公司制度、业务标准、操作规范、分类标准及统一执行要求。', subTags:['公司制度','流程规范/SOP','品牌视觉规范','业务分类标准','数据分类标准','风险管理制度','内控制度','合规指引','文档编写规范'], docCount:15, enabled:true },
+  { cn:'商务方案', en:'Business Proposals', desc:'用于客户开发、合作沟通、方案介绍、报价及商务汇报的材料。', subTags:['银行合作方案','支付机构合作方案','客户解决方案','合作建议书','商务提案/Proposal','报价方案','项目合作计划','对外演示材料/Deck'], docCount:12, enabled:true },
+  { cn:'模板', en:'Templates', desc:'可重复使用，用于快速生成标准文档的空白模板、母版或标准样例。', subTags:['商务Proposal模板','合作建议书模板','合同协议模板','NDA模板','报告模板','会议纪要模板','PRD模板','需求文档模板','技术文档模板','项目交付模板','验收模板','财务测算模板','客户分析模板'], docCount:8, enabled:true },
+  { cn:'合同与法律文件', en:'Legal & Contracts', desc:'正式合同、已签署协议、法律意见、授权文件及其他具有法律效力的材料。', subTags:['合作协议','保密协议/NDA','服务协议','补充协议','技术合作协议','数据处理协议','法律意见','授权文件','合同条款清单','已签署合同'], docCount:6, enabled:true },
+  { cn:'产品文档', en:'Product Docs', desc:'产品定位、功能、使用方法、版本及产品能力相关文档。', subTags:['产品介绍','产品手册','PRD','功能规格说明','产品解决方案','产品FAQ','版本发布说明','产品路线图','功能清单','产品演示脚本'], docCount:10, enabled:true },
+  { cn:'需求文档', en:'Requirements', desc:'用户、业务、产品、技术和合规相关的需求定义及变更记录。', subTags:['用户需求','业务需求','功能需求','技术需求','数据需求','合规需求','客户定制需求','需求变更','验收标准'], docCount:10, enabled:true },
+  { cn:'技术文档', en:'Technical Docs', desc:'API、系统架构、开发集成、数据结构、部署运维及安全相关文档。', subTags:['API规范','系统架构设计','技术方案','开发指南','系统集成指南','数据字典','接口字段说明','部署指南','运维手册','故障排查','安全设计','测试说明'], docCount:15, enabled:true },
+  { cn:'操作指南与演示', en:'User Guides & Demos', desc:'用于系统操作、用户培训、功能演示和快速上手的说明材料。', subTags:['系统操作指南','功能操作说明','快速入门','系统操作Demo','产品演示Demo','培训材料','视频操作教程','常见问题说明','管理后台操作指南'], docCount:5, enabled:true },
+  { cn:'合规与风控', en:'Compliance & Risk', desc:'监管法规解读、合规映射、反洗钱、客户识别、风险评估及内控管理等。', subTags:['监管法规解读','RegTech合规映射','FATF合规映射','AML/反洗钱','KYC/客户识别','风险评估','风险管理','内控管理','合规检查清单','审计材料','国家/地区合规指南','监管报送说明'], docCount:7, enabled:true },
+  { cn:'数据清单与数据库', en:'Data & Directory', desc:'客户、合作伙伴、业务机会、分类字典及其他结构化数据资料。', subTags:['BD客户数据库','潜在客户清单','合作伙伴清单','客户联系人清单','项目清单','商机清单','分类字典','标签字典','数据台账','资源目录'], docCount:9, enabled:true },
+  { cn:'分析与测算', en:'Analysis & Modeling', desc:'用于客户评估、商业决策、财务分析、收益预测和业务测算的材料。', subTags:['客户收益测算','银行收益测算','财务报表分析','客户经营分析','商业模式分析','定价测算','成本收益分析','ROI分析','市场分析','行业研究','客户价值评估','可行性分析'], docCount:11, enabled:true },
+  { cn:'会议纪要', en:'Meeting Notes', desc:'对会议背景、讨论内容、决策结论和后续行动项的正式记录。', subTags:['内部例会纪要','项目周会纪要','客户沟通会议纪要','合作伙伴会议纪要','需求评审会议纪要','产品评审会议纪要','技术评审会议纪要','合规评审会议纪要','风险评审会议纪要','管理决策会议纪要','培训/分享会议纪要','项目复盘会议纪要'], docCount:4, enabled:true }
+];
+
+function renderKnowledgeTypes() {
+  var tbody = document.getElementById('kbTypeTableBody');
+  if (!tbody) return;
+  var html = '';
+  for (var i = 0; i < knowledgeTypeData.length; i++) {
+    var t = knowledgeTypeData[i];
+    var subCount = t.subTags ? t.subTags.length : 0;
+    html += '<tr>' +
+      '<td><strong>' + t.cn + '</strong></td>' +
+      '<td>' + t.en + '</td>' +
+      '<td style="font-size:12px;color:var(--text-muted);max-width:260px;">' + t.desc + '</td>' +
+      '<td><button class="btn btn-xs btn-outline" onclick="manageKbSubTags(' + i + ')" style="font-size:11px;padding:2px 8px;">' + subCount + ' 个</button></td>' +
+      '<td>' + t.docCount + '</td>' +
+      '<td><span class="tag ' + (t.enabled ? 'tag-green' : 'tag-amber') + '">' + (t.enabled ? '启用' : '停用') + '</span></td>' +
+      '<td>' +
+        '<button class="btn btn-xs" onclick="manageKbSubTags(' + i + ')" style="margin-right:4px;font-size:11px;padding:2px 8px;">管理标签</button>' +
+        '<button class="btn btn-xs btn-danger" onclick="if(confirm(\'确定删除「' + t.cn + '」？\'))deleteKnowledgeType(' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button>' +
+      '</td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function manageKbSubTags(index) {
+  var t = knowledgeTypeData[index];
+  if (!t) return;
+  var subTags = t.subTags || [];
+  var listHtml = '';
+  for (var i = 0; i < subTags.length; i++) {
+    listHtml += '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--bg);border-radius:6px;font-size:13px;margin-bottom:4px;">' +
+      '<span>' + subTags[i] + '</span>' +
+      '<button class="btn btn-xs btn-danger" onclick="removeKbSubTag(' + index + ',' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
+  }
+  if (!listHtml) {
+    listHtml = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:20px;">暂无二级标签</p>';
+  }
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>二级标签管理 — ' + t.cn,
+    '<div style="padding:20px;">' +
+      '<div style="margin-bottom:14px;padding:10px 12px;background:var(--bg);border-radius:8px;"><p style="font-size:12px;color:var(--text-muted);margin-bottom:2px;">英文名称：' + t.en + '</p><p style="font-size:12px;color:var(--text-muted);">描述：' + t.desc + '</p></div>' +
+      '<div style="display:flex;gap:8px;margin-bottom:14px;">' +
+        '<input class="form-input" id="kbSubTagInput" placeholder="输入二级标签名称" style="flex:1;" onkeydown="if(event.key===\'Enter\')addKbSubTag(' + index + ')">' +
+        '<button class="btn btn-primary" onclick="addKbSubTag(' + index + ')">添加</button>' +
+      '</div>' +
+      '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">共 ' + subTags.length + ' 个二级标签</div>' +
+      '<div style="display:flex;flex-direction:column;gap:2px;" id="kbSubTagList">' + listHtml + '</div>' +
+    '</div>'
+  );
+}
+
+function addKbSubTag(index) {
+  var input = document.getElementById('kbSubTagInput');
+  var tag = input.value.trim();
+  if (!tag) { alert('请输入二级标签名称'); return; }
+  if (!knowledgeTypeData[index].subTags) knowledgeTypeData[index].subTags = [];
+  knowledgeTypeData[index].subTags.push(tag);
+  input.value = '';
+  manageKbSubTags(index);
+  renderKnowledgeTypes();
+}
+
+function removeKbSubTag(typeIndex, tagIndex) {
+  if (!confirm('确定删除该二级标签？')) return;
+  knowledgeTypeData[typeIndex].subTags.splice(tagIndex, 1);
+  manageKbSubTags(typeIndex);
+  renderKnowledgeTypes();
+}
+
+function deleteKnowledgeType(index) {
+  knowledgeTypeData.splice(index, 1);
+  renderKnowledgeTypes();
 }
 
 function addKnowledgeType() {
@@ -4997,10 +5079,15 @@ function submitAddKnowledgeType() {
   const en = document.getElementById('addKbTypeEn').value.trim();
   if (!en) { alert('请填写英文名称'); return; }
   const desc = document.getElementById('addKbTypeDesc').value.trim() || '-';
-  const tbody = document.getElementById('kbTypeTableBody');
-  const tr = document.createElement('tr');
-  tr.innerHTML = '<td>' + name + '</td><td>' + en + '</td><td>' + desc + '</td><td>0</td><td><span class="tag tag-green">启用</span></td><td><button class="btn btn-sm btn-danger" onclick="if(confirm(\'确定删除？\'))this.closest(\'tr\').remove()">删除</button></td>';
-  tbody.appendChild(tr);
+  knowledgeTypeData.push({
+    cn: name,
+    en: en,
+    desc: desc,
+    subTags: [],
+    docCount: 0,
+    enabled: true
+  });
+  renderKnowledgeTypes();
   closeProjectDetail();
 }
 
