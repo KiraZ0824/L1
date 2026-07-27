@@ -2101,7 +2101,7 @@
             <th>描述</th>
             <th style="width:80px;">二级标签</th>
             <th style="width:65px;">状态</th>
-            <th style="min-width:130px;">操作</th>
+            <th style="min-width:50px;">操作</th>
           </tr>
         </thead>
         <tbody id="kbTypeTableBody"></tbody>
@@ -3821,8 +3821,13 @@ function renderUploadFileList() {
       '<span>' + icon + '</span>' +
       '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</span>' +
       '<span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">' + formatFileSize(f.size) + '</span>' +
-      '<button class="btn btn-xs" onclick="previewUploadFile(' + i + ')" style="font-size:11px;padding:2px 6px;">预览</button>' +
-      '<button class="btn btn-xs btn-danger" onclick="removeUploadFile(' + i + ')" style="font-size:11px;padding:2px 6px;">删除</button>' +
+      '<div style="position:relative;display:inline-block;">' +
+        '<button class="btn btn-xs" onclick="event.stopPropagation();toggleFileMenu(' + i + ')" style="font-size:14px;padding:0 4px;line-height:22px;">⋮</button>' +
+        '<div id="fileMenu_' + i + '" style="display:none;position:absolute;right:0;top:100%;z-index:100;min-width:90px;background:var(--card);border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.12);padding:4px 0;">' +
+          '<div onclick="previewUploadFile(' + i + ')" style="padding:6px 12px;cursor:pointer;font-size:12px;color:var(--text-secondary);">预览</div>' +
+          '<div onclick="removeUploadFile(' + i + ')" style="padding:6px 12px;cursor:pointer;font-size:12px;color:var(--accent-rose);">删除</div>' +
+        '</div>' +
+      '</div>' +
     '</div>';
   }
   container.innerHTML = html;
@@ -3833,6 +3838,31 @@ function formatFileSize(bytes) {
   if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
   return (bytes / 1048576).toFixed(1) + ' MB';
 }
+
+function toggleFileMenu(index) {
+  var menu = document.getElementById('fileMenu_' + index);
+  if (!menu) return;
+  var isOpen = menu.style.display === 'block';
+  closeAllMenus();
+  menu.style.display = isOpen ? 'none' : 'block';
+}
+
+function toggleKbOpsMenu(index) {
+  var menu = document.getElementById('kbOpsMenu_' + index);
+  if (!menu) return;
+  var isOpen = menu.style.display === 'block';
+  closeAllMenus();
+  menu.style.display = isOpen ? 'none' : 'block';
+}
+
+function closeAllMenus() {
+  document.querySelectorAll('[id^="fileMenu_"], [id^="kbOpsMenu_"]').forEach(function(el) { el.style.display = 'none'; });
+}
+
+// Close menus when clicking elsewhere
+document.addEventListener('click', function() {
+  closeAllMenus();
+});
 
 function removeUploadFile(index) {
   _uploadFiles.splice(index, 1);
@@ -5102,8 +5132,13 @@ function renderKnowledgeTypes() {
       '<td style="text-align:center;"><a href="javascript:void(0)" onclick="manageKbSubTags(' + i + ')" style="color:var(--primary);text-decoration:none;font-size:13px;">' + subCount + ' 个</a></td>' +
       '<td style="white-space:nowrap;"><span class="tag ' + (t.enabled ? 'tag-green' : 'tag-amber') + '">' + (t.enabled ? '启用' : '停用') + '</span></td>' +
       '<td>' +
-        '<button class="btn btn-xs" onclick="manageKbSubTags(' + i + ')" style="margin-right:4px;font-size:11px;padding:2px 8px;">管理标签</button>' +
-        '<button class="btn btn-xs btn-danger" onclick="if(confirm(\'确定删除「' + t.cn + '」？\'))deleteKnowledgeType(' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button>' +
+        '<div style="position:relative;display:inline-block;">' +
+          '<button class="btn btn-xs" onclick="event.stopPropagation();toggleKbOpsMenu(' + i + ')" style="font-size:14px;padding:0 4px;line-height:22px;">⋮</button>' +
+          '<div id="kbOpsMenu_' + i + '" style="display:none;position:absolute;right:0;top:100%;z-index:100;min-width:100px;background:var(--card);border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,0.12);padding:4px 0;">' +
+            '<div onclick="manageKbSubTags(' + i + ')" style="padding:6px 12px;cursor:pointer;font-size:12px;color:var(--text-secondary);">管理标签</div>' +
+            '<div onclick="if(confirm(\'确定删除「' + t.cn + '」？\'))deleteKnowledgeType(' + i + ')" style="padding:6px 12px;cursor:pointer;font-size:12px;color:var(--accent-rose);">删除</div>' +
+          '</div>' +
+        '</div>' +
       '</td></tr>';
   }
   tbody.innerHTML = html;
