@@ -3927,6 +3927,7 @@ function submitUploadDoc() {
   const projectId = document.getElementById('uploadDocProject').value;
   const contributor = document.getElementById('uploadDocContributor').value;
   if (!contributor) { alert('请选择知识贡献者'); return; }
+  if (_selectedSubTags.length === 0) { alert('请至少选择一个二级标签'); return; }
   const project = projects.find(function(p) { return p.id === projectId; });
   const source = document.getElementById('uploadDocSource').value;
   const typeIdx = parseInt(document.getElementById('uploadDocType').value);
