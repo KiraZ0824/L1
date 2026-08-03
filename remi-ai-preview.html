@@ -1346,6 +1346,46 @@
     .tag-rose { background: #fee2e2; color: #991b1b; }
     .tag-slate { background: #f1f5f9; color: #475569; }
 
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 36px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #cbd5e1;
+      border-radius: 20px;
+      transition: all 0.3s;
+    }
+    .toggle-slider:before {
+      content: '';
+      position: absolute;
+      height: 16px;
+      width: 16px;
+      left: 2px;
+      bottom: 2px;
+      background: white;
+      border-radius: 50%;
+      transition: all 0.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--primary);
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(16px);
+    }
+
     .select-wrap {
       position: relative;
       display: inline-block;
@@ -1936,9 +1976,9 @@
                   <div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;"><button class="tab-bar-item active" id="tvKanban" onclick="switchWbTaskView('kanban')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">看板</button><button class="tab-bar-item" id="tvList" onclick="switchWbTaskView('list')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">列表</button></div></div>
                 </div>
                 <div id="wbTaskKanbanWrap"><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbKanbanBoard"></div></div></div>
-                <div id="wbTaskListWrap" style="display:none;"><div class="card wb-panel-scroll" style="padding:12px;"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="conv-search" style="margin-top:0;flex:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="wbListSearch" placeholder="搜索任务..." oninput="renderWbList()" style="font-size:12px;"></div></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg);border-bottom:1px solid var(--border-light);"><th style="padding:8px 10px;text-align:left;">标题</th><th style="padding:8px 10px;text-align:left;">项目</th><th style="padding:8px 10px;text-align:left;">优先级</th><th style="padding:8px 10px;text-align:left;">负责人</th><th style="padding:8px 10px;text-align:left;">状态</th><th style="padding:8px 10px;text-align:left;">截止日期</th></tr></thead><tbody id="wbListBody"></tbody></table></div></div>
+                <div id="wbTaskListWrap" style="display:none;"><div class="card wb-panel-scroll" style="padding:12px;"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="conv-search" style="margin-top:0;flex:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="wbListSearch" placeholder="搜索任务..." oninput="renderWbList()" style="font-size:12px;"></div></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg);border-bottom:1px solid var(--border-light);"><th style="padding:8px 10px;text-align:left;">任务</th><th style="padding:8px 10px;text-align:left;">项目</th><th style="padding:8px 10px;text-align:left;">优先级</th><th style="padding:8px 10px;text-align:left;">项目阶段</th><th style="padding:8px 10px;text-align:left;">任务状态</th><th style="padding:8px 10px;text-align:left;">负责人</th><th style="padding:8px 10px;text-align:left;">奖励</th><th style="padding:8px 10px;text-align:left;">截止日期</th><th style="padding:8px 10px;text-align:left;">操作</th></tr></thead><tbody id="wbListBody"></tbody></table></div></div>
               </div>
-              <div class="wb-panel" id="wb-panel-project"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div class="select-wrap"><select id="wbProjectFilter" onchange="renderWbProjects()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div></div>
+              <div class="wb-panel" id="wb-panel-project"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div class="select-wrap"><select id="wbProjectFilter" onchange="onWbProjectFilterChange()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div><div id="wbProjectInfo" style="font-size:12px;color:var(--text-muted);"></div><div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;"><button class="tab-bar-item active" id="wbProjectViewBoard" onclick="switchWbProjectView('board')" style="font-size:12px;padding:4px 12px;border-radius:6px;border:none;cursor:pointer;">阶段看板</button><button class="tab-bar-item" id="wbProjectViewRelease" onclick="switchWbProjectView('release')" style="font-size:12px;padding:4px 12px;border-radius:6px;border:none;cursor:pointer;background:transparent;color:var(--text-muted);">项目总览</button></div></div></div><div id="wbProjectBoardWrap" class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div><div id="wbProjectReleaseWrap" class="card wb-panel-scroll" style="padding:12px;display:none;"><div id="wbProjectReleaseBoard"></div></div></div>
               <div class="wb-panel" id="wb-panel-timeline" style="overflow:hidden;width:100%"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><div style="display:flex;background:var(--bg);border-radius:8px;padding:2px;"><button class="tab-bar-item active" id="tlModeProject" onclick="switchTimelineMode('project')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button><button class="tab-bar-item" id="tlModeTask" onclick="switchTimelineMode('task')" style="font-size:12px;padding:4px 12px;border-radius:6px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button></div><div id="tlProjectFilterWrap" style="display:none;"><select id="timelineProjectFilter" onchange="renderWbTimeline()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div class="timeline-container" id="timelineContainer"></div></div></div>
               <div class="wb-panel" id="wb-panel-burndown"><div class="card wb-panel-scroll" style="padding:16px;"><div class="burndown-container" id="burndownContainer"></div></div></div>
             </div>
@@ -2106,6 +2146,7 @@
             <th style="min-width:140px;">英文名称</th>
             <th>描述</th>
             <th style="width:80px;">二级标签</th>
+            <th style="width:80px;">贡献基础值</th>
             <th style="width:65px;">状态</th>
             <th style="min-width:50px;">操作</th>
           </tr>
@@ -2560,11 +2601,13 @@
             </div>
             <div style="padding:0 16px;">
               <div class="tab-bar" id="pointsTabBar" style="margin-bottom:0;">
-                <button class="tab-bar-item active">积分明细</button>
+                <button class="tab-bar-item active" onclick="switchPointsTab(this, 'history')">积分明细</button>
+                <button class="tab-bar-item" onclick="switchPointsTab(this, 'budget')">项目预算概览</button>
+                <button class="tab-bar-item" onclick="switchPointsTab(this, 'rules')">积分规则</button>
               </div>
             </div>
             <!-- 积分明细 -->
-            <div class="table-wrap" style="border:none;border-radius:0;">
+            <div id="points-history" class="table-wrap" style="border:none;border-radius:0;">
               <table>
                 <thead><tr><th>时间</th><th>类型</th><th>来源</th><th>变动</th><th>余额</th></tr></thead>
                 <tbody>
@@ -2576,15 +2619,41 @@
                 </tbody>
               </table>
             </div>
+            <!-- 项目预算概览 -->
+            <div id="points-budget" style="display:none;padding:20px;">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr><th>项目名称</th><th>总预算</th><th>冻结中（预计发放）</th><th>已发放</th><th>剩余</th><th>使用率</th></tr></thead>
+                  <tbody id="projectBudgetBody"></tbody>
+                </table>
+              </div>
             </div>
-          </div>
-          <div class="card">
-            <div class="card-header"><div class="card-title">项目预算概览</div></div>
-            <div class="table-wrap" style="border:none;">
-              <table>
-                <thead><tr><th>项目</th><th>总预算</th><th>已发放</th><th>冻结中</th><th>剩余</th><th>使用率</th></tr></thead>
-                <tbody id="projectBudgetTable"></tbody>
-              </table>
+            <!-- 积分规则 -->
+            <div id="points-rules" style="display:none;padding:20px;">
+              <div style="display:flex;gap:20px;">
+                <div style="flex:1;">
+                  <div style="font-size:14px;font-weight:600;margin-bottom:12px;">基础贡献值积分规则</div>
+                  <div class="table-wrap">
+                    <table>
+                      <thead><tr><th>基础贡献值</th><th>对应积分</th><th>说明</th></tr></thead>
+                      <tbody id="pointsBaseRuleBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+                <div style="flex:1;">
+                  <div style="font-size:14px;font-weight:600;margin-bottom:12px;">难度系数积分规则</div>
+                  <div class="table-wrap">
+                    <table>
+                      <thead><tr><th>难度系数范围</th><th>积分倍率</th><th>说明</th></tr></thead>
+                      <tbody id="pointsDifficultyRuleBody"></tbody>
+                    </table>
+                  </div>
+                  <div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text-secondary);">
+                    <strong>规则说明：</strong>贡献积分 =〔基础贡献值 × 对应积分 + 难度系数 × 积分倍率〕
+                  </div>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         </div>
@@ -3053,6 +3122,12 @@ const projects = [
   { id:'p3', name:'合规风控升级', desc:'数据安全合规政策V3.0升级与企业风险管理体系建设', type:'内部项目', stage:'review', budget:8000, spent:3500, frozen:1200, members:5, tasks:8, lead:'赵明', dept:'合规部', startDate:'2026-03-15', endDate:'2026-08-30' },
   { id:'p4', name:'多语言翻译模块', desc:'基于AI的多语言翻译引擎开发与产品化落地', type:'客户项目', stage:'research', budget:15000, spent:0, frozen:0, members:6, tasks:3, lead:'王思远', dept:'技术部', startDate:'2026-07-01', endDate:'2026-12-31' },
   { id:'p5', name:'市场调研报告', desc:'2026年H1市场竞品调研与用户需求分析', type:'研究项目', stage:'closed', budget:3000, spent:3000, frozen:0, members:3, tasks:5, lead:'陈雨桐', dept:'市场部', startDate:'2026-02-01', endDate:'2026-05-30' },
+];
+
+const projectReleases = [
+  { id:'r1', name:'Issuance V2.0', projectId:'p1', status:'unreleased', progress:66, startDate:'2026-06-05', releaseDate:'2026-07-31', desc:'发布平台重构' },
+  { id:'r2', name:'RCSS V2.0', projectId:'p4', status:'unreleased', progress:39, startDate:'2026-06-05', releaseDate:'2026-08-15', desc:'REMI重构项目' },
+  { id:'r3', name:'RFI V1.1', projectId:'p3', status:'unreleased', progress:100, startDate:'2026-06-30', releaseDate:'2026-07-31', desc:'RFI 官网和 Web3 相关产品服务' }
 ];
 
 // Bonus Requests
@@ -3697,7 +3772,7 @@ function openUploadDocModal() {
     _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传知识',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
-      '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门 <span style="color:var(--text);">*</span></label><select id="uploadDocDept" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);">' + getDeptOptions(getUserDept('张明远')) + '</select></div><div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 <span style="color:var(--accent-rose);">*</span></label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()">请选择知识贡献者</div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div></div>' +
+      '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门 <span style="color:var(--text);">*</span></label><select id="uploadDocDept" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);">' + getDeptOptions(getUserDept('张明远')) + '</select></div><div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 <span style="color:var(--text);">*</span></label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()">请选择知识贡献者</div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><div style="display:flex;align-items:center;gap:8px;"><input type="file" id="uploadDocFile" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx,.xls,.xlsx,.md,.csv" multiple onchange="onUploadFileChange(this)" style="display:none;"><button class="btn btn-sm btn-outline" onclick="document.getElementById(\'uploadDocFile\').click()" style="white-space:nowrap;">选择文件</button><span style="font-size:12px;color:var(--text-muted);">支持格式：DOC、DOCX、PDF、TXT、PPT、PPTX、XLS、XLSX、MD、CSV</span></div><div id="uploadFileList" style="display:flex;flex-direction:column;gap:4px;margin-top:8px;"></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="uploadDocProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:8px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目（可选）</option>' + projectOpts + '</select></div>' +
       '<div>' +
@@ -3731,7 +3806,8 @@ function buildSubTagOptions(idx) {
   if (!type || !type.subTags) return '<option value="">暂无标签</option>';
   var html = '';
   for (var i = 0; i < type.subTags.length; i++) {
-    html += '<option value="' + type.subTags[i] + '">' + type.subTags[i] + '</option>';
+    var tag = typeof type.subTags[i] === 'string' ? type.subTags[i] : type.subTags[i].name;
+    html += '<option value="' + tag + '">' + tag + '</option>';
   }
   return html;
 }
@@ -4266,7 +4342,7 @@ function openProjectModal() {
         <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">编辑阶段名称，设置起止时间，可排序和增删</p>
         <div id="backlogStagesContainer" style="display:flex;flex-direction:column;gap:6px;"></div>
       </div>
-      <div class="form-group"><label class="form-label">项目成员</label><div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="tag tag-green" style="cursor:pointer;">+ 添加成员</span></div></div>
+      <div class="form-group"><label class="form-label">项目成员</label><div id="projectMembersContainer" style="display:flex;gap:6px;flex-wrap:wrap;min-height:32px;padding:4px;border:1px solid var(--border-light);border-radius:8px;background:var(--card);"></div></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal()">取消</button>
@@ -4274,6 +4350,49 @@ function openProjectModal() {
     </div>`;
   document.getElementById('modalOverlay').classList.add('open');
   renderBacklogStages();
+  initProjectMembers();
+}
+
+var _projectMembers = [];
+
+function getAllUsers() {
+  var all = [];
+  _deptUsers.forEach(function(g) { g.users.forEach(function(u) { all.push(u); }); });
+  return all;
+}
+
+function initProjectMembers() {
+  _projectMembers = ['苏思远', '张永成'];
+  renderProjectMembers();
+}
+
+function renderProjectMembers() {
+  var container = document.getElementById('projectMembersContainer');
+  if (!container) return;
+  var html = '';
+  _projectMembers.forEach(function(m, i) {
+    html += '<span class="tag tag-green" style="display:inline-flex;align-items:center;gap:4px;cursor:default;">' + m + '<span style="cursor:pointer;font-size:14px;line-height:1;margin-left:2px;" onclick="removeProjectMember(' + i + ')">×</span></span>';
+  });
+  var allUsers = getAllUsers();
+  var available = allUsers.filter(function(u) { return _projectMembers.indexOf(u) === -1; });
+  if (available.length > 0) {
+    html += '<select onchange="if(this.value)addProjectMember(this.value);this.selectedIndex=0;" style="padding:2px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px;background:var(--card);color:var(--text);"><option value="">+ 添加成员</option>';
+    available.forEach(function(u) { html += '<option value="' + u + '">' + u + '</option>'; });
+    html += '</select>';
+  }
+  container.innerHTML = html;
+}
+
+function addProjectMember(name) {
+  if (_projectMembers.indexOf(name) === -1) {
+    _projectMembers.push(name);
+    renderProjectMembers();
+  }
+}
+
+function removeProjectMember(index) {
+  _projectMembers.splice(index, 1);
+  renderProjectMembers();
 }
 
 // ===== TASKS =====
@@ -5173,7 +5292,8 @@ function renderKnowledgeTypes() {
       '<td>' + t.en + '</td>' +
       '<td style="font-size:12px;color:var(--text-muted);max-width:260px;">' + t.desc + '</td>' +
       '<td style="text-align:center;"><a href="javascript:void(0)" onclick="manageKbSubTags(' + i + ')" style="color:var(--primary);text-decoration:none;font-size:13px;">' + subCount + ' 个</a></td>' +
-      '<td style="white-space:nowrap;"><span class="tag ' + (t.enabled ? 'tag-green' : 'tag-amber') + '">' + (t.enabled ? '启用' : '停用') + '</span></td>' +
+      '<td style="text-align:center;font-size:13px;">' + (t.baseValue !== undefined ? t.baseValue : '-') + '</td>' +
+      '<td style="white-space:nowrap;"><label class="toggle-switch"><input type="checkbox" ' + (t.enabled ? 'checked' : '') + ' onchange="toggleKbStatus(' + i + ', this.checked)"><span class="toggle-slider"></span></label></td>' +
       '<td>' +
         '<div style="position:relative;display:inline-block;">' +
           '<button class="btn btn-xs" onclick="event.stopPropagation();toggleKbOpsMenu(' + i + ')" style="font-size:14px;padding:0 4px;line-height:22px;">⋮</button>' +
@@ -5193,8 +5313,10 @@ function manageKbSubTags(index) {
   var subTags = t.subTags || [];
   var listHtml = '';
   for (var i = 0; i < subTags.length; i++) {
-    listHtml += '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:var(--bg);border-radius:6px;font-size:13px;margin-bottom:4px;">' +
-      '<span>' + subTags[i] + '</span>' +
+    var tag = typeof subTags[i] === 'string' ? { name: subTags[i], difficulty: undefined } : subTags[i];
+    listHtml += '<div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--bg);border-radius:6px;font-size:13px;margin-bottom:4px;">' +
+      '<span style="flex:1;">' + tag.name + '</span>' +
+      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateSubTagDifficulty(' + index + ',' + i + ', this.value)" style="width:90px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);">' +
       '<button class="btn btn-xs btn-danger" onclick="removeKbSubTag(' + index + ',' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
   }
   if (!listHtml) {
@@ -5219,10 +5341,19 @@ function addKbSubTag(index) {
   var tag = input.value.trim();
   if (!tag) { alert('请输入二级标签名称'); return; }
   if (!knowledgeTypeData[index].subTags) knowledgeTypeData[index].subTags = [];
-  knowledgeTypeData[index].subTags.push(tag);
+  knowledgeTypeData[index].subTags.push({ name: tag, difficulty: undefined });
   input.value = '';
   manageKbSubTags(index);
   renderKnowledgeTypes();
+}
+
+function updateSubTagDifficulty(typeIndex, tagIndex, value) {
+  var tag = knowledgeTypeData[typeIndex].subTags[tagIndex];
+  if (typeof tag === 'string') {
+    knowledgeTypeData[typeIndex].subTags[tagIndex] = { name: tag, difficulty: value ? Number(value) : undefined };
+  } else {
+    tag.difficulty = value ? Number(value) : undefined;
+  }
 }
 
 function removeKbSubTag(typeIndex, tagIndex) {
@@ -5237,12 +5368,17 @@ function deleteKnowledgeType(index) {
   renderKnowledgeTypes();
 }
 
+function toggleKbStatus(index, enabled) {
+  knowledgeTypeData[index].enabled = enabled;
+}
+
 function addKnowledgeType() {
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>\n      新增知识类型',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:12px;">' +
       '<div class="form-row"><div class="form-group"><label class="form-label">类型名称 *</label><input class="form-input" id="addKbTypeName" placeholder="输入中文名称"></div><div class="form-group"><label class="form-label">英文名称 *</label><input class="form-input" id="addKbTypeEn" placeholder="输入英文名称"></div></div>' +
       '<div class="form-group"><label class="form-label">描述</label><textarea class="form-textarea" id="addKbTypeDesc" rows="3" placeholder="可选：描述该类型的用途和范围" style="resize:vertical;"></textarea></div>' +
+      '<div class="form-group"><label class="form-label">贡献基础值</label><input class="form-input" id="addKbBaseValue" type="number" placeholder="可选：输入数字"></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitAddKnowledgeType()">确认添加</button></div>' +
     '</div>'
   );
@@ -5254,16 +5390,121 @@ function submitAddKnowledgeType() {
   const en = document.getElementById('addKbTypeEn').value.trim();
   if (!en) { alert('请填写英文名称'); return; }
   const desc = document.getElementById('addKbTypeDesc').value.trim() || '-';
+  const baseValue = document.getElementById('addKbBaseValue').value;
   knowledgeTypeData.push({
     cn: name,
     en: en,
     desc: desc,
     subTags: [],
     docCount: 0,
-    enabled: true
+    enabled: true,
+    baseValue: baseValue ? Number(baseValue) : undefined
   });
   renderKnowledgeTypes();
   closeProjectDetail();
+}
+
+// ===== POINTS RULES =====
+var pointsBaseRules = [
+  { value: 0, points: 0, desc: '基础贡献值0，0积分' },
+  { value: 1, points: 10, desc: '基础贡献值1，10积分' },
+  { value: 2, points: 20, desc: '基础贡献值2，20积分' },
+  { value: 3, points: 30, desc: '基础贡献值3，30积分' },
+  { value: 4, points: 40, desc: '基础贡献值4，40积分' },
+  { value: 5, points: 50, desc: '基础贡献值5，50积分' },
+  { value: 6, points: 65, desc: '基础贡献值6，65积分' },
+  { value: 7, points: 80, desc: '基础贡献值7，80积分' },
+  { value: 8, points: 100, desc: '基础贡献值8，100积分' },
+  { value: 9, points: 120, desc: '基础贡献值9，120积分' },
+  { value: 10, points: 150, desc: '基础贡献值10，150积分' }
+];
+
+var pointsDifficultyRules = [
+  { min: 0, max: 2, multiplier: 1.0, desc: '简单难度，积分倍率1.0x' },
+  { min: 3, max: 5, multiplier: 1.5, desc: '中等难度，积分倍率1.5x' },
+  { min: 6, max: 8, multiplier: 2.0, desc: '困难难度，积分倍率2.0x' },
+  { min: 9, max: 10, multiplier: 3.0, desc: '极难难度，积分倍率3.0x' }
+];
+
+function switchPointsTab(el, tab) {
+  document.querySelectorAll('#pointsTabBar .tab-bar-item').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('points-history').style.display = tab === 'history' ? '' : 'none';
+  document.getElementById('points-budget').style.display = tab === 'budget' ? '' : 'none';
+  document.getElementById('points-rules').style.display = tab === 'rules' ? '' : 'none';
+  if (tab === 'budget') { renderProjectBudget(); }
+  if (tab === 'rules') { renderPointsRules(); }
+}
+
+function renderProjectBudget() {
+  var tbody = document.getElementById('projectBudgetBody');
+  if (!tbody || !projects || projects.length === 0) return;
+  var html = '';
+  for (var i = 0; i < projects.length; i++) {
+    var p = projects[i];
+    var frozen = p.frozen || 0;
+    var spent = p.spent || 0;
+    var remaining = p.budget - spent - frozen;
+    var usageRate = Math.round((spent + frozen) / p.budget * 100);
+    html += '<tr>' +
+      '<td style="font-weight:600;">' + p.name + '</td>' +
+      '<td>' + p.budget.toLocaleString() + '</td>' +
+      '<td style="color:var(--accent-amber);font-weight:600;">' + frozen.toLocaleString() + '</td>' +
+      '<td style="color:var(--accent-emerald);font-weight:600;">' + spent.toLocaleString() + '</td>' +
+      '<td>' + remaining.toLocaleString() + '</td>' +
+      '<td>' +
+        '<div style="display:flex;align-items:center;gap:8px;">' +
+          '<div style="flex:1;height:6px;background:var(--bg);border-radius:3px;overflow:hidden;">' +
+            '<div style="width:' + usageRate + '%;height:100%;background:' + (usageRate > 80 ? 'var(--accent-rose)' : usageRate > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';border-radius:3px;"></div>' +
+          '</div>' +
+          '<span style="font-size:12px;font-weight:600;white-space:nowrap;">' + usageRate + '%</span>' +
+        '</div>' +
+      '</td>' +
+    '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function renderPointsRules() {
+  // Render base rules
+  var baseBody = document.getElementById('pointsBaseRuleBody');
+  if (baseBody) {
+    var baseHtml = '';
+    for (var i = 0; i < pointsBaseRules.length; i++) {
+      var rule = pointsBaseRules[i];
+      baseHtml += '<tr>' +
+        '<td style="text-align:center;">' + rule.value + '</td>' +
+        '<td><input type="number" value="' + rule.points + '" onchange="updateBaseRulePoints(' + i + ', this.value)" style="width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);"></td>' +
+        '<td style="font-size:12px;color:var(--text-muted);">' + rule.desc + '</td>' +
+      '</tr>';
+    }
+    baseBody.innerHTML = baseHtml;
+  }
+
+  // Render difficulty rules
+  var diffBody = document.getElementById('pointsDifficultyRuleBody');
+  if (diffBody) {
+    var diffHtml = '';
+    for (var i = 0; i < pointsDifficultyRules.length; i++) {
+      var rule = pointsDifficultyRules[i];
+      diffHtml += '<tr>' +
+        '<td style="text-align:center;">' + rule.min + ' - ' + rule.max + '</td>' +
+        '<td><input type="number" step="0.1" value="' + rule.multiplier + '" onchange="updateDifficultyRule(' + i + ', this.value)" style="width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;font-size:12px;background:var(--card);"></td>' +
+        '<td style="font-size:12px;color:var(--text-muted);">' + rule.desc + '</td>' +
+      '</tr>';
+    }
+    diffBody.innerHTML = diffHtml;
+  }
+}
+
+function updateBaseRulePoints(index, value) {
+  pointsBaseRules[index].points = Number(value);
+  pointsBaseRules[index].desc = '基础贡献值' + pointsBaseRules[index].value + '，' + value + '积分';
+}
+
+function updateDifficultyRule(index, value) {
+  pointsDifficultyRules[index].multiplier = Number(value);
+  pointsDifficultyRules[index].desc = '难度系数' + pointsDifficultyRules[index].min + '-' + pointsDifficultyRules[index].max + '，积分倍率' + value + 'x';
 }
 
 // ===== BACKEND ADMIN =====
@@ -5787,8 +6028,8 @@ function switchMcTab(tab) {
   if (!unreadBtn || !readBtn) return;
   unreadBtn.classList.toggle('active', tab === 'unread');
   readBtn.classList.toggle('active', tab === 'read');
-  unreadList.style.display = tab === 'unread' ? 'flex' : 'none';
-  readList.style.display = tab === 'read' ? 'flex' : 'none';
+  unreadList.style.display = tab === 'unread' ? 'block' : 'none';
+  readList.style.display = tab === 'read' ? 'block' : 'none';
 }
 
 // ===== TODO FILTER =====
@@ -6174,6 +6415,42 @@ function switchWbTab(tab) {
   if (tab === 'burndown') renderBurndown();
 }
 
+var wbProjectViewMode = 'board';
+
+function onWbProjectFilterChange() {
+  if (wbProjectViewMode === 'release') renderWbProjectReleases();
+  else renderWbProjects();
+}
+
+function switchWbProjectView(mode) {
+  wbProjectViewMode = mode;
+  var boardBtn = document.getElementById('wbProjectViewBoard');
+  var releaseBtn = document.getElementById('wbProjectViewRelease');
+  var boardWrap = document.getElementById('wbProjectBoardWrap');
+  var releaseWrap = document.getElementById('wbProjectReleaseWrap');
+  if (boardBtn && releaseBtn) {
+    if (mode === 'board') {
+      boardBtn.classList.add('active');
+      releaseBtn.classList.remove('active');
+      releaseBtn.style.background = 'transparent';
+      releaseBtn.style.color = 'var(--text-muted)';
+      boardBtn.style.background = '';
+      boardBtn.style.color = '';
+    } else {
+      releaseBtn.classList.add('active');
+      boardBtn.classList.remove('active');
+      boardBtn.style.background = 'transparent';
+      boardBtn.style.color = 'var(--text-muted)';
+      releaseBtn.style.background = '';
+      releaseBtn.style.color = '';
+    }
+  }
+  if (boardWrap) boardWrap.style.display = mode === 'board' ? '' : 'none';
+  if (releaseWrap) releaseWrap.style.display = mode === 'release' ? '' : 'none';
+  if (mode === 'board') renderWbProjects();
+  if (mode === 'release') renderWbProjectReleases();
+}
+
 var taskViewMode = 'kanban';
 
 function switchWbTaskView(mode) {
@@ -6267,9 +6544,10 @@ function renderWbProjects() {
     projects.forEach(p => {
       filterEl.innerHTML += '<option value="' + p.id + '">' + p.name + '</option>';
     });
-    filterEl.value = currentVal;
+    filterEl.value = currentVal || (projects[0] ? projects[0].id : 'all');
   }
-  const projFilter = document.getElementById('wbProjectFilter')?.value || 'all';
+  const projFilter = document.getElementById('wbProjectFilter')?.value || (projects[0] ? projects[0].id : 'all');
+  const currentProject = projects.find(p => p.id === projFilter);
   const stages = [
     { key:'research', label:'调研阶段' },
     { key:'initiation', label:'立项阶段' },
@@ -6277,19 +6555,56 @@ function renderWbProjects() {
     { key:'review', label:'项目验收' },
     { key:'closed', label:'项目结项' }
   ];
-  let html = '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">';
   const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已验收', closed:'已关闭' };
   const statusColors = { todo:'var(--text-muted)', in_progress:'var(--accent-blue)', pending_review:'var(--accent-amber)', rejected:'var(--accent-rose)', done:'var(--accent-emerald)', closed:'var(--text-muted)' };
   const today = '2026-07-23';
+  let html = '';
+  // 更新下拉框右侧负责人/预算信息
+  var infoEl = document.getElementById('wbProjectInfo');
+  if (infoEl) {
+    if (currentProject) {
+      infoEl.innerHTML = '<span>负责人：<span style="color:var(--text);font-weight:600;">' + currentProject.lead + '</span></span> <span style="margin-left:12px;">预算：<span style="color:var(--primary);font-weight:600;">' + currentProject.budget.toLocaleString() + ' RP</span></span>';
+    } else {
+      infoEl.innerHTML = '';
+    }
+  }
+  // 任务看板（按阶段分列）
+  html += '<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;">';
   stages.forEach(stage => {
     var items = tasks.filter(t => t.stage === stage.key);
-    if (projFilter !== 'all') items = items.filter(t => t.projectId === projFilter);
+    if (currentProject) items = items.filter(t => t.projectId === currentProject.id);
     html += `<div style="background:var(--bg);border-radius:8px;padding:12px;"><div style="font-size:13px;font-weight:700;white-space:nowrap;margin-bottom:8px;">${stage.label}</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">${items.length} 个任务</div>${items.map(t => {
       const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
       const border = isOverdue ? 'border:1px solid var(--accent-rose);box-shadow:0 0 0 1px var(--accent-rose);' : 'border:1px solid var(--border-light);';
       return `<div style="padding:8px 10px;background:var(--card);border-radius:6px;margin-bottom:6px;font-size:12px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="font-weight:600;line-height:1.45;color:var(--text);margin-bottom:6px;word-break:break-word;">${t.title}</div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:999px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${statusLabels[t.status]}</span></div><div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted);gap:8px;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
     }).join('')}</div>`;
   });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function renderWbProjectReleases() {
+  const container = document.getElementById('wbProjectReleaseBoard');
+  if (!container) return;
+  const filterEl = document.getElementById('wbProjectFilter');
+  const projFilter = filterEl ? filterEl.value : 'all';
+  var items = projects;
+  if (projFilter !== 'all') items = items.filter(function(p) { return p.id === projFilter; });
+  var stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
+  var html = '<div style="display:flex;flex-direction:column;gap:8px;">';
+  html += '<div style="display:grid;grid-template-columns:1.5fr 1fr 1.5fr 1fr 1fr 2fr 50px;gap:12px;padding:0 8px 8px 8px;border-bottom:1px solid var(--border-light);font-size:11px;font-weight:700;color:var(--text-muted);"><div>项目名称</div><div>当前阶段</div><div>项目进度</div><div>开始时间</div><div>结束时间</div><div>描述</div><div style="white-space:nowrap;">更多操作</div></div>';
+  html += items.map(function(p) {
+    var usageRate = Math.round((p.spent + p.frozen) / p.budget * 100);
+    return '<div style="display:grid;grid-template-columns:1.5fr 1fr 1.5fr 1fr 1fr 2fr 50px;gap:12px;align-items:center;padding:10px 8px;border-bottom:1px solid var(--border-light);font-size:12px;">' +
+      '<div style="color:var(--primary);font-weight:600;cursor:pointer;" onclick="openProjectDetail(\'' + p.id + '\')">' + p.name + '</div>' +
+      '<div>' + (stageLabels[p.stage] || p.stage) + '</div>' +
+      '<div><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;height:6px;background:var(--border-light);border-radius:3px;overflow:hidden;"><div style="width:' + usageRate + '%;height:100%;background:var(--primary);border-radius:3px;"></div></div><span style="font-size:11px;font-weight:600;white-space:nowrap;">' + usageRate + '%</span></div></div>' +
+      '<div style="color:var(--text-muted);">' + p.startDate + '</div>' +
+      '<div style="color:var(--text-muted);">' + p.endDate + '</div>' +
+      '<div style="color:var(--text-muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + p.desc + '</div>' +
+      '<div style="text-align:center;color:var(--text-muted);font-size:18px;line-height:1;cursor:pointer;" onclick="openProjectDetail(\'' + p.id + '\')">⋯</div>' +
+    '</div>';
+  }).join('');
   html += '</div>';
   container.innerHTML = html;
 }
@@ -6335,13 +6650,15 @@ function renderWbList() {
   const body = document.getElementById('wbListBody');
   if (!body) return;
   const keyword = (document.getElementById('wbListSearch')?.value || '').toLowerCase();
-  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已验收', closed:'已关闭' };
+  const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已验收', closed:'已关闭', draft:'草稿' };
+  const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
   let filtered = tasks;
   if (keyword) filtered = filtered.filter(t => t.title.toLowerCase().includes(keyword) || t.desc.toLowerCase().includes(keyword));
   const today = '2026-07-23';
   body.innerHTML = filtered.map(t => {
     const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
-    return `<tr onclick="openTaskByStatus('${t.id}')" style="cursor:pointer;"><td style="padding:8px 10px;font-weight:600;">${t.title}</td><td style="padding:8px 10px;color:var(--text-muted);">${wbGetProjectName(t.projectId)}</td><td style="padding:8px 10px;">${t.priority}</td><td style="padding:8px 10px;">${t.assignee}</td><td style="padding:8px 10px;">${statusLabels[t.status] || t.status}</td><td style="padding:8px 10px;${isOverdue ? 'color:var(--accent-rose);font-weight:600;' : 'color:var(--text-muted);'}">${t.deadline || '-'}</td></tr>`;
+    const stageName = stageLabels[t.stage] || t.backlog || '-';
+    return `<tr style="cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><td style="padding:8px 10px;font-weight:600;color:var(--primary);">${t.title}</td><td style="padding:8px 10px;color:var(--text-muted);">${wbGetProjectName(t.projectId)}</td><td style="padding:8px 10px;">${t.priority}</td><td style="padding:8px 10px;color:var(--text-muted);">${stageName}</td><td style="padding:8px 10px;"><span class="bl-status status-${t.status}"><span class="bl-status-dot status-${t.status}"></span>${statusLabels[t.status] || t.status}</span></td><td style="padding:8px 10px;">${t.assignee}</td><td style="padding:8px 10px;color:var(--primary);font-weight:600;">${t.reward || 0} RP</td><td style="padding:8px 10px;${isOverdue ? 'color:var(--accent-rose);font-weight:600;' : 'color:var(--text-muted);'}">${t.deadline || '-'}</td><td style="padding:8px 10px;">${renderActionMenu(getTaskButtons(t), 'wbtask_' + t.id)}</td></tr>`;
   }).join('');
 }
 
@@ -6423,27 +6740,26 @@ function renderWbTimeline() {
 function renderBurndown() {
   const container = document.getElementById('burndownContainer');
   if (!container) return;
-  const sprints = [
-    { label:'Sprint 7', remaining:13, completed:2, added:0 },
-    { label:'Sprint 8', remaining:13, completed:0, added:4 },
-    { label:'Sprint 9', remaining:10, completed:3, added:4 },
-    { label:'Sprint 10', remaining:6, completed:4, added:0 },
-    { label:'Next', remaining:6, completed:0, added:0, forecast:6 }
+  const quarters = [
+    { label:'Q1', remaining:42, completed:18, added:8 },
+    { label:'Q2', remaining:35, completed:25, added:12 },
+    { label:'Q3', remaining:20, completed:30, added:6 },
+    { label:'Q4', remaining:15, completed:5, added:3 }
   ];
-  const maxVal = 16;
-  let html = '<div class="burndown-header"><div style="font-size:14px;font-weight:600;">Epic Burndown</div></div>';
-  html += '<div class="burndown-legend"><span class="legend-item"><span class="legend-dot" style="background:var(--accent-emerald);"></span>已完成</span><span class="legend-item"><span class="legend-dot" style="background:var(--bg);border:1px solid var(--border-light);"></span>预测</span><span class="legend-item"><span class="legend-dot" style="background:var(--primary);"></span>剩余工作</span><span class="legend-item"><span class="legend-dot" style="background:var(--accent-blue);"></span>新增工作</span></div>';
+  const maxVal = 50;
+  let html = '<div class="burndown-header"><div style="font-size:14px;font-weight:600;">季度燃尽图</div></div>';
+  html += '<div class="burndown-legend"><span class="legend-item"><span class="legend-dot" style="background:var(--accent-emerald);"></span>已完成</span><span class="legend-item"><span class="legend-dot" style="background:var(--bg);border:1px solid var(--border-light);"></span>预测</span><span class="legend-item"><span class="legend-dot" style="background:var(--primary);"></span>剩余任务</span><span class="legend-item"><span class="legend-dot" style="background:var(--accent-blue);"></span>新增任务</span></div>';
   html += '<div class="burndown-chart"><div class="burndown-y-axis">';
-  for (let v = 16; v >= 0; v -= 2) html += '<span>' + v + '</span>';
+  for (let v = 50; v >= 0; v -= 10) html += '<span>' + v + '</span>';
   html += '</div><div class="burndown-bars-area">';
-  sprints.forEach(sp => {
+  quarters.forEach(q => {
     html += '<div class="burndown-bar-wrap"><div class="burndown-bar-stack">';
-    if (sp.added) html += '<div class="burndown-bar-seg added" style="height:' + (sp.added / maxVal * 300) + 'px;">+' + sp.added + '</div>';
-    html += '<div class="burndown-bar-seg remaining" style="height:' + (sp.remaining / maxVal * 300) + 'px;">' + sp.remaining + '</div>';
-    if (sp.completed) html += '<div class="burndown-bar-seg completed" style="height:' + (sp.completed / maxVal * 300) + 'px;">-' + sp.completed + '</div>';
+    if (q.added) html += '<div class="burndown-bar-seg added" style="height:' + (q.added / maxVal * 300) + 'px;">+' + q.added + '</div>';
+    html += '<div class="burndown-bar-seg remaining" style="height:' + (q.remaining / maxVal * 300) + 'px;">' + q.remaining + '</div>';
+    if (q.completed) html += '<div class="burndown-bar-seg completed" style="height:' + (q.completed / maxVal * 300) + 'px;">-' + q.completed + '</div>';
     html += '</div>';
-    if (sp.forecast) html += '<div class="burndown-bar-seg forecast" style="height:' + (sp.forecast / maxVal * 300) + 'px;"></div>';
-    html += '<div class="burndown-bar-label">' + sp.label + '</div></div>';
+    if (q.forecast) html += '<div class="burndown-bar-seg forecast" style="height:' + (q.forecast / maxVal * 300) + 'px;"></div>';
+    html += '<div class="burndown-bar-label">' + q.label + '</div></div>';
   });
   html += '</div></div>';
   container.innerHTML = html;
