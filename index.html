@@ -3887,6 +3887,31 @@ function onUploadProjectChange() {
 
 var _uploadFiles = [];
 
+var _knowledgeReviews = [
+  {
+    id: 'kr1',
+    keyId: 'RemiKR001',
+    title: 'Q2财报分析报告-知识上传审核',
+    status: 'pending_review',
+    priority: 'P1',
+    project: 'Q2 财务分析',
+    uploader: '张明远',
+    dept: '技术部',
+    contributor: '李晓华',
+    files: [
+      { name: 'Q2财务分析报告.pdf', size: '2.3MB', type: 'pdf' },
+      { name: '附表-各部门预算执行.xlsx', size: '580KB', type: 'xlsx' }
+    ],
+    source: '员工创作',
+    primaryType: '分析与测算',
+    subTag: '财务分析',
+    baseValue: 6,
+    difficulty: 3,
+    uploadTime: '2026-07-25 14:30',
+    desc: '2026年第二季度财务数据深度分析与可视化报告，包含各部门预算执行情况附表。'
+  }
+];
+
 function onUploadFileChange(input) {
   for (var i = 0; i < input.files.length; i++) {
     _uploadFiles.push(input.files[i]);
@@ -6505,8 +6530,26 @@ function renderWbBacklog() {
   const container = document.getElementById('backlogItemsContainer');
   if (!container) return;
   var allItems = tasks;
+  var reviewItems = _knowledgeReviews.map(function(r) {
+    return {
+      id: r.id,
+      keyId: r.keyId,
+      title: r.title,
+      status: r.status,
+      priority: r.priority,
+      projectId: '',
+      projectName: r.project,
+      reward: 0,
+      assignee: r.uploader,
+      createdAt: r.uploadTime,
+      deadline: '-',
+      updatedAt: r.uploadTime,
+      isKnowledgeReview: true
+    };
+  });
   if (blFilterMode === 'task') allItems = tasks.filter(t => t.status !== 'done' && t.status !== 'closed');
-  else if (blFilterMode === 'review') allItems = tasks.filter(t => t.status === 'pending_review');
+  else if (blFilterMode === 'review') allItems = tasks.filter(t => t.status === 'pending_review').concat(reviewItems);
+  else allItems = tasks.concat(reviewItems);
   const priorityOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
   allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
   const statusLabels = { todo: '待开始', in_progress: '进行中', pending_review: '待审核', rejected: '驳回' };
@@ -6514,23 +6557,97 @@ function renderWbBacklog() {
   let html = '<div class="backlog-count">Backlog <strong>(' + allItems.length + ' 个任务)</strong></div>';
   html += '<div style="min-width:840px;"><div class="backlog-header"><div class="backlog-header-col col-key">编号</div><div class="backlog-header-col col-title">标题</div><div class="backlog-header-col col-priority">优先级</div><div class="backlog-header-col col-project">项目</div><div class="backlog-header-col col-status">状态</div><div class="backlog-header-col col-rp">RP</div><div class="backlog-header-col col-start">开始时间</div><div class="backlog-header-col col-deadline">截止时间</div><div class="backlog-header-col col-updated">更新时间</div><div class="backlog-header-col col-assignee">负责人</div></div>';
   html += '<div class="backlog-list">';
-  allItems.forEach(function(t, idx) {
-    const projName = wbGetProjectName(t.projectId);
-    const keyId = 'RemiBD' + String(idx + 1).padStart(3, '0');
-    html += '<div class="backlog-item" onclick="openTaskByStatus(\'' + t.id + '\')">' +
+  allItems.forEach(function(item) {
+    var projName, keyId;
+    if (item.isKnowledgeReview) {
+      projName = item.projectName;
+      keyId = item.keyId;
+      html += '<div class="backlog-item" style="background:var(--primary-light);" onclick="openKnowledgeReviewDetail(\'' + item.id + '\')">';
+    } else {
+      projName = wbGetProjectName(item.projectId);
+      keyId = 'RemiBD' + String(allItems.indexOf(item) + 1).padStart(3, '0');
+      html += '<div class="backlog-item" onclick="openTaskByStatus(\'' + item.id + '\')">';
+    }
+    html +=
       '<div class="backlog-col col-key">' + keyId + '</div>' +
-      '<div class="backlog-col col-title">' + t.title + '</div>' +
-      '<div class="backlog-col col-priority ' + t.priority.toLowerCase() + '">' + t.priority + '</div>' +
+      '<div class="backlog-col col-title">' + item.title + (item.isKnowledgeReview ? ' <span style="font-size:10px;color:var(--primary);font-weight:600;">[知识审核]</span>' : '') + '</div>' +
+      '<div class="backlog-col col-priority ' + item.priority.toLowerCase() + '">' + item.priority + '</div>' +
       '<div class="backlog-col col-project"><span class="bl-tag bl-tag-project">' + projName + '</span></div>' +
-      '<div class="backlog-col col-status"><span class="bl-status status-' + t.status + '"><span class="bl-status-dot status-' + t.status + '"></span>' + (statusLabels[t.status] || t.status) + '</span></div>' +
-      '<div class="backlog-col col-rp">' + (t.reward || 0) + '</div>' +
-      '<div class="backlog-col col-start">' + (t.createdAt || '-') + '</div>' +
-      '<div class="backlog-col col-deadline' + (t.status !== 'done' && t.status !== 'closed' && t.deadline && t.deadline < today ? '" style="color:var(--accent-rose);font-weight:600;"' : '"') + '>' + (t.deadline || '-') + '</div>' +
-      '<div class="backlog-col col-updated">' + (t.updatedAt || '-') + '</div>' +
-      '<div class="backlog-col col-assignee">' + t.assignee + '</div></div>';
+      '<div class="backlog-col col-status"><span class="bl-status status-' + item.status + '"><span class="bl-status-dot status-' + item.status + '"></span>' + (statusLabels[item.status] || item.status) + '</span></div>' +
+      '<div class="backlog-col col-rp">' + (item.reward || 0) + '</div>' +
+      '<div class="backlog-col col-start">' + (item.createdAt || '-') + '</div>' +
+      '<div class="backlog-col col-deadline">' + (item.deadline || '-') + '</div>' +
+      '<div class="backlog-col col-updated">' + (item.updatedAt || '-') + '</div>' +
+      '<div class="backlog-col col-assignee">' + item.assignee + '</div></div>';
   });
   html += '</div></div>';
   container.innerHTML = html;
+}
+
+function openKnowledgeReviewDetail(reviewId) {
+  var r = _knowledgeReviews.find(function(x) { return x.id === reviewId; });
+  if (!r) return;
+  var fileIcons = { pdf: '📄', doc: '📝', docx: '📝', xlsx: '📊', xls: '📊', ppt: '📽️', pptx: '📽️', txt: '📋', md: '📋', csv: '📊' };
+  var filesHtml = '';
+  for (var i = 0; i < r.files.length; i++) {
+    var f = r.files[i];
+    var icon = fileIcons[f.type] || '📄';
+    filesHtml += '<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg);border-radius:6px;font-size:13px;margin-bottom:4px;">' +
+      '<span>' + icon + '</span>' +
+      '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + f.name + '</span>' +
+      '<span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">' + f.size + '</span>' +
+      '<button class="btn btn-xs btn-outline" onclick="event.stopPropagation();" style="font-size:10px;padding:2px 6px;">预览</button>' +
+    '</div>';
+  }
+  var predictedPoints = (r.baseValue || 0) * 30 + (r.difficulty || 0) * 1.5;
+  _showTaskPanel(
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>\n      知识审核详情 — ' + r.keyId,
+    '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
+      '<div style="display:flex;align-items:center;gap:8px;"><span class="bl-status status-pending_review"><span class="bl-status-dot status-pending_review"></span>待审核</span><span style="font-size:18px;font-weight:700;">' + r.title + '</span></div>' +
+      '<div style="padding:12px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text-secondary);">' + r.desc + '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><div style="font-size:13px;">' + r.uploader + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门</label><div style="font-size:13px;">' + r.dept + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者</label><div style="font-size:13px;">' + r.contributor + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><div style="font-size:13px;">' + (r.project || '-') + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识来源</label><div style="font-size:13px;">' + r.source + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">上传时间</label><div style="font-size:13px;">' + r.uploadTime + '</div></div>' +
+      '</div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识标签</label><div style="display:flex;gap:8px;flex-wrap:wrap;"><span class="tag" style="background:var(--primary-light);color:var(--primary);">' + r.primaryType + '</span><span class="tag" style="background:var(--bg);color:var(--text-muted);">' + r.subTag + '</span></div></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识附件</label>' + filesHtml + '</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:12px;background:var(--bg);border-radius:8px;">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">基础贡献值</label><div style="font-size:14px;font-weight:700;color:var(--primary);">' + (r.baseValue || '-') + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">难度系数</label><div style="font-size:14px;font-weight:700;color:var(--accent-blue);">' + (r.difficulty || '-') + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计积分</label><div style="font-size:14px;font-weight:700;color:var(--accent-emerald);">' + predictedPoints + ' RP</div></div>' +
+      '</div>' +
+      '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;">' +
+        '<button class="btn btn-ghost" onclick="closeProjectDetail()">关闭</button>' +
+        '<button class="btn btn-danger" onclick="rejectKnowledgeReview(\'' + r.id + '\')">驳回</button>' +
+        '<button class="btn btn-primary" onclick="approveKnowledgeReview(\'' + r.id + '\')">审核通过</button>' +
+      '</div>' +
+    '</div>'
+  );
+}
+
+function approveKnowledgeReview(reviewId) {
+  var r = _knowledgeReviews.find(function(x) { return x.id === reviewId; });
+  if (!r) return;
+  r.status = 'done';
+  alert('知识审核通过！\n贡献者：' + r.contributor + '\n预计积分：' + ((r.baseValue || 0) * 30 + (r.difficulty || 0) * 1.5) + ' RP');
+  closeProjectDetail();
+  renderWbBacklog();
+}
+
+function rejectKnowledgeReview(reviewId) {
+  var r = _knowledgeReviews.find(function(x) { return x.id === reviewId; });
+  if (!r) return;
+  var reason = prompt('请输入驳回原因：');
+  if (reason) {
+    r.status = 'rejected';
+    alert('已驳回：' + reason);
+    closeProjectDetail();
+    renderWbBacklog();
+  }
 }
 
 function renderWbProjects() {
