@@ -1264,7 +1264,7 @@
       border-radius: var(--radius-sm); font-family: var(--font); font-size: 13px;
       outline: none; transition: var(--transition); background: var(--card);
     }
-    .form-input:focus, .form-textarea:focus { border-color: var(--primary-border); box-shadow: 0 0 0 3px rgba(249,115,22,0.08); }
+    .form-input:focus, .form-textarea:focus, .form-select:focus { border-color: var(--primary-border); box-shadow: 0 0 0 3px rgba(249,115,22,0.08); }
     .form-textarea { resize: vertical; min-height: 80px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
@@ -1319,16 +1319,18 @@
       border: none;
       cursor: pointer;
       transition: var(--transition);
+      user-select: none;
     }
     .btn svg { width: 15px; height: 15px; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
     .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
     .btn-ghost { background: transparent; color: var(--text-secondary); }
-    .btn-ghost:hover { background: var(--bg); }
+    .btn-ghost:hover:not(:disabled) { background: var(--bg); }
     .btn-outline { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); }
-    .btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+    .btn-outline:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
     .btn-danger { background: #fee2e2; color: #dc2626; }
-    .btn-danger:hover { background: #fecaca; }
+    .btn-danger:hover:not(:disabled) { background: #fecaca; }
     .btn-sm { padding: 5px 12px; font-size: 11px; }
     .btn-xs { padding: 3px 10px; font-size: 10px; }
 
@@ -1352,6 +1354,7 @@
       width: 36px;
       height: 20px;
       cursor: pointer;
+      user-select: none;
     }
     .toggle-switch input {
       opacity: 0;
@@ -1433,6 +1436,7 @@
       position: relative;
       border: none;
       flex-shrink: 0;
+      user-select: none;
     }
     .toggle.on { background: var(--primary); }
     .toggle::after {
@@ -1562,12 +1566,19 @@
       letter-spacing: 0.3px;
       background: #fafaf9;
       border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 1;
     }
     td {
       padding: 10px 16px;
       font-size: 13px;
       color: var(--text);
       border-bottom: 1px solid var(--border-light);
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: #fafaf9; }
@@ -1642,7 +1653,10 @@
 
     /* ===== SCROLLBAR ===== */
     ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
     ::-webkit-scrollbar-thumb { background: #d6d3d1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #a8a29e; }
+    * { scrollbar-width: thin; scrollbar-color: #d6d3d1 transparent; }
 
     /* ===== WORKBENCH TABS ===== */
     .wb-tabs {
@@ -3113,6 +3127,16 @@
 </div>
 
 <script>
+// ===== GLOBAL CLICK-OUTSIDE FOR DROPDOWN MENUS =====
+document.addEventListener('click', function(e) {
+  var menus = document.querySelectorAll('[id^="fileMenu_"], [id^="actionMenu_"], [id^="kbOpsMenu_"]');
+  menus.forEach(function(m) {
+    if (m.style.display !== 'none' && !m.parentElement.contains(e.target)) {
+      m.style.display = 'none';
+    }
+  });
+});
+
 // ===== DATA =====
 
 // Projects
@@ -4915,6 +4939,7 @@ function renderTaskList() {
       <td>${renderActionMenu(getTaskButtons(t), 'task_' + t.id)}</td>
     </tr>`;
   }).join('');
+  if (filtered.length === 0) tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted);">暂无任务数据</td></tr>';
 }
 
 function switchTaskView(el, view) {
@@ -6803,6 +6828,7 @@ function renderWbList() {
     const stageName = stageLabels[t.stage] || t.backlog || '-';
     return `<tr style="cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><td style="padding:8px 10px;font-weight:600;color:var(--primary);">${t.title}</td><td style="padding:8px 10px;color:var(--text-muted);">${wbGetProjectName(t.projectId)}</td><td style="padding:8px 10px;">${t.priority}</td><td style="padding:8px 10px;color:var(--text-muted);">${stageName}</td><td style="padding:8px 10px;"><span class="bl-status status-${t.status}"><span class="bl-status-dot status-${t.status}"></span>${statusLabels[t.status] || t.status}</span></td><td style="padding:8px 10px;">${t.assignee}</td><td style="padding:8px 10px;color:var(--primary);font-weight:600;">${t.reward || 0} RP</td><td style="padding:8px 10px;${isOverdue ? 'color:var(--accent-rose);font-weight:600;' : 'color:var(--text-muted);'}">${t.deadline || '-'}</td><td style="padding:8px 10px;">${renderActionMenu(getTaskButtons(t), 'wbtask_' + t.id)}</td></tr>`;
   }).join('');
+  if (filtered.length === 0) body.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-muted);">暂无任务数据</td></tr>';
 }
 
 function switchTimelineMode(mode) {
