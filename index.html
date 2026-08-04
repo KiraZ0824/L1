@@ -3846,8 +3846,7 @@ function updateAuditFlowPreview() {
   var dotActive = 'width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px;';
   var lineStyle = 'width:1px;height:28px;background:var(--border-light);margin-left:3px;';
   var titleStyle = 'font-size:13px;font-weight:600;color:var(--text);';
-  var personStyle = 'display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:#f0f0f0;border-radius:3px;font-size:12px;margin-top:4px;';
-  var avatarStyle = 'width:20px;height:20px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;';
+  var personStyle = 'display:inline-flex;align-items:center;padding:4px 10px;background:#f0f0f0;border-radius:3px;font-size:12px;margin-top:4px;';
   var hintStyle = 'font-size:11px;color:var(--accent-amber);margin-top:2px;';
   
   var html = '<div style="display:flex;flex-direction:column;gap:0;">';
@@ -3855,7 +3854,7 @@ function updateAuditFlowPreview() {
   // Node 1: 上传人
   html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotActive + '"></div></div>';
-  html += '<div><div style="' + titleStyle + '">上传人</div><div style="' + personStyle + '"><span style="' + avatarStyle + '">远</span>张明远</div></div>';
+  html += '<div><div style="' + titleStyle + '">上传人</div><div style="' + personStyle + '">张明远</div></div>';
   html += '</div>';
   html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
   
@@ -3863,7 +3862,7 @@ function updateAuditFlowPreview() {
   if (hasProject) {
     html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
     html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
-    html += '<div><div style="' + titleStyle + '">项目负责人审核</div><div style="' + personStyle + '"><span style="' + avatarStyle + '">' + projectLead.charAt(0) + '</span>' + projectLead + '</div></div>';
+    html += '<div><div style="' + titleStyle + '">项目负责人审核</div><div style="' + personStyle + '">' + projectLead + '</div></div>';
     html += '</div>';
     html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
   }
@@ -3871,7 +3870,7 @@ function updateAuditFlowPreview() {
   // Node 3: 领导层审核
   html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
-  html += '<div><div style="' + titleStyle + '">领导层审核</div><div style="' + personStyle + '"><span style="' + avatarStyle + '">部</span>部门负责人</div></div>';
+  html += '<div><div style="' + titleStyle + '">领导层审核</div><div style="' + personStyle + '">部门负责人</div></div>';
   html += '</div>';
   html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
   
@@ -3880,7 +3879,7 @@ function updateAuditFlowPreview() {
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
   html += '<div><div style="' + titleStyle + '">自动抄送</div>';
   if (contributor) {
-    html += '<div style="' + personStyle + '"><span style="' + avatarStyle + '">' + contributor.charAt(contributor.length - 1) + '</span>' + contributor + '</div>';
+    html += '<div style="' + personStyle + '">' + contributor + '</div>';
   } else {
     html += '<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">待选择知识贡献者</div>';
   }
