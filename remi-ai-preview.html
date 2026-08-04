@@ -1908,7 +1908,7 @@
                         <option value="Q2项目验收报告模板.docx">Q2 项目验收报告模板</option>
                         <option value="敏捷开发最佳实践案例集.pdf">敏捷开发最佳实践案例集</option>
                       </select>
-                      <div id="skillSelectorDropdown" class="skill-selector-dropdown" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:8px;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px;width:220px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;"></div>
+                      <div id="skillSelectorDropdown" class="skill-selector-dropdown" style="display:none;position:absolute;bottom:100%;left:0;margin-bottom:8px;background:var(--card);border:1px solid var(--border);border-radius:3px;padding:8px;width:220px;box-shadow:0 8px 24px rgba(0,0,0,0.12);z-index:300;"></div>
                     </div>
                     <div id="selectedSkillsBar" style="padding:4px 8px;display:flex;gap:4px;flex-wrap:wrap;"></div>
                     <div class="chat-input-wrap">
@@ -1931,7 +1931,7 @@
             <div style="display:flex;align-items:center;gap:10px;width:100%;max-width:720px;">
               <div style="flex:1;position:relative;">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-                <input type="text" id="globalSearch" placeholder="搜索任务、项目、知识库..." style="width:100%;padding:10px 14px 10px 40px;border:1px solid var(--border-light);border-radius:10px;font-size:14px;background:var(--card);color:var(--text);outline:none;box-shadow:var(--shadow-sm);transition:var(--transition);box-sizing:border-box;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border-light)'">
+                <input type="text" id="globalSearch" placeholder="搜索任务、项目、知识库..." style="width:100%;padding:10px 14px 10px 40px;border:1px solid var(--border-light);border-radius:3px;font-size:14px;background:var(--card);color:var(--text);outline:none;box-shadow:var(--shadow-sm);transition:var(--transition);box-sizing:border-box;" onfocus="this.style.borderColor='var(--primary)'" onblur="this.style.borderColor='var(--border-light)'">
               </div>
               <div style="display:flex;gap:8px;flex-shrink:0;">
                 <div class="select-wrap"><select id="langToggleBtn" onchange="toggleLanguage()" style="padding:4px 8px;font-size:12px;border:1px solid var(--border-light);border-radius:3px;background:var(--bg-card);color:var(--text);cursor:pointer;outline:none;"><option value="zh">中文</option><option value="en">EN</option></select></div>
@@ -1968,18 +1968,18 @@
                 <button class="wb-tab" onclick="switchWbTab('timeline')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><polyline points="8 5 3 12 8 19"/></svg>时间线</button>
                 <button class="wb-tab" onclick="switchWbTab('burndown')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>燃尽图</button>
               </div>
-              <div class="wb-panel active" id="wb-panel-backlog"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div style="display:flex;background:var(--bg);border-radius:4px;padding:2px;"><button class="tab-bar-item active" id="blFilterAll" onclick="switchBlFilter('all')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">全部</button><button class="tab-bar-item" id="blFilterTask" onclick="switchBlFilter('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button><button class="tab-bar-item" id="blFilterReview" onclick="switchBlFilter('review')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">审核</button></div></div><div class="card wb-panel-scroll" style="padding:0;"><div id="backlogItemsContainer"></div></div></div>
+              <div class="wb-panel active" id="wb-panel-backlog"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="blFilterAll" onclick="switchBlFilter('all')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">全部</button><button class="tab-bar-item" id="blFilterTask" onclick="switchBlFilter('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button><button class="tab-bar-item" id="blFilterReview" onclick="switchBlFilter('review')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">审核</button></div></div><div class="card wb-panel-scroll" style="padding:0;"><div id="backlogItemsContainer"></div></div></div>
               <div class="wb-panel" id="wb-panel-task">
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;">
                   <div class="select-wrap"><select id="wbTaskProjectFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div>
                   <div class="select-wrap"><select id="wbTaskPriorityFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div>
-                  <div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:4px;padding:2px;"><button class="tab-bar-item active" id="tvKanban" onclick="switchWbTaskView('kanban')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">看板</button><button class="tab-bar-item" id="tvList" onclick="switchWbTaskView('list')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">列表</button></div></div>
+                  <div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="tvKanban" onclick="switchWbTaskView('kanban')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">看板</button><button class="tab-bar-item" id="tvList" onclick="switchWbTaskView('list')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">列表</button></div></div>
                 </div>
                 <div id="wbTaskKanbanWrap"><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbKanbanBoard"></div></div></div>
                 <div id="wbTaskListWrap" style="display:none;"><div class="card wb-panel-scroll" style="padding:12px;"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="conv-search" style="margin-top:0;flex:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="wbListSearch" placeholder="搜索任务..." oninput="renderWbList()" style="font-size:12px;"></div></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg);border-bottom:1px solid var(--border-light);"><th style="padding:8px 10px;text-align:left;">任务</th><th style="padding:8px 10px;text-align:left;">项目</th><th style="padding:8px 10px;text-align:left;">优先级</th><th style="padding:8px 10px;text-align:left;">项目阶段</th><th style="padding:8px 10px;text-align:left;">任务状态</th><th style="padding:8px 10px;text-align:left;">负责人</th><th style="padding:8px 10px;text-align:left;">奖励</th><th style="padding:8px 10px;text-align:left;">截止日期</th><th style="padding:8px 10px;text-align:left;">操作</th></tr></thead><tbody id="wbListBody"></tbody></table></div></div>
               </div>
-              <div class="wb-panel" id="wb-panel-project"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div class="select-wrap"><select id="wbProjectFilter" onchange="onWbProjectFilterChange()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div><div id="wbProjectInfo" style="font-size:12px;color:var(--text-muted);"></div><div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:4px;padding:2px;"><button class="tab-bar-item active" id="wbProjectViewBoard" onclick="switchWbProjectView('board')" style="font-size:12px;padding:4px 12px;border-radius:3px;border:none;cursor:pointer;">阶段看板</button><button class="tab-bar-item" id="wbProjectViewRelease" onclick="switchWbProjectView('release')" style="font-size:12px;padding:4px 12px;border-radius:3px;border:none;cursor:pointer;background:transparent;color:var(--text-muted);">项目总览</button></div></div></div><div id="wbProjectBoardWrap" class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div><div id="wbProjectReleaseWrap" class="card wb-panel-scroll" style="padding:12px;display:none;"><div id="wbProjectReleaseBoard"></div></div></div>
-              <div class="wb-panel" id="wb-panel-timeline" style="overflow:hidden;width:100%"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><div style="display:flex;background:var(--bg);border-radius:4px;padding:2px;"><button class="tab-bar-item active" id="tlModeProject" onclick="switchTimelineMode('project')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button><button class="tab-bar-item" id="tlModeTask" onclick="switchTimelineMode('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button></div><div id="tlProjectFilterWrap" style="display:none;"><select id="timelineProjectFilter" onchange="renderWbTimeline()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div class="timeline-container" id="timelineContainer"></div></div></div>
+              <div class="wb-panel" id="wb-panel-project"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div class="select-wrap"><select id="wbProjectFilter" onchange="onWbProjectFilterChange()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div><div id="wbProjectInfo" style="font-size:12px;color:var(--text-muted);"></div><div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="wbProjectViewBoard" onclick="switchWbProjectView('board')" style="font-size:12px;padding:4px 12px;border-radius:3px;border:none;cursor:pointer;">阶段看板</button><button class="tab-bar-item" id="wbProjectViewRelease" onclick="switchWbProjectView('release')" style="font-size:12px;padding:4px 12px;border-radius:3px;border:none;cursor:pointer;background:transparent;color:var(--text-muted);">项目总览</button></div></div></div><div id="wbProjectBoardWrap" class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div><div id="wbProjectReleaseWrap" class="card wb-panel-scroll" style="padding:12px;display:none;"><div id="wbProjectReleaseBoard"></div></div></div>
+              <div class="wb-panel" id="wb-panel-timeline" style="overflow:hidden;width:100%"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="tlModeProject" onclick="switchTimelineMode('project')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button><button class="tab-bar-item" id="tlModeTask" onclick="switchTimelineMode('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button></div><div id="tlProjectFilterWrap" style="display:none;"><select id="timelineProjectFilter" onchange="renderWbTimeline()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div class="timeline-container" id="timelineContainer"></div></div></div>
               <div class="wb-panel" id="wb-panel-burndown"><div class="card wb-panel-scroll" style="padding:16px;"><div class="burndown-container" id="burndownContainer"></div></div></div>
             </div>
           </div>
@@ -2252,9 +2252,9 @@
           </div>
           <div class="user-tab-content" id="user-users-list" style="display:none;">
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
-              <input type="text" id="userSearchInput" placeholder="搜索姓名/邮箱/部门..." oninput="filterUserList()" style="flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--border-light);border-radius:4px;font-size:12px;">
-              <select id="userDeptFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:12px;"><option value="">全部部门</option><option>总经办</option><option>BD</option><option>合规部</option><option>产品研发部</option><option>技术部</option><option>产品部</option><option>运维部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select>
-              <select id="userRoleFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:12px;"><option value="">全部角色</option><option>管理员</option><option>审核员</option><option>普通用户</option></select>
+              <input type="text" id="userSearchInput" placeholder="搜索姓名/邮箱/部门..." oninput="filterUserList()" style="flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;">
+              <select id="userDeptFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;"><option value="">全部部门</option><option>总经办</option><option>BD</option><option>合规部</option><option>产品研发部</option><option>技术部</option><option>产品部</option><option>运维部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select>
+              <select id="userRoleFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;"><option value="">全部角色</option><option>管理员</option><option>审核员</option><option>普通用户</option></select>
             </div>
             <div class="table-wrap">
               <table>
@@ -2505,7 +2505,7 @@
             </button>
           </div>
           <!-- 项目统计指标 -->
-          <div id="projectStatsGrid" style="display:flex;gap:24px;margin-bottom:16px;padding:14px 20px;background:rgba(255,255,255,0.95);border:1px solid var(--border-light);border-radius:6px;"></div>
+          <div id="projectStatsGrid" style="display:flex;gap:24px;margin-bottom:16px;padding:14px 20px;background:rgba(255,255,255,0.95);border:1px solid var(--border-light);border-radius:3px;"></div>
           <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
             <div class="conv-search" style="margin-top:0;flex:1;max-width:280px;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -2648,7 +2648,7 @@
                       <tbody id="pointsDifficultyRuleBody"></tbody>
                     </table>
                   </div>
-                  <div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:4px;font-size:13px;color:var(--text-secondary);">
+                  <div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:3px;font-size:13px;color:var(--text-secondary);">
                     <strong>规则说明：</strong>贡献积分 =〔基础贡献值 × 对应积分 + 难度系数 × 积分倍率〕
                   </div>
                 </div>
@@ -3074,16 +3074,16 @@
 
 <!-- ===== NEW ROLE MODAL ===== -->
 <div class="modal-overlay" id="newRoleModalOverlay" style="display:none;" onclick="closeNewRoleModal()">
-  <div class="modal" style="width:480px;background:#fff;border-radius:8px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.15);position:relative;" onclick="event.stopPropagation()">
+  <div class="modal" style="width:480px;background:#fff;border-radius:3px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.15);position:relative;" onclick="event.stopPropagation()">
     <h3 style="font-size:16px;font-weight:700;margin-bottom:20px;">新建角色</h3>
     <div style="display:flex;flex-direction:column;gap:14px;">
       <div>
         <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">角色名称 *</label>
-        <input type="text" placeholder="请输入角色名称" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;outline:none;box-sizing:border-box;">
+        <input type="text" placeholder="请输入角色名称" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;outline:none;box-sizing:border-box;">
       </div>
       <div>
         <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">类型</label>
-        <select style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;outline:none;background:#fff;box-sizing:border-box;">
+        <select style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;outline:none;background:#fff;box-sizing:border-box;">
           <option>自定义</option>
           <option>系统内置</option>
           <option>外部注册</option>
@@ -3091,7 +3091,7 @@
       </div>
       <div>
         <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">描述</label>
-        <textarea rows="2" placeholder="请输入角色描述" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
+        <textarea rows="2" placeholder="请输入角色描述" style="width:100%;padding:8px 12px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;outline:none;resize:vertical;box-sizing:border-box;"></textarea>
       </div>
       <div>
         <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">模块权限</label>
@@ -3464,7 +3464,7 @@ function renderSkillDropdown() {
     ${skills.map(s => {
       const selected = installedSkillIds.includes(s.id);
       return `
-        <div class="skill-option ${selected?'selected':''}" onclick="toggleChatSkill(${s.id})" style="display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:4px;cursor:pointer;${selected?'background:var(--primary-light);':''}">
+        <div class="skill-option ${selected?'selected':''}" onclick="toggleChatSkill(${s.id})" style="display:flex;align-items:center;gap:8px;padding:6px 6px;border-radius:3px;cursor:pointer;${selected?'background:var(--primary-light);':''}">
           <span style="font-size:16px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:3px;background:${s.color};">${s.icon}</span>
           <span style="flex:1;font-size:13px;font-weight:500;">${s.name}</span>
           <span style="width:16px;height:16px;border-radius:50%;border:2px solid ${selected?'var(--primary)':'var(--border)'};display:flex;align-items:center;justify-content:center;font-size:10px;color:${selected?'var(--primary)':'transparent'};flex-shrink:0;">${selected?'✓':''}</span>
@@ -3520,7 +3520,7 @@ function openBonusModal(projectId) {
       '<div style="font-size:13px;color:var(--text-muted);">项目：<strong style="color:var(--text);">' + p.name + '</strong>（' + (stageLabels[p.stage] || p.stage) + '）</div>' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">奖励分配列表</label>' +
-        '<div id="bonusRewardRows" style="background:var(--bg);border-radius:4px;padding:6px 8px;border:1px solid var(--border-light);">' +
+        '<div id="bonusRewardRows" style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' +
           _buildBonusRow(p.lead, '') +
         '</div>' +
         '<button class="btn btn-xs btn-outline" onclick="addBonusRow()" style="margin-top:6px;font-size:11px;">+ 添加人员</button>' +
@@ -3529,7 +3529,7 @@ function openBonusModal(projectId) {
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">审核流程</label>' +
         '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;">' +
           '<span style="font-size:12px;color:var(--text-muted);flex-shrink:0;">审核人：</span>' +
-          '<select id="bonusReviewer" style="flex:1;padding:6px 8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;background:var(--card);">' + opts + '</select>' +
+          '<select id="bonusReviewer" style="flex:1;padding:6px 8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;background:var(--card);">' + opts + '</select>' +
         '</div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;">' +
@@ -3678,7 +3678,7 @@ function openAddDepartmentModal() {
       '<div class="form-row"><div class="form-group"><label class="form-label">部门名称 *</label><input class="form-input" id="addDeptName" placeholder="输入部门名称"></div><div class="form-group"><label class="form-label">上级部门</label><select class="form-select" id="addDeptParent" onchange="toggleDeptFields()"><option value="">无（顶级部门）</option><option>总经办</option><option>BD</option><option>合规部</option><option>产品研发部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select></div></div>' +
       '<div id="deptCodeRow" class="form-group"><label class="form-label">部门代码 * <span style="font-size:11px;color:var(--text-muted);font-weight:400;">一个大写字母，不可重复</span></label><input class="form-input" id="addDeptCode" placeholder="例：I" maxlength="1" style="text-transform:uppercase;width:120px;"></div>' +
       '<div id="deptGroupRow" class="form-group" style="display:none;"><label class="form-label">部门组号 * <span style="font-size:11px;color:var(--text-muted);font-weight:400;">01-99 的数字，与该上级部门内不重复</span></label><input class="form-input" id="addDeptGroup" placeholder="例：01" maxlength="2" style="width:120px;"></div>' +
-      '<div class="form-row"><div class="form-group"><label class="form-label">部门负责人</label><select class="form-select" id="addDeptLead"><option>张明远</option><option>李晓华</option><option>王思远</option><option>陈雨桐</option><option>赵明</option></select></div><div class="form-group"><label class="form-label">部门人数</label><div style="padding:8px;font-size:13px;color:var(--text-muted);background:var(--bg);border-radius:4px;">根据绑定人员自动计算</div></div></div>' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">部门负责人</label><select class="form-select" id="addDeptLead"><option>张明远</option><option>李晓华</option><option>王思远</option><option>陈雨桐</option><option>赵明</option></select></div><div class="form-group"><label class="form-label">部门人数</label><div style="padding:8px;font-size:13px;color:var(--text-muted);background:var(--bg);border-radius:3px;">根据绑定人员自动计算</div></div></div>' +
       '<div class="form-group"><label class="form-label">部门描述</label><textarea class="form-textarea" id="addDeptDesc" rows="2" placeholder="可选：部门职责描述" style="resize:vertical;"></textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitAddDepartment()">确认添加</button></div>' +
     '</div>'
@@ -3772,12 +3772,12 @@ function openUploadDocModal() {
     _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>\n      上传知识',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
-      '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门 <span style="color:var(--text);">*</span></label><select id="uploadDocDept" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;background:var(--card);">' + getDeptOptions(getUserDept('张明远')) + '</select></div><div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 <span style="color:var(--text);">*</span></label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()">请选择知识贡献者</div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div></div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><div style="display:flex;align-items:center;gap:8px;"><input type="file" id="uploadDocFile" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx,.xls,.xlsx,.md,.csv" multiple onchange="onUploadFileChange(this)" style="display:none;"><button class="btn btn-sm btn-outline" onclick="document.getElementById(\'uploadDocFile\').click()" style="white-space:nowrap;">选择文件</button><span style="font-size:12px;color:var(--text-muted);">支持格式：DOC、DOCX、PDF、TXT、PPT、PPTX、XLS、XLSX、MD、CSV</span></div><div style="margin-top:8px;display:flex;align-items:center;gap:8px;"><input type="url" id="uploadDocLink" placeholder="或填写在线链接（https://...）" style="flex:1;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;background:var(--card);"><button class="btn btn-sm btn-outline" onclick="addUploadLink()" style="white-space:nowrap;">添加链接</button></div><div id="uploadFileList" style="display:flex;flex-direction:column;gap:4px;margin-top:8px;"></div></div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="uploadDocProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目（可选）</option>' + projectOpts + '</select></div>' +
+      '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门 <span style="color:var(--text);">*</span></label><select id="uploadDocDept" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);">' + getDeptOptions(getUserDept('张明远')) + '</select></div><div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 <span style="color:var(--text);">*</span></label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()">请选择知识贡献者</div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><div style="display:flex;align-items:center;gap:8px;"><input type="file" id="uploadDocFile" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx,.xls,.xlsx,.md,.csv" multiple onchange="onUploadFileChange(this)" style="display:none;"><button class="btn btn-sm btn-outline" onclick="document.getElementById(\'uploadDocFile\').click()" style="white-space:nowrap;">选择文件</button><span style="font-size:12px;color:var(--text-muted);">支持格式：DOC、DOCX、PDF、TXT、PPT、PPTX、XLS、XLSX、MD、CSV</span></div><div style="margin-top:8px;display:flex;align-items:center;gap:8px;"><input type="url" id="uploadDocLink" placeholder="或填写在线链接（https://...）" style="flex:1;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);"><button class="btn btn-sm btn-outline" onclick="addUploadLink()" style="white-space:nowrap;">添加链接</button></div><div id="uploadFileList" style="display:flex;flex-direction:column;gap:4px;margin-top:8px;"></div></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="uploadDocProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目（可选）</option>' + projectOpts + '</select></div>' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识标签 <span style="color:var(--text);">*</span></label>' +
-        '<div style="display:flex;flex-direction:column;gap:8px;background:var(--bg);border-radius:4px;padding:10px;border:1px solid var(--border-light);">' +
+        '<div style="display:flex;flex-direction:column;gap:8px;background:var(--bg);border-radius:3px;padding:10px;border:1px solid var(--border-light);">' +
           '<div style="display:flex;align-items:center;gap:8px;">' +
             '<span style="font-size:12px;color:var(--text-muted);white-space:nowrap;">知识来源</span>' +
             '<select id="uploadDocSource" style="flex:1;padding:6px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);"><option>员工创作</option><option>APEX专家</option><option>AI辅助</option><option>外部资料</option></select>' +
@@ -4133,7 +4133,7 @@ function renderArtifactPreview(type) {
   } else if (type === 'md') {
     content.innerHTML = '<div class="artifact-preview-md"><h1># API 接口设计文档</h1><p>本文档定义了核心接口规范。</p><h2>## 认证</h2><p>采用 <code>OAuth 2.0 + JWT</code> 方案。</p></div>';
   } else if (type === 'html') {
-    content.innerHTML = '<div style="width:680px;height:320px;background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#e2e8f0;font-size:14px;">数据可视化看板预览</div>';
+    content.innerHTML = '<div style="width:680px;height:320px;background:linear-gradient(135deg,#0f172a,#1e293b);border-radius:3px;display:flex;align-items:center;justify-content:center;color:#e2e8f0;font-size:14px;">数据可视化看板预览</div>';
   } else {
     content.innerHTML = '<div class="artifact-preview-doc" style="font-family:monospace;white-space:pre-wrap;">会议纪要\n\n1. 本周上线节奏确认\n2. 事故复盘模板统一\n3. 下周排期确认</div>';
   }
@@ -4169,7 +4169,7 @@ function openProjectDetail(projectId) {
         <span class="tag ${stageTags[p.stage] || 'tag-slate'}" style="font-size:11px;">${stageLabels[p.stage] || '未知'}</span>
       </div>
       <div style="font-size:16px;font-weight:700;margin-bottom:8px;">${p.name}</div>
-      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;padding:10px;background:var(--bg);border-radius:4px;">${p.desc}</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-bottom:16px;padding:10px;background:var(--bg);border-radius:3px;">${p.desc}</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
         <div style="padding:8px;border-radius:3px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">项目负责人</div><div style="font-size:13px;font-weight:500;">${p.lead}</div></div>
         <div style="padding:8px;border-radius:3px;background:var(--bg);"><div style="font-size:11px;color:var(--text-muted);">所属部门</div><div style="font-size:13px;font-weight:500;">${p.dept}</div></div>
@@ -4209,7 +4209,7 @@ function openProjectDetail(projectId) {
       </div>
       <div style="margin-bottom:12px;">
         <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">项目成员</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap;">${memberSet.map(m => `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px 3px 6px;border-radius:10px;background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:500;"><span style="width:20px;height:20px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;">${m[0]}</span>${m}</span>`).join('')}</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">${memberSet.map(m => `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px 3px 6px;border-radius:3px;background:var(--primary-light);color:var(--primary);font-size:12px;font-weight:500;"><span style="width:20px;height:20px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;">${m[0]}</span>${m}</span>`).join('')}</div>
       </div>
       <div>
         <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">关联任务 (${projectTasks.length})</div>
@@ -4292,7 +4292,7 @@ function renderProjects() {
         '<td>' + p.lead + '</td>' +
         '<td>' + statusTag + '</td>' +
         '<td style="font-weight:500;">' + p.budget.toLocaleString() + ' RP</td>' +
-        '<td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:4px;"><div style="height:6px;border-radius:4px;width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div><span style="font-size:11px;color:var(--text-muted);">' + pct + '%</span></div></td>' +
+        '<td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:3px;"><div style="height:6px;border-radius:3px;width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div><span style="font-size:11px;color:var(--text-muted);">' + pct + '%</span></div></td>' +
         '<td><a href="javascript:void(0)" onclick="event.stopPropagation();goToProjectTasks(\'' + p.id + '\')" style="color:var(--primary);text-decoration:none;font-weight:600;">' + taskCount + ' 个任务</a></td>' +
         '<td>' + renderActionMenu([{ label:'追加奖励', action:"openBonusModal('" + p.id + "')", cls:'btn-ghost' }], 'proj_' + p.id) + '</td>' +
       '</tr>';
@@ -4393,7 +4393,7 @@ function openProjectModal() {
         <p style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">编辑阶段名称，设置起止时间，可排序和增删</p>
         <div id="backlogStagesContainer" style="display:flex;flex-direction:column;gap:6px;"></div>
       </div>
-      <div class="form-group"><label class="form-label">项目成员</label><div id="projectMembersContainer" style="display:flex;gap:6px;flex-wrap:wrap;min-height:32px;padding:4px;border:1px solid var(--border-light);border-radius:4px;background:var(--card);"></div></div>
+      <div class="form-group"><label class="form-label">项目成员</label><div id="projectMembersContainer" style="display:flex;gap:6px;flex-wrap:wrap;min-height:32px;padding:4px;border:1px solid var(--border-light);border-radius:3px;background:var(--card);"></div></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-ghost" onclick="closeModal()">取消</button>
@@ -4582,7 +4582,7 @@ function _taskDetailHtml(t) {
       '<div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">交付形式</div>' +
       '<div style="font-size:13px;font-weight:500;">' + (t.delivery || '无需交付') + '</div>' +
     '</div>' +
-    (t.desc ? '<div style="font-size:13px;color:var(--text-secondary);padding:10px 12px;background:var(--bg);border-radius:4px;margin-bottom:12px;line-height:1.6;">' + t.desc + '</div>' : '') +
+    (t.desc ? '<div style="font-size:13px;color:var(--text-secondary);padding:10px 12px;background:var(--bg);border-radius:3px;margin-bottom:12px;line-height:1.6;">' + t.desc + '</div>' : '') +
     (t.completedAt ? '<div style="font-size:12px;color:var(--accent-emerald);padding:8px;background:rgba(16,185,129,0.1);border-radius:3px;margin-bottom:12px;">✅ 完成时间：' + t.completedAt + '</div>' : '') +
   '</div>';
 }
@@ -4590,11 +4590,11 @@ function _taskDetailHtml(t) {
 function _deliveryUploadHtml(t) {
   const delivery = t.delivery || '';
   if (delivery === '文档链接') {
-    return '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付链接</label><input type="url" id="deliveryUrl" placeholder="输入文档链接地址..." style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"></div>';
+    return '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付链接</label><input type="url" id="deliveryUrl" placeholder="输入文档链接地址..." style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>';
   } else if (delivery === '附件') {
-    return '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">上传附件</label><input type="file" id="deliveryFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"></div>';
+    return '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">上传附件</label><input type="file" id="deliveryFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>';
   }
-  return '<div style="font-size:12px;color:var(--text-muted);padding:8px;background:var(--bg);border-radius:4px;">无需交付物上传</div>';
+  return '<div style="font-size:12px;color:var(--text-muted);padding:8px;background:var(--bg);border-radius:3px;">无需交付物上传</div>';
 }
 
 // ===== TASK ACTIONS =====
@@ -4616,22 +4616,22 @@ function editTask(id) {
     _taskDetailHtml(t) +
     '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
       '<input type="hidden" id="editTaskId" value="' + id + '">' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务标题 *</label><input id="editTitle" value="' + t.title + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务标题 *</label><input id="editTitle" value="' + t.title + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
       '<div class="form-row">' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="editProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;">' + projects.map(p => '<option value="' + p.id + '"' + (p.id===t.projectId?' selected':'') + '>' + p.name + '</option>').join('') + '</select></div>' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属Backlog</label><input id="editBacklog" value="' + (t.backlog||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="editProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;">' + projects.map(p => '<option value="' + p.id + '"' + (p.id===t.projectId?' selected':'') + '>' + p.name + '</option>').join('') + '</select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属Backlog</label><input id="editBacklog" value="' + (t.backlog||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
       '</div>' +
       '<div class="form-row">' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">优先级</label><select id="editPriority" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"><option' + (t.priority==='P0'?' selected':'') + '>P0紧急</option><option' + (t.priority==='P1'?' selected':'') + '>P1高</option><option' + (t.priority==='P2'?' selected':'') + '>P2中</option><option' + (t.priority==='P3'?' selected':'') + '>P3低</option></select></div>' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务负责人</label><select id="editAssignee" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"><option' + (t.assignee==='张明远'?' selected':'') + '>张明远</option><option' + (t.assignee==='李晓华'?' selected':'') + '>李晓华</option><option' + (t.assignee==='王思远'?' selected':'') + '>王思远</option><option' + (t.assignee==='赵明'?' selected':'') + '>赵明</option><option' + (t.assignee==='陈雨桐'?' selected':'') + '>陈雨桐</option></select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">优先级</label><select id="editPriority" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (t.priority==='P0'?' selected':'') + '>P0紧急</option><option' + (t.priority==='P1'?' selected':'') + '>P1高</option><option' + (t.priority==='P2'?' selected':'') + '>P2中</option><option' + (t.priority==='P3'?' selected':'') + '>P3低</option></select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务负责人</label><select id="editAssignee" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (t.assignee==='张明远'?' selected':'') + '>张明远</option><option' + (t.assignee==='李晓华'?' selected':'') + '>李晓华</option><option' + (t.assignee==='王思远'?' selected':'') + '>王思远</option><option' + (t.assignee==='赵明'?' selected':'') + '>赵明</option><option' + (t.assignee==='陈雨桐'?' selected':'') + '>陈雨桐</option></select></div>' +
       '</div>' +
       '<div class="form-row">' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">截止日期</label><input id="editDeadline" type="date" value="' + t.deadline + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"></div>' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计奖励 (RP)</label><input id="editReward" type="number" value="' + t.reward + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">截止日期</label><input id="editDeadline" type="date" value="' + t.deadline + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计奖励 (RP)</label><input id="editReward" type="number" value="' + t.reward + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
       '</div>' +
       '<div class="form-row">' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"><option' + (!t.delivery?' selected':'') + '>无需交付</option><option' + (t.delivery==='附件'?' selected':'') + '>附件</option><option' + (t.delivery==='文档链接'?' selected':'') + '>文档链接</option></select></div>' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预期工作量 (人天)</label><input id="editEffort" value="' + (t.effort||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;" placeholder="如 3"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (!t.delivery?' selected':'') + '>无需交付</option><option' + (t.delivery==='附件'?' selected':'') + '>附件</option><option' + (t.delivery==='文档链接'?' selected':'') + '>文档链接</option></select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预期工作量 (人天)</label><input id="editEffort" value="' + (t.effort||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;" placeholder="如 3"></div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="saveEditTask()">保存修改</button></div>' +
     '</div>'
@@ -4662,9 +4662,9 @@ function processTask(id) {
     _taskDetailHtml(t) +
     '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
       '<input type="hidden" id="submitTaskId" value="' + id + '">' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成说明 *</label><textarea id="submitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="详细描述任务完成情况、完成内容..."></textarea></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成说明 *</label><textarea id="submitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="详细描述任务完成情况、完成内容..."></textarea></div>' +
       _deliveryUploadHtml(t) +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成日期</label><input type="date" id="submitDate" value="' + new Date().toISOString().slice(0,10) + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">完成日期</label><input type="date" id="submitDate" value="' + new Date().toISOString().slice(0,10) + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitForReview()">提交审核</button></div>' +
     '</div>'
   );
@@ -4688,7 +4688,7 @@ function resubmitTask(id) {
     _taskDetailHtml(t) +
     '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
       '<input type="hidden" id="resubmitTaskId" value="' + id + '">' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">修改说明 *</label><textarea id="resubmitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="说明本次修改了什么内容..."></textarea></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">修改说明 *</label><textarea id="resubmitNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="说明本次修改了什么内容..."></textarea></div>' +
       _deliveryUploadHtml(t) +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="doResubmit()">重新提交</button></div>' +
     '</div>'
@@ -4771,12 +4771,12 @@ function auditTask(id) {
       '<input type="hidden" id="auditTaskId" value="' + id + '">' +
       '<div>' +
         '<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">奖励分配 <span style="font-weight:400;font-size:11px;color:var(--text-muted);">（默认按预计奖励平均分配）</span></div>' +
-        '<div id="auditRewardRows" style="background:var(--bg);border-radius:4px;padding:6px 8px;border:1px solid var(--border-light);">' +
+        '<div id="auditRewardRows" style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' +
           _buildRewardRow(t.assignee, t.reward) +
         '</div>' +
         '<button class="btn btn-xs btn-outline" onclick="addRewardRow()" style="margin-top:6px;font-size:11px;">+ 添加人员</button>' +
       '</div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">' +
         '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
         '<button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectAudit()">驳回</button>' +
@@ -4828,7 +4828,7 @@ function confirmCloseTask(id) {
     '<div style="padding:20px;">' +
       '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">即将关闭任务「' + t.title + '」，请填写关闭原因。</div>' +
       '<input type="hidden" id="closeTaskId" value="' + id + '">' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关闭原因 *</label><textarea id="closeReason" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="必须填写关闭原因..."></textarea></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">关闭原因 *</label><textarea id="closeReason" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="必须填写关闭原因..."></textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;margin-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" style="background:var(--accent-rose);border-color:var(--accent-rose);" onclick="doCloseTask()">确认关闭</button></div>' +
     '</div>'
   );
@@ -4851,7 +4851,7 @@ function publishTask(id) {
     '<div style="padding:20px;">' +
       '<input type="hidden" id="publishTaskId" value="' + id + '">' +
       '<div style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">当前为草稿状态，发布后将变为<strong>待开始</strong>，可分配给团队成员。</div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">发布说明</label><input id="publishNote" placeholder="可选：添加发布说明..." style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;box-sizing:border-box;"></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">发布说明</label><input id="publishNote" placeholder="可选：添加发布说明..." style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;margin-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="doPublishTask()">确认发布</button></div>' +
     '</div>'
   );
@@ -5376,7 +5376,7 @@ function manageKbSubTags(index) {
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>二级标签管理 — ' + t.cn,
     '<div style="padding:20px;">' +
-      '<div style="margin-bottom:14px;padding:10px 12px;background:var(--bg);border-radius:4px;"><p style="font-size:12px;color:var(--text-muted);margin-bottom:2px;">英文名称：' + t.en + '</p><p style="font-size:12px;color:var(--text-muted);">描述：' + t.desc + '</p></div>' +
+      '<div style="margin-bottom:14px;padding:10px 12px;background:var(--bg);border-radius:3px;"><p style="font-size:12px;color:var(--text-muted);margin-bottom:2px;">英文名称：' + t.en + '</p><p style="font-size:12px;color:var(--text-muted);">描述：' + t.desc + '</p></div>' +
       '<div style="display:flex;gap:8px;margin-bottom:14px;">' +
         '<input class="form-input" id="kbSubTagInput" placeholder="输入二级标签名称" style="flex:1;" onkeydown="if(event.key===\'Enter\')addKbSubTag(' + index + ')">' +
         '<button class="btn btn-primary" onclick="addKbSubTag(' + index + ')">添加</button>' +
@@ -6003,7 +6003,7 @@ function openBonusReview(requestId) {
       '<div style="font-size:13px;color:var(--text-muted);">申请人：<strong style="color:var(--text);">' + r.requester + '</strong></div>' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">奖励分配列表</label>' +
-        '<div style="background:var(--bg);border-radius:4px;padding:6px 8px;border:1px solid var(--border-light);">' +
+        '<div style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' +
           '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:11px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:4px;">' +
             '<span style="flex:1;">人员</span><span style="width:90px;text-align:right;">金额</span><span style="flex:0.7;">原因</span>' +
           '</div>' +
@@ -6016,7 +6016,7 @@ function openBonusReview(requestId) {
       '<input type="hidden" id="bonusReviewId" value="' + requestId + '">' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label>' +
-        '<textarea id="bonusReviewOpinion" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:4px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="请填写审核意见..."></textarea>' +
+        '<textarea id="bonusReviewOpinion" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="请填写审核意见..."></textarea>' +
       '</div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">' +
         '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
@@ -6333,7 +6333,7 @@ function renderBacklogProjectView(project) {
           <div class="select-wrap no-caret" style="min-width:200px;font-size:15px;font-weight:700;color:var(--text);">
             <select id="dashboardProjectFilter" onchange="renderBacklogKanban()" style="font-size:15px;font-weight:700;color:var(--text);padding:0;border:none;background:transparent;cursor:pointer;-webkit-appearance:none;appearance:none;"></select>
           </div>
-          <div class="conv-search" style="max-width:220px;width:100%;background:var(--bg);border-radius:4px;">
+          <div class="conv-search" style="max-width:220px;width:100%;background:var(--bg);border-radius:3px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="backlogSearch" placeholder="搜索项目任务..." oninput="renderBacklogKanban()" style="background:transparent;">
           </div>
@@ -6364,7 +6364,7 @@ function renderBacklogProjectView(project) {
               <div style="padding:8px 10px;background:var(--card);border-radius:3px;margin-bottom:6px;font-size:12px;border:1px solid var(--border-light);">
                 <div style="font-weight:600;line-height:1.45;color:var(--text);margin-bottom:8px;word-break:break-word;">${t.title}</div>
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:6px;">
-                  <span style="padding:2px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${project.name}</span>
+                  <span style="padding:2px 6px;border-radius:3px;background:var(--primary-light);color:var(--primary);">${project.name}</span>
                   <span style="display:flex;align-items:center;gap:4px;"><span class="task-priority ${priorityClass}"></span>${t.priority}</span>
                 </div>
                 <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted);gap:8px;">
@@ -6417,7 +6417,7 @@ function renderBacklogTaskView(project) {
             <div style="font-size:15px;font-weight:700;">全部项目任务</div>
             <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">共 ${allTasks.length} 个任务 · ${projects.length} 个项目</div>
           </div>
-          <div class="conv-search" style="max-width:220px;width:100%;background:var(--bg);border-radius:4px;">
+          <div class="conv-search" style="max-width:220px;width:100%;background:var(--bg);border-radius:3px;">
             <svg viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="backlogSearch" placeholder="搜索任务..." oninput="renderBacklogKanban()" style="background:transparent;">
           </div>
@@ -6436,7 +6436,7 @@ function renderBacklogTaskView(project) {
               <div style="padding:8px 10px;background:var(--card);border-radius:3px;margin-bottom:6px;font-size:12px;border:1px solid var(--border-light);">
                 <div style="font-weight:600;line-height:1.45;color:var(--text);margin-bottom:8px;word-break:break-word;">${t.title}</div>
                 <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:6px;">
-                  <span style="padding:2px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${projName}</span>
+                  <span style="padding:2px 6px;border-radius:3px;background:var(--primary-light);color:var(--primary);">${projName}</span>
                   <span style="display:flex;align-items:center;gap:4px;"><span class="task-priority ${priorityClass}"></span>${t.priority}</span>
                 </div>
                 <div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted);gap:8px;">
@@ -6630,7 +6630,7 @@ function openKnowledgeReviewDetail(reviewId) {
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>\n      知识审核详情 — ' + r.keyId,
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
       '<div style="display:flex;align-items:center;gap:8px;"><span class="bl-status status-pending_review"><span class="bl-status-dot status-pending_review"></span>待审核</span><span style="font-size:18px;font-weight:700;">' + r.title + '</span></div>' +
-      '<div style="padding:12px;background:var(--bg);border-radius:4px;font-size:13px;color:var(--text-secondary);">' + r.desc + '</div>' +
+      '<div style="padding:12px;background:var(--bg);border-radius:3px;font-size:13px;color:var(--text-secondary);">' + r.desc + '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><div style="font-size:13px;">' + r.uploader + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门</label><div style="font-size:13px;">' + r.dept + '</div></div>' +
@@ -6641,7 +6641,7 @@ function openKnowledgeReviewDetail(reviewId) {
       '</div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识标签</label><div style="display:flex;gap:8px;flex-wrap:wrap;"><span class="tag" style="background:var(--primary-light);color:var(--primary);">' + r.primaryType + '</span><span class="tag" style="background:var(--bg);color:var(--text-muted);">' + r.subTag + '</span></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识附件</label>' + filesHtml + '</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:12px;background:var(--bg);border-radius:4px;">' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:12px;background:var(--bg);border-radius:3px;">' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">基础贡献值</label><div style="font-size:14px;font-weight:700;color:var(--primary);">' + (r.baseValue || '-') + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">难度系数</label><div style="font-size:14px;font-weight:700;color:var(--accent-blue);">' + (r.difficulty || '-') + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计积分</label><div style="font-size:14px;font-weight:700;color:var(--accent-emerald);">' + predictedPoints + ' RP</div></div>' +
@@ -6716,10 +6716,10 @@ function renderWbProjects() {
   stages.forEach(stage => {
     var items = tasks.filter(t => t.stage === stage.key);
     if (currentProject) items = items.filter(t => t.projectId === currentProject.id);
-    html += `<div style="background:var(--bg);border-radius:4px;padding:12px;"><div style="font-size:13px;font-weight:700;white-space:nowrap;margin-bottom:8px;">${stage.label}</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">${items.length} 个任务</div>${items.map(t => {
+    html += `<div style="background:var(--bg);border-radius:3px;padding:12px;"><div style="font-size:13px;font-weight:700;white-space:nowrap;margin-bottom:8px;">${stage.label}</div><div style="font-size:11px;color:var(--text-muted);margin-bottom:8px;">${items.length} 个任务</div>${items.map(t => {
       const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
       const border = isOverdue ? 'border:1px solid var(--accent-rose);box-shadow:0 0 0 1px var(--accent-rose);' : 'border:1px solid var(--border-light);';
-      return `<div style="padding:8px 10px;background:var(--card);border-radius:3px;margin-bottom:6px;font-size:12px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="font-weight:600;line-height:1.45;color:var(--text);margin-bottom:6px;word-break:break-word;">${t.title}</div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:999px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${statusLabels[t.status]}</span></div><div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted);gap:8px;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
+      return `<div style="padding:8px 10px;background:var(--card);border-radius:3px;margin-bottom:6px;font-size:12px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="font-weight:600;line-height:1.45;color:var(--text);margin-bottom:6px;word-break:break-word;">${t.title}</div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:3px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:3px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${statusLabels[t.status]}</span></div><div style="display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--text-muted);gap:8px;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
     }).join('')}</div>`;
   });
   html += '</div>';
@@ -6780,12 +6780,12 @@ function renderWbKanban() {
   if (priFilter !== 'all') filtered = filtered.filter(t => t.priority === priFilter);
   const statusColors = { todo:'var(--text-muted)', in_progress:'var(--accent-blue)', pending_review:'var(--accent-amber)', rejected:'var(--accent-rose)', done:'var(--accent-emerald)', closed:'var(--text-muted)' };
   const today = '2026-07-23';
-  board.innerHTML = `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;">${statusList.map(s => { const items = filtered.filter(t => t.status === s.key); return `<div style="background:var(--bg);border-radius:4px;padding:10px;"><div style="font-size:12px;font-weight:700;margin-bottom:8px;white-space:nowrap;">${s.label} <span style="color:var(--text-muted);font-weight:400;">(${items.length})</span></div>${items.map(t => {
+  board.innerHTML = `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;">${statusList.map(s => { const items = filtered.filter(t => t.status === s.key); return `<div style="background:var(--bg);border-radius:3px;padding:10px;"><div style="font-size:12px;font-weight:700;margin-bottom:8px;white-space:nowrap;">${s.label} <span style="color:var(--text-muted);font-weight:400;">(${items.length})</span></div>${items.map(t => {
     const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
     const border = isOverdue ? 'border:1px solid var(--accent-rose);box-shadow:0 0 0 1px var(--accent-rose);' : 'border:1px solid var(--border-light);';
     const mAct = t.status === 'todo' ? 'editTask' : t.status === 'in_progress' ? 'processTask' : t.status === 'pending_review' ? 'auditTask' : t.status === 'rejected' ? 'resubmitTask' : 'openTaskDetail';
     const mLbl = t.status === 'todo' ? '编辑' : t.status === 'in_progress' ? '提交审核' : t.status === 'pending_review' ? '审核' : t.status === 'rejected' ? '重新提交' : '查看详情';
-    return `<div style="padding:10px;background:var(--card);border-radius:4px;margin-bottom:8px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:4px;"><span style="font-size:12px;font-weight:600;line-height:1.4;flex:1;word-break:break-word;">${t.title}</span><div class="task-menu-wrap" onclick="event.stopPropagation();"><span class="task-menu-dots">⋮</span><div class="task-menu-dropdown"><div onclick="${mAct}('${t.id}');event.stopPropagation();">${mLbl}</div></div></div></div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:999px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:999px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${s.label}</span></div><div style="font-size:10px;color:var(--text-muted);display:flex;justify-content:space-between;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
+    return `<div style="padding:10px;background:var(--card);border-radius:3px;margin-bottom:8px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:4px;"><span style="font-size:12px;font-weight:600;line-height:1.4;flex:1;word-break:break-word;">${t.title}</span><div class="task-menu-wrap" onclick="event.stopPropagation();"><span class="task-menu-dots">⋮</span><div class="task-menu-dropdown"><div onclick="${mAct}('${t.id}');event.stopPropagation();">${mLbl}</div></div></div></div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:3px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:3px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${s.label}</span></div><div style="font-size:10px;color:var(--text-muted);display:flex;justify-content:space-between;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
   }).join('')}</div>`; }).join('')}</div>`;
 }
 
@@ -6843,7 +6843,7 @@ function renderWbTimeline() {
       const left = si * mWidth;
       const width = (ei - si + 1) * mWidth;
       html += '<div style="min-width:' + (months.length * 120) + 'px;position:relative;height:48px;border-bottom:1px solid var(--border-light);">';
-      html += `<div class="tl-bar" style="position:absolute;left:${left}%;width:${width}%;top:12px;height:24px;background:var(--primary);display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;border-radius:4px;">${p.name}</div>`;
+      html += `<div class="tl-bar" style="position:absolute;left:${left}%;width:${width}%;top:12px;height:24px;background:var(--primary);display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;border-radius:3px;">${p.name}</div>`;
       html += '</div>';
     });
     html += '</div></div>';
@@ -6857,7 +6857,7 @@ function renderWbTimeline() {
     html += '<div style="width:340px;flex-shrink:0;border-right:1px solid var(--border-light);">';
     html += '<div style="display:grid;grid-template-columns:100px 1fr 70px;padding:8px 12px;font-size:11px;font-weight:600;color:var(--text-muted);border-bottom:1px solid var(--border-light);"><span>任务</span><span>状态</span><span>经办人</span></div>';
     filtered.forEach(t => {
-      html += `<div style="display:grid;grid-template-columns:100px 1fr 70px;padding:8px 12px;font-size:12px;border-bottom:1px solid var(--border-light);align-items:center;"><span style="color:var(--primary);font-weight:500;">${t.id.toUpperCase()}</span><span style="padding:2px 8px;border-radius:4px;font-size:10px;text-align:center;background:var(--accent-emerald)20;color:var(--accent-emerald);">${statusMap[t.status] || t.status}</span><span style="color:var(--text-muted);">${t.assignee}</span></div>`;
+      html += `<div style="display:grid;grid-template-columns:100px 1fr 70px;padding:8px 12px;font-size:12px;border-bottom:1px solid var(--border-light);align-items:center;"><span style="color:var(--primary);font-weight:500;">${t.id.toUpperCase()}</span><span style="padding:2px 8px;border-radius:3px;font-size:10px;text-align:center;background:var(--accent-emerald)20;color:var(--accent-emerald);">${statusMap[t.status] || t.status}</span><span style="color:var(--text-muted);">${t.assignee}</span></div>`;
     });
     html += '</div>';
     html += '<div style="flex:1;position:relative;">';
@@ -6872,7 +6872,7 @@ function renderWbTimeline() {
       const width = mWidth * 0.8;
       const color = t.priority === 'P0' ? 'var(--accent-rose)' : t.priority === 'P1' ? 'var(--accent-amber)' : 'var(--primary)';
       html += '<div style="min-width:' + (months.length * 100) + 'px;position:relative;height:40px;border-bottom:1px solid var(--border-light);">';
-      html += `<div class="tl-bar" style="position:absolute;left:${left}%;width:${width}%;top:8px;height:24px;background:${color};display:flex;align-items:center;padding:0 6px;font-size:10px;font-weight:600;color:#fff;border-radius:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.title}</div>`;
+      html += `<div class="tl-bar" style="position:absolute;left:${left}%;width:${width}%;top:8px;height:24px;background:${color};display:flex;align-items:center;padding:0 6px;font-size:10px;font-weight:600;color:#fff;border-radius:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${t.title}</div>`;
       html += '</div>';
     });
     html += '</div></div>';
