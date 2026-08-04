@@ -3798,7 +3798,8 @@ function openUploadDocModal() {
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
       '<div style="display:flex;gap:12px;"><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门 <span style="color:var(--text);">*</span></label><select id="uploadDocDept" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);">' + getDeptOptions(getUserDept('张明远')) + '</select></div><div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 <span style="color:var(--text);">*</span></label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()">请选择知识贡献者</div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><div style="display:flex;align-items:center;gap:8px;"><input type="file" id="uploadDocFile" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx,.xls,.xlsx,.md,.csv" multiple onchange="onUploadFileChange(this)" style="display:none;"><button class="btn btn-sm btn-outline" onclick="document.getElementById(\'uploadDocFile\').click()" style="white-space:nowrap;">选择文件</button><span style="font-size:12px;color:var(--text-muted);">支持格式：DOC、DOCX、PDF、TXT、PPT、PPTX、XLS、XLSX、MD、CSV</span></div><div style="margin-top:8px;display:flex;align-items:center;gap:8px;"><input type="url" id="uploadDocLink" placeholder="或填写在线链接（https://...）" style="flex:1;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);"><button class="btn btn-sm btn-outline" onclick="addUploadLink()" style="white-space:nowrap;">添加链接</button></div><div id="uploadFileList" style="display:flex;flex-direction:column;gap:4px;margin-top:8px;"></div></div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="uploadDocProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目（可选）</option>' + projectOpts + '</select></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="uploadDocProject" onchange="updateAuditFlowPreview()" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目（可选）</option>' + projectOpts + '</select></div>' +
+      '<div style="padding:12px;background:var(--bg);border-radius:3px;border:1px solid var(--border-light);"><div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:10px;">审核流程预览</div><div id="auditFlowPreview" style="display:flex;align-items:center;gap:0;"></div></div>' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识标签 <span style="color:var(--text);">*</span></label>' +
         '<div style="display:flex;flex-direction:column;gap:8px;background:var(--bg);border-radius:3px;padding:10px;border:1px solid var(--border-light);">' +
@@ -3823,6 +3824,43 @@ function openUploadDocModal() {
   document.getElementById('uploadDocContributor').value = '';
   var trigger = document.getElementById('contributorTrigger');
   if (trigger) { trigger.textContent = '请选择知识贡献者'; trigger.classList.remove('has-value'); }
+  updateAuditFlowPreview();
+}
+
+function updateAuditFlowPreview() {
+  var container = document.getElementById('auditFlowPreview');
+  if (!container) return;
+  var projSelect = document.getElementById('uploadDocProject');
+  var projectId = projSelect ? projSelect.value : '';
+  var hasProject = projectId && projectId !== '';
+  var projectLead = '';
+  if (hasProject) {
+    var p = projects.find(function(x) { return x.id === projectId; });
+    projectLead = p ? p.lead : '项目负责人';
+  }
+  var nodeStyle = 'display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border:1px solid var(--border);border-radius:3px;background:var(--card);min-width:80px;';
+  var nodeActive = 'display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border:1px solid var(--primary);border-radius:3px;background:var(--primary-light);min-width:80px;';
+  var arrowStyle = 'color:var(--text-muted);font-size:16px;padding:0 4px;';
+  var labelStyle = 'font-size:11px;font-weight:600;color:var(--text);';
+  var subStyle = 'font-size:10px;color:var(--text-muted);';
+  var html = '';
+  // Node 1: 上传人
+  html += '<div style="' + nodeStyle + '"><span style="font-size:16px;">👤</span><span style="' + labelStyle + '">上传人</span><span style="' + subStyle + '">张明远</span></div>';
+  html += '<span style="' + arrowStyle + '">→</span>';
+  if (hasProject) {
+    // Node 2: 项目负责人审核
+    html += '<div style="' + nodeActive + '"><span style="font-size:16px;">📌</span><span style="' + labelStyle + '">项目负责人审核</span><span style="' + subStyle + '">' + projectLead + '</span></div>';
+    html += '<span style="' + arrowStyle + '">→</span>';
+  }
+  // Node 3: 领导层审批
+  html += '<div style="' + (hasProject ? nodeStyle : nodeActive) + '"><span style="font-size:16px;">📋</span><span style="' + labelStyle + '">领导层审批</span><span style="' + subStyle + '">部门负责人</span></div>';
+  // Node 4: 完成
+  html += '<span style="' + arrowStyle + '">→</span>';
+  html += '<div style="' + nodeStyle + '"><span style="font-size:16px;">✅</span><span style="' + labelStyle + '">审核完成</span><span style="' + subStyle + '">知识入库</span></div>';
+  if (!hasProject) {
+    html += '<div style="margin-left:12px;font-size:11px;color:var(--accent-amber);">⚠ 未选择项目，跳过项目负责人审核</div>';
+  }
+  container.innerHTML = html;
 }
 
 function buildSubTagOptions(idx) {
