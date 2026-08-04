@@ -3838,28 +3838,69 @@ function updateAuditFlowPreview() {
     var p = projects.find(function(x) { return x.id === projectId; });
     projectLead = p ? p.lead : '项目负责人';
   }
-  var nodeStyle = 'display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border:1px solid var(--border);border-radius:3px;background:var(--card);min-width:80px;';
-  var nodeActive = 'display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 12px;border:1px solid var(--primary);border-radius:3px;background:var(--primary-light);min-width:80px;';
-  var arrowStyle = 'color:var(--text-muted);font-size:16px;padding:0 4px;';
-  var labelStyle = 'font-size:11px;font-weight:600;color:var(--text);';
-  var subStyle = 'font-size:10px;color:var(--text-muted);';
-  var html = '';
+  // 获取知识贡献者
+  var contributorEl = document.getElementById('uploadDocContributor');
+  var contributor = contributorEl ? contributorEl.value : '';
+  
+  var dotStyle = 'width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:6px;';
+  var dotActive = 'width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px;';
+  var lineStyle = 'width:1px;height:28px;background:var(--border-light);margin-left:3px;';
+  var titleStyle = 'font-size:13px;font-weight:600;color:var(--text);';
+  var personStyle = 'display:inline-flex;align-items:center;gap:6px;padding:4px 10px;background:#f0f0f0;border-radius:3px;font-size:12px;margin-top:4px;';
+  var avatarStyle = 'width:20px;height:20px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;';
+  var hintStyle = 'font-size:11px;color:var(--accent-amber);margin-top:2px;';
+  
+  var html = '<div style="display:flex;flex-direction:column;gap:0;">';
+  
   // Node 1: 上传人
-  html += '<div style="' + nodeStyle + '"><span style="font-size:16px;">👤</span><span style="' + labelStyle + '">上传人</span><span style="' + subStyle + '">张明远</span></div>';
-  html += '<span style="' + arrowStyle + '">→</span>';
+  html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
+  html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotActive + '"></div></div>';
+  html += '<div><div style="' + titleStyle + '">上传人</div><div style="' + personStyle + '"><span style="' + avatarStyle + '">远</span>张明远</div></div>';
+  html += '</div>';
+  html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
+  
+  // Node 2: 项目负责人审核（有项目时显示）
   if (hasProject) {
-    // Node 2: 项目负责人审核
-    html += '<div style="' + nodeActive + '"><span style="font-size:16px;">📌</span><span style="' + labelStyle + '">项目负责人审核</span><span style="' + subStyle + '">' + projectLead + '</span></div>';
-    html += '<span style="' + arrowStyle + '">→</span>';
+    html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
+    html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
+    html += '<div><div style="' + titleStyle + '">项目负责人审核</div><div style="' + personStyle + '"><span style="' + avatarStyle + '">' + projectLead.charAt(0) + '</span>' + projectLead + '</div></div>';
+    html += '</div>';
+    html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
+  } else {
+    html += '<div style="display:flex;gap:12px;align-items:flex-start;opacity:0.4;">';
+    html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
+    html += '<div><div style="' + titleStyle + ';text-decoration:line-through;">项目负责人审核</div><div style="' + hintStyle + '">未选择项目，跳过此节点</div></div>';
+    html += '</div>';
+    html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
   }
-  // Node 3: 领导层审批
-  html += '<div style="' + (hasProject ? nodeStyle : nodeActive) + '"><span style="font-size:16px;">📋</span><span style="' + labelStyle + '">领导层审批</span><span style="' + subStyle + '">部门负责人</span></div>';
-  // Node 4: 完成
-  html += '<span style="' + arrowStyle + '">→</span>';
-  html += '<div style="' + nodeStyle + '"><span style="font-size:16px;">✅</span><span style="' + labelStyle + '">审核完成</span><span style="' + subStyle + '">知识入库</span></div>';
-  if (!hasProject) {
-    html += '<div style="margin-left:12px;font-size:11px;color:var(--accent-amber);">⚠ 未选择项目，跳过项目负责人审核</div>';
+  
+  // Node 3: 领导层审核
+  html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
+  html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
+  html += '<div><div style="' + titleStyle + '">领导层审核</div><div style="' + personStyle + '"><span style="' + avatarStyle + '">部</span>部门负责人</div></div>';
+  html += '</div>';
+  html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
+  
+  // Node 4: 自动抄送
+  html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
+  html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
+  html += '<div><div style="' + titleStyle + '">自动抄送</div>';
+  if (contributor) {
+    html += '<div style="' + personStyle + '"><span style="' + avatarStyle + '">' + contributor.charAt(contributor.length - 1) + '</span>' + contributor + '</div>';
+  } else {
+    html += '<div style="font-size:11px;color:var(--text-muted);margin-top:2px;">待选择知识贡献者</div>';
   }
+  html += '</div>';
+  html += '</div>';
+  html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
+  
+  // Node 5: 结束
+  html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
+  html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
+  html += '<div><div style="' + titleStyle + '">结束</div></div>';
+  html += '</div>';
+  
+  html += '</div>';
   container.innerHTML = html;
 }
 
