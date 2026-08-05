@@ -4099,9 +4099,11 @@ var _knowledgeReviews = [
     status: 'pending_review',
     priority: 'P1',
     project: 'Q2 财务分析',
+    projectLead: '李晓华',
     uploader: '张明远',
     dept: '技术部',
     contributor: '李晓华',
+    ccUsers: ['李晓华', '赵明'],
     files: [
       { name: 'Q2财务分析报告.pdf', size: '2.3MB', type: 'pdf' },
       { name: '附表-各部门预算执行.xlsx', size: '580KB', type: 'xlsx' }
@@ -4112,7 +4114,13 @@ var _knowledgeReviews = [
     baseValue: 6,
     difficulty: 3,
     uploadTime: '2026-07-25 14:30',
-    desc: '2026年第二季度财务数据深度分析与可视化报告，包含各部门预算执行情况附表。'
+    desc: '2026年第二季度财务数据深度分析与可视化报告，包含各部门预算执行情况附表。',
+    auditFlow: [
+      { type: 'initiate', name: '发起', status: 'done', operator: '张明远', time: '2026-07-25 14:30', comment: '' },
+      { type: 'review', name: '审核', status: 'pending', operators: ['李晓华', '赵明'], actions: [] },
+      { type: 'cc', name: '自动抄送', status: 'pending', targets: ['李晓华', '赵明'] },
+      { type: 'end', name: '结束', status: 'pending' }
+    ]
   }
 ];
 
@@ -6808,7 +6816,7 @@ function renderWbBacklog() {
 function openKnowledgeReviewDetail(reviewId) {
   var r = _knowledgeReviews.find(function(x) { return x.id === reviewId; });
   if (!r) return;
-  var fileIcons = { pdf: '📄', doc: '📝', docx: '📝', xlsx: '📊', xls: '📊', ppt: '📽️', pptx: '📽️', txt: '📋', md: '📋', csv: '📊' };
+  var fileIcons = { pdf: '📄', doc: '', docx: '📝', xlsx: '📊', xls: '', ppt: '📽️', pptx: '📽️', txt: '', md: '📋', csv: '📊' };
   var filesHtml = '';
   for (var i = 0; i < r.files.length; i++) {
     var f = r.files[i];
@@ -6821,10 +6829,92 @@ function openKnowledgeReviewDetail(reviewId) {
     '</div>';
   }
   var predictedPoints = (r.baseValue || 0) * 30 + (r.difficulty || 0) * 1.5;
+
+  // Build audit flow HTML
+  var auditFlowHtml = '';
+  if (r.auditFlow) {
+    var dotDone = 'width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px;';
+    var dotPending = 'width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;margin-top:6px;';
+    var lineStyle = 'width:1px;height:28px;background:var(--border-light);margin-left:3px;';
+    var titleStyle = 'font-size:13px;font-weight:600;color:var(--text);';
+    var avatarStyle = 'width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:600;flex-shrink:0;';
+
+    auditFlowHtml = '<div style="padding:14px;background:var(--bg);border-radius:3px;border:1px solid var(--border-light);">';
+    auditFlowHtml += '<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:12px;">审核流程</div>';
+    auditFlowHtml += '<div style="display:flex;flex-direction:column;gap:0;">';
+
+    for (var i = 0; i < r.auditFlow.length; i++) {
+      var node = r.auditFlow[i];
+      var isDone = node.status === 'done';
+      var isPending = node.status === 'pending';
+      var dotClass = isDone ? dotDone : dotPending;
+
+      auditFlowHtml += '<div style="display:flex;gap:12px;align-items:flex-start;">';
+      auditFlowHtml += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotClass + '"></div></div>';
+      auditFlowHtml += '<div style="flex:1;">';
+      auditFlowHtml += '<div style="' + titleStyle + '">' + node.name + '</div>';
+
+      // Show operators for review node
+      if (node.type === 'review') {
+        if (node.operators && node.operators.length > 0) {
+          auditFlowHtml += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;align-items:center;">';
+          node.operators.forEach(function(op) {
+            var initials = op.substring(0, 1);
+            auditFlowHtml += '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;background:' + (isDone ? 'var(--primary-light)' : '#f0f0f0') + ';border-radius:14px;font-size:12px;">';
+            auditFlowHtml += '<span style="' + avatarStyle + 'background:' + (isDone ? 'var(--primary)' : 'var(--text-muted)') + ';">' + initials + '</span>';
+            auditFlowHtml += op;
+            auditFlowHtml += '</span>';
+          });
+          auditFlowHtml += '</div>';
+        }
+        // Action buttons for pending review nodes
+        if (isPending) {
+          auditFlowHtml += '<div style="display:flex;gap:6px;margin-top:8px;">';
+          auditFlowHtml += '<button class="btn btn-xs" style="background:var(--accent-rose);color:white;border:none;padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;" onclick="reviewKnowledgeAction(\'' + r.id + '\', ' + i + ', \'reject\')">驳回</button>';
+          auditFlowHtml += '<button class="btn btn-xs" style="background:var(--accent-amber);color:white;border:none;padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;" onclick="reviewKnowledgeAction(\'' + r.id + '\', ' + i + ', \'disagree\')">拒绝</button>';
+          auditFlowHtml += '<button class="btn btn-xs" style="background:var(--primary);color:white;border:none;padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;" onclick="reviewKnowledgeAction(\'' + r.id + '\', ' + i + ', \'approve\')">审核通过</button>';
+          auditFlowHtml += '</div>';
+        }
+      }
+
+      // Show completed operator info
+      if (isDone && node.operator) {
+        auditFlowHtml += '<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">' + node.operator + ' · ' + (node.time || '') + '</div>';
+        if (node.comment) {
+          auditFlowHtml += '<div style="font-size:11px;color:var(--accent-amber);margin-top:2px;">备注：' + node.comment + '</div>';
+        }
+      }
+
+      // Show CC targets
+      if (node.type === 'cc' && node.targets && node.targets.length > 0) {
+        auditFlowHtml += '<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;">';
+        node.targets.forEach(function(t) {
+          auditFlowHtml += '<span style="display:inline-flex;align-items:center;padding:4px 10px;background:#f0f0f0;border-radius:3px;font-size:12px;">' + t + '</span>';
+        });
+        auditFlowHtml += '</div>';
+      }
+
+      auditFlowHtml += '</div>';
+      auditFlowHtml += '</div>';
+
+      // Add connector line (except last node)
+      if (i < r.auditFlow.length - 1) {
+        auditFlowHtml += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
+      }
+    }
+
+    auditFlowHtml += '</div>';
+    auditFlowHtml += '</div>';
+  }
+
+  var statusClass = r.status === 'done' ? 'bl-status status-done' : (r.status === 'rejected' ? 'bl-status status-rejected' : 'bl-status status-pending_review');
+  var statusDot = r.status === 'done' ? 'status-done' : (r.status === 'rejected' ? 'status-rejected' : 'status-pending_review');
+  var statusText = r.status === 'done' ? '已通过' : (r.status === 'rejected' ? '已驳回' : '待审核');
+
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>\n      知识审核详情 — ' + r.keyId,
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
-      '<div style="display:flex;align-items:center;gap:8px;"><span class="bl-status status-pending_review"><span class="bl-status-dot status-pending_review"></span>待审核</span><span style="font-size:18px;font-weight:700;">' + r.title + '</span></div>' +
+      '<div style="display:flex;align-items:center;gap:8px;"><span class="' + statusClass + '"><span class="bl-status-dot ' + statusDot + '"></span>' + statusText + '</span><span style="font-size:18px;font-weight:700;">' + r.title + '</span></div>' +
       '<div style="padding:12px;background:var(--bg);border-radius:3px;font-size:13px;color:var(--text-secondary);">' + r.desc + '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><div style="font-size:13px;">' + r.uploader + '</div></div>' +
@@ -6841,36 +6931,54 @@ function openKnowledgeReviewDetail(reviewId) {
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">难度系数</label><div style="font-size:14px;font-weight:700;color:var(--accent-blue);">' + (r.difficulty || '-') + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计积分</label><div style="font-size:14px;font-weight:700;color:var(--accent-emerald);">' + predictedPoints + ' RP</div></div>' +
       '</div>' +
+      auditFlowHtml +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;">' +
         '<button class="btn btn-ghost" onclick="closeProjectDetail()">关闭</button>' +
-        '<button class="btn btn-danger" onclick="rejectKnowledgeReview(\'' + r.id + '\')">驳回</button>' +
-        '<button class="btn btn-primary" onclick="approveKnowledgeReview(\'' + r.id + '\')">审核通过</button>' +
       '</div>' +
     '</div>'
   );
 }
 
-function approveKnowledgeReview(reviewId) {
+function reviewKnowledgeAction(reviewId, nodeIndex, action) {
   var r = _knowledgeReviews.find(function(x) { return x.id === reviewId; });
-  if (!r) return;
-  r.status = 'done';
-  alert('知识审核通过！\n贡献者：' + r.contributor + '\n预计积分：' + ((r.baseValue || 0) * 30 + (r.difficulty || 0) * 1.5) + ' RP');
+  if (!r || !r.auditFlow || !r.auditFlow[nodeIndex]) return;
+
+  var node = r.auditFlow[nodeIndex];
+  var now = new Date();
+  var timeStr = now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate() + ' ' + now.getHours() + ':' + (now.getMinutes()<10?'0':'') + now.getMinutes();
+
+  if (action === 'approve') {
+    node.status = 'done';
+    node.operator = '当前用户';
+    node.time = timeStr;
+    node.comment = '';
+    r.status = 'done';
+    alert('审核通过！\n贡献者：' + r.contributor + '\n预计积分：' + ((r.baseValue || 0) * 30 + (r.difficulty || 0) * 1.5) + ' RP');
+  } else if (action === 'reject') {
+    var reason = prompt('请输入驳回原因：');
+    if (reason) {
+      node.status = 'done';
+      node.operator = '当前用户';
+      node.time = timeStr;
+      node.comment = reason;
+      r.status = 'rejected';
+      alert('已驳回：' + reason);
+    }
+  } else if (action === 'disagree') {
+    var reason = prompt('请输入拒绝原因：');
+    if (reason) {
+      node.status = 'done';
+      node.operator = '当前用户';
+      node.time = timeStr;
+      node.comment = reason;
+      r.status = 'rejected';
+      alert('已拒绝：' + reason);
+    }
+  }
+
   closeProjectDetail();
   renderWbBacklog();
 }
-
-function rejectKnowledgeReview(reviewId) {
-  var r = _knowledgeReviews.find(function(x) { return x.id === reviewId; });
-  if (!r) return;
-  var reason = prompt('请输入驳回原因：');
-  if (reason) {
-    r.status = 'rejected';
-    alert('已驳回：' + reason);
-    closeProjectDetail();
-    renderWbBacklog();
-  }
-}
-
 function renderWbProjects() {
   const container = document.getElementById('wbProjectCards');
   if (!container) return;
