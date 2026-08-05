@@ -3823,8 +3823,15 @@ function openUploadDocModal() {
   // Reset contributor dropdown
   _selectedContributors = [];
   renderContributorTrigger();
+  // Reset approvers
+  _selectedApprovers = [];
+  // Reset project selection
+  var projSelect = document.getElementById('uploadDocProject');
+  if (projSelect) projSelect.value = '';
   updateAuditFlowPreview();
 }
+
+var _selectedApprovers = [];
 
 function updateAuditFlowPreview() {
   var container = document.getElementById('auditFlowPreview');
@@ -3832,11 +3839,19 @@ function updateAuditFlowPreview() {
   var projSelect = document.getElementById('uploadDocProject');
   var projectId = projSelect ? projSelect.value : '';
   var hasProject = projectId && projectId !== '';
-  var projectLead = '';
+  
+  // Auto-populate project lead as first approver when project is selected
   if (hasProject) {
     var p = projects.find(function(x) { return x.id === projectId; });
-    projectLead = p ? p.lead : '项目负责人';
+    var leadName = p ? p.lead : '';
+    if (leadName && _selectedApprovers.indexOf(leadName) === -1) {
+      _selectedApprovers.unshift(leadName);
+    }
+  } else {
+    // Clear approvers when no project is selected
+    _selectedApprovers = [];
   }
+  
   // 获取知识贡献者（支持多选）
   var contributorEl = document.getElementById('uploadDocContributor');
   var contributorValue = contributorEl ? contributorEl.value : '';
@@ -3846,35 +3861,38 @@ function updateAuditFlowPreview() {
   var dotActive = 'width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px;';
   var lineStyle = 'width:1px;height:28px;background:var(--border-light);margin-left:3px;';
   var titleStyle = 'font-size:13px;font-weight:600;color:var(--text);';
-  var personStyle = 'display:inline-flex;align-items:center;padding:4px 10px;background:#f0f0f0;border-radius:3px;font-size:12px;margin-top:4px;';
-  var hintStyle = 'font-size:11px;color:var(--accent-amber);margin-top:2px;';
+  var avatarStyle = 'width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-size:10px;font-weight:600;flex-shrink:0;';
   
   var html = '<div style="display:flex;flex-direction:column;gap:0;">';
   
-  // Node 1: 上传人
+  // Node 1: 发起
   html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotActive + '"></div></div>';
-  html += '<div><div style="' + titleStyle + '">上传人</div><div style="' + personStyle + '">张明远</div></div>';
+  html += '<div><div style="' + titleStyle + '">发起</div></div>';
   html += '</div>';
   html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
   
-  // Node 2: 项目负责人审核（有项目时显示）
-  if (hasProject) {
-    html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
-    html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
-    html += '<div><div style="' + titleStyle + '">项目负责人审核</div><div style="' + personStyle + '">' + projectLead + '</div></div>';
-    html += '</div>';
-    html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
-  }
-  
-  // Node 3: 领导层审核
+  // Node 2: 审核
   html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
-  html += '<div><div style="' + titleStyle + '">领导层审核</div><div style="' + personStyle + '">部门负责人</div></div>';
+  html += '<div><div style="' + titleStyle + '">审核</div>';
+  html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;align-items:center;">';
+  // Add button
+  html += '<div onclick="openApproverSelector()" style="width:28px;height:28px;border-radius:14px;border:1px dashed var(--primary);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--primary);font-size:18px;flex-shrink:0;">+</div>';
+  // Selected approvers
+  _selectedApprovers.forEach(function(name, i) {
+    var initials = name.substring(0, 1);
+    html += '<span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px 4px 4px;background:#f0f0f0;border-radius:14px;font-size:12px;">';
+    html += '<span style="' + avatarStyle + 'background:var(--primary);">' + initials + '</span>';
+    html += name;
+    html += '<span onclick="event.stopPropagation();removeApprover(' + i + ')" style="cursor:pointer;color:var(--text-muted);margin-left:2px;font-size:14px;">×</span>';
+    html += '</span>';
+  });
+  html += '</div></div>';
   html += '</div>';
   html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
   
-  // Node 4: 自动抄送
+  // Node 3: 自动抄送
   html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
   html += '<div><div style="' + titleStyle + '">自动抄送</div>';
@@ -3891,7 +3909,7 @@ function updateAuditFlowPreview() {
   html += '</div>';
   html += '<div style="display:flex;gap:12px;"><div style="' + lineStyle + '"></div></div>';
   
-  // Node 5: 结束
+  // Node 4: 结束
   html += '<div style="display:flex;gap:12px;align-items:flex-start;">';
   html += '<div style="display:flex;flex-direction:column;align-items:center;gap:0;"><div style="' + dotStyle + '"></div></div>';
   html += '<div><div style="' + titleStyle + '">结束</div></div>';
@@ -3899,6 +3917,52 @@ function updateAuditFlowPreview() {
   
   html += '</div>';
   container.innerHTML = html;
+}
+
+function openApproverSelector() {
+  var allUsers = [];
+  _deptUsers.forEach(function(g) {
+    g.users.forEach(function(u) {
+      if (allUsers.indexOf(u) === -1) allUsers.push(u);
+    });
+  });
+  
+  var options = allUsers.map(function(u) {
+    var checked = _selectedApprovers.indexOf(u) !== -1 ? 'checked' : '';
+    return '<label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;"><input type="checkbox" value="' + u + '" ' + checked + ' onchange="toggleApproverFromCheckbox(this)" style="cursor:pointer;">' + u + '</label>';
+  }).join('');
+  
+  var dialog = document.createElement('div');
+  dialog.id = 'approverSelector';
+  dialog.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;z-index:10000;';
+  dialog.innerHTML = '<div style="background:white;border-radius:8px;padding:20px;min-width:300px;max-height:80vh;overflow-y:auto;">' +
+    '<div style="font-size:14px;font-weight:600;margin-bottom:12px;">选择审核人</div>' +
+    '<div style="max-height:200px;overflow-y:auto;margin-bottom:12px;">' + options + '</div>' +
+    '<div style="display:flex;gap:8px;justify-content:flex-end;"><button class="btn btn-sm btn-ghost" onclick="closeApproverSelector()">取消</button><button class="btn btn-sm btn-primary" onclick="closeApproverSelector()">确定</button></div>' +
+  '</div>';
+  dialog.onclick = function(e) { if (e.target === dialog) closeApproverSelector(); };
+  document.body.appendChild(dialog);
+}
+
+function toggleApproverFromCheckbox(checkbox) {
+  var name = checkbox.value;
+  var idx = _selectedApprovers.indexOf(name);
+  if (checkbox.checked && idx === -1) {
+    _selectedApprovers.push(name);
+  } else if (!checkbox.checked && idx !== -1) {
+    _selectedApprovers.splice(idx, 1);
+  }
+}
+
+function closeApproverSelector() {
+  var dialog = document.getElementById('approverSelector');
+  if (dialog) dialog.remove();
+  updateAuditFlowPreview();
+}
+
+function removeApprover(index) {
+  _selectedApprovers.splice(index, 1);
+  updateAuditFlowPreview();
 }
 
 function buildSubTagOptions(idx) {
