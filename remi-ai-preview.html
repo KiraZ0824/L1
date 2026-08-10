@@ -2020,7 +2020,7 @@
           </div>
 
           <!-- KPI Cards -->
-          <div id="ovKpiCards" style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px;"></div>
+          <div id="ovKpiCards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;"></div>
 
           <!-- Row: My Todos (left) + Project Progress (right) -->
           <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:16px;">
@@ -2037,32 +2037,28 @@
             </div>
           </div>
 
-          <!-- Task Completion (standalone) -->
-          <div class="card" style="padding:16px;margin-bottom:16px;">
-            <div style="font-size:14px;font-weight:600;margin-bottom:12px;">任务完成率</div>
-            <div id="ovChartTaskCompletion"></div>
-          </div>
-
-          <!-- Charts Row 2 -->
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;">
+          <!-- Charts Row 1.5: Quarterly Burndown + Knowledge Growth -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
             <div class="card" style="padding:16px;">
-              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">积分发放趋势</div>
-              <div id="ovChartPointsTrend"></div>
+              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">季度燃尽图</div>
+              <div id="ovChartBurndown"></div>
             </div>
             <div class="card" style="padding:16px;">
               <div style="font-size:14px;font-weight:600;margin-bottom:12px;">知识库增长</div>
               <div id="ovChartKnowledgeGrowth"></div>
             </div>
+          </div>
+
+          <!-- Charts Row 2 -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="card" style="padding:16px;">
+              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">积分发放趋势</div>
+              <div id="ovChartPointsTrend"></div>
+            </div>
             <div class="card" style="padding:16px;">
               <div style="font-size:14px;font-weight:600;margin-bottom:12px;">知识贡献分布</div>
               <div id="ovChartDeptContribution"></div>
             </div>
-          </div>
-
-          <!-- Project Progress Overview -->
-          <div class="card" style="padding:16px;">
-            <div style="font-size:14px;font-weight:600;margin-bottom:12px;">项目进度概览</div>
-            <div id="ovProjectProgress"></div>
           </div>
         </div>
       </div>
@@ -2120,7 +2116,6 @@
                 <button class="wb-tab" onclick="switchWbTab('task')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>任务</button>
                 <button class="wb-tab" onclick="switchWbTab('project')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>项目</button>
                 <button class="wb-tab" onclick="switchWbTab('timeline')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><polyline points="8 5 3 12 8 19"/></svg>时间线</button>
-                <button class="wb-tab" onclick="switchWbTab('burndown')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>燃尽图</button>
               </div>
               <div class="wb-panel active" id="wb-panel-backlog"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="blFilterAll" onclick="switchBlFilter('all')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">全部</button><button class="tab-bar-item" id="blFilterTask" onclick="switchBlFilter('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button><button class="tab-bar-item" id="blFilterReview" onclick="switchBlFilter('review')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">审核</button></div></div><div class="card wb-panel-scroll" style="padding:0;"><div id="backlogItemsContainer"></div></div></div>
               <div class="wb-panel" id="wb-panel-task">
@@ -2134,7 +2129,6 @@
               </div>
               <div class="wb-panel" id="wb-panel-project"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div class="select-wrap"><select id="wbProjectFilter" onchange="onWbProjectFilterChange()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div><div id="wbProjectInfo" style="font-size:12px;color:var(--text-muted);"></div><div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="wbProjectViewBoard" onclick="switchWbProjectView('board')" style="font-size:12px;padding:4px 12px;border-radius:3px;border:none;cursor:pointer;">阶段看板</button><button class="tab-bar-item" id="wbProjectViewRelease" onclick="switchWbProjectView('release')" style="font-size:12px;padding:4px 12px;border-radius:3px;border:none;cursor:pointer;background:transparent;color:var(--text-muted);">项目总览</button></div></div></div><div id="wbProjectBoardWrap" class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div><div id="wbProjectReleaseWrap" class="card wb-panel-scroll" style="padding:12px;display:none;"><div id="wbProjectReleaseBoard"></div></div></div>
               <div class="wb-panel" id="wb-panel-timeline" style="overflow:hidden;width:100%"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="tlModeProject" onclick="switchTimelineMode('project')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button><button class="tab-bar-item" id="tlModeTask" onclick="switchTimelineMode('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button></div><div id="tlProjectFilterWrap" style="display:none;"><select id="timelineProjectFilter" onchange="renderWbTimeline()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div class="timeline-container" id="timelineContainer"></div></div></div>
-              <div class="wb-panel" id="wb-panel-burndown"><div class="card wb-panel-scroll" style="padding:16px;"><div class="burndown-container" id="burndownContainer"></div></div></div>
             </div>
           </div>
 
@@ -4119,7 +4113,7 @@ function updateRewardUpperLimit() {
     }
   }
   var upperLimit = Math.round(baseValue * 30 + difficulty * 1.5);
-  hintEl.textContent = '此知识类型的奖励上限额：' + upperLimit + ' RP（基础贡献值 ' + baseValue + ' × 30 + 难度系数 ' + difficulty + ' × 1.5）';
+  hintEl.textContent = '此知识类型的奖励上限额：' + upperLimit + ' RP';
 }
 
 var _deptUsers = [
@@ -7174,7 +7168,6 @@ function switchWbTab(tab) {
   if (tab === 'project') renderWbProjects();
   if (tab === 'task') { renderWbKanban(); }
   if (tab === 'timeline') renderWbTimeline();
-  if (tab === 'burndown') renderBurndown();
 }
 
 var wbProjectViewMode = 'board';
@@ -7269,20 +7262,18 @@ function renderOverview() {
 
   // KPI Cards
   var activeProjects = projects.filter(function(p) { return p.stage !== 'closed'; }).length;
-  var totalBudget = projects.reduce(function(s, p) { return s + p.budget; }, 0);
-  var totalSpent = projects.reduce(function(s, p) { return s + p.spent; }, 0);
+  var activeTasks = tasks.filter(function(t) { return t.status === 'todo' || t.status === 'in_progress' || t.status === 'pending_review'; }).length;
+  var knowledgeUploads = _knowledgeReviews.length;
   var totalTasks = tasks.length;
   var doneTasks = tasks.filter(function(t) { return t.status === 'done' || t.status === 'closed'; }).length;
-  var completionRate = Math.round(doneTasks / totalTasks * 100);
-  var totalPoints = tasks.filter(function(t) { return t.status === 'done'; }).reduce(function(s, t) { return s + t.reward; }, 0);
-  var pendingTasks = tasks.filter(function(t) { return t.status === 'todo' || t.status === 'in_progress'; }).length;
+  var completionRate = totalTasks > 0 ? Math.round(doneTasks / totalTasks * 100) : 0;
+  var totalReward = tasks.filter(function(t) { return t.status === 'done'; }).reduce(function(s, t) { return s + t.reward; }, 0);
 
   var kpis = [
     { label: '在途项目', value: activeProjects, sub: projects.length + ' 个项目总数', growth: '+1', growthColor: '#10b981', color: 'var(--primary)' },
-    { label: '预算使用率', value: Math.round(totalSpent / totalBudget * 100) + '%', sub: totalSpent.toLocaleString() + ' / ' + totalBudget.toLocaleString() + ' RP', growth: '+5.2%', growthColor: '#ef4444', color: 'var(--accent-amber)' },
-    { label: '任务完成率', value: completionRate + '%', sub: doneTasks + ' / ' + totalTasks + ' 个任务', growth: '+8.3%', growthColor: '#10b981', color: '#10b981' },
-    { label: '积分发放', value: totalPoints.toLocaleString(), sub: 'RP 已发放', growth: '+1,200', growthColor: '#10b981', color: '#8b5cf6' },
-    { label: '待办任务', value: pendingTasks, sub: '需处理', growth: '-3', growthColor: '#10b981', color: '#ef4444' }
+    { label: '在途任务', value: activeTasks, sub: tasks.length + ' 个任务总数', growth: '+5', growthColor: '#10b981', color: '#3b82f6' },
+    { label: '知识上传', value: knowledgeUploads, sub: '条知识记录', growth: '+2', growthColor: '#10b981', color: '#8b5cf6' },
+    { label: '奖励发放', value: totalReward.toLocaleString(), sub: 'RP 已发放', growth: '+1,200', growthColor: '#10b981', color: '#f59e0b' }
   ];
 
   document.getElementById('ovKpiCards').innerHTML = kpis.map(function(k) {
@@ -7305,40 +7296,51 @@ function renderOverview() {
     var pDone = pTasks.filter(function(t) { return t.status === 'done' || t.status === 'closed'; }).length;
     var pPct = pTasks.length > 0 ? Math.round(pDone / pTasks.length * 100) : 0;
     var sColor = stageColors[p.stage] || '#64748b';
-    budgetHtml += '<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0;width:100%;">' +
-      '<span style="width:6px;height:6px;border-radius:50%;background:' + sColor + ';flex-shrink:0;"></span>' +
-      '<span style="flex:0 0 180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;">' + p.name + '</span>' +
-      '<span style="flex:0 0 50px;color:var(--text-muted);">' + (stageLabels[p.stage] || '') + '</span>' +
-      '<div style="flex:1;height:6px;background:var(--border-light);border-radius:3px;overflow:hidden;"><div style="height:6px;width:' + pPct + '%;background:' + sColor + ';border-radius:3px;"></div></div>' +
-      '<span style="flex:0 0 36px;font-weight:600;color:' + sColor + ';text-align:right;">' + pPct + '%</span>' +
-      '<span style="flex:0 0 180px;color:var(--text-muted);font-size:11px;text-align:right;">' + (p.startDate || '-') + ' ~ ' + (p.endDate || '-') + '</span>' +
+    budgetHtml += '<div style="padding:8px 0;border-bottom:1px solid var(--border-light);">' +
+      '<div style="display:flex;align-items:center;gap:8px;font-size:12px;width:100%;">' +
+        '<span style="width:6px;height:6px;border-radius:50%;background:' + sColor + ';flex-shrink:0;"></span>' +
+        '<span style="flex:0 0 150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;">' + p.name + '</span>' +
+        '<div style="flex:1;height:6px;background:var(--border-light);border-radius:3px;overflow:hidden;"><div style="height:6px;width:' + pPct + '%;background:' + sColor + ';border-radius:3px;"></div></div>' +
+        '<span style="flex:0 0 36px;font-weight:600;color:' + sColor + ';text-align:right;">' + pPct + '%</span>' +
+        '<span style="flex:0 0 50px;color:var(--text-muted);">' + (stageLabels[p.stage] || '') + '</span>' +
+      '</div>' +
+      '<div style="display:flex;gap:12px;font-size:11px;color:var(--text-muted);margin-top:4px;padding-left:14px;">' +
+        '<span>负责人: ' + (p.lead || '-') + '</span>' +
+        '<span>任务: ' + pDone + '/' + pTasks.length + '</span>' +
+        '<span>' + (p.startDate || '-') + ' ~ ' + (p.endDate || '-') + '</span>' +
+      '</div>' +
     '</div>';
   });
   budgetHtml += '</div>';
   document.getElementById('ovChartProjectProgress').innerHTML = budgetHtml;
 
-  // Chart 2: Task Completion (donut with CSS)
-  var donutHtml = '<div style="display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;padding:20px 0;">' +
-    '<div style="position:relative;width:120px;height:120px;">' +
-      '<svg viewBox="0 0 36 36" style="width:120px;height:120px;transform:rotate(-90deg);">' +
-        '<circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--border-light)" stroke-width="3"/>' +
-        '<circle cx="18" cy="18" r="15.915" fill="none" stroke="var(--primary)" stroke-width="3" stroke-dasharray="' + completionRate + ' ' + (100 - completionRate) + '" stroke-linecap="round"/>' +
-      '</svg>' +
-      '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">' +
-        '<div style="font-size:24px;font-weight:700;color:var(--text);">' + completionRate + '%</div>' +
-        '<div style="font-size:11px;color:var(--text-muted);">完成率</div>' +
-      '</div>' +
-    '</div>' +
-    '<div style="display:flex;gap:16px;font-size:12px;">' +
-      '<div style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--primary);"></span>已完成 ' + doneTasks + '</div>' +
-      '<div style="display:flex;align-items:center;gap:4px;"><span style="width:8px;height:8px;border-radius:50%;background:var(--border-light);"></span>未完成 ' + (totalTasks - doneTasks) + '</div>' +
-    '</div>' +
-  '</div>';
-  document.getElementById('ovChartTaskCompletion').innerHTML = donutHtml;
+  // Chart 2: Quarterly Burndown (compact, reusing .burndown-* CSS)
+  var quarters = [
+    { label:'Q1', remaining:42, completed:18, added:8 },
+    { label:'Q2', remaining:35, completed:25, added:12 },
+    { label:'Q3', remaining:20, completed:30, added:6 },
+    { label:'Q4', remaining:15, completed:5, added:3 }
+  ];
+  var maxVal = 50;
+  var barH = 150;
+  var bHtml = '<div class="burndown-legend"><span class="legend-item"><span class="legend-dot" style="background:var(--accent-emerald);"></span>已完成</span><span class="legend-item"><span class="legend-dot" style="background:var(--primary);"></span>剩余任务</span><span class="legend-item"><span class="legend-dot" style="background:var(--accent-blue);"></span>新增任务</span></div>';
+  bHtml += '<div class="burndown-chart" style="min-height:200px;"><div class="burndown-y-axis">';
+  for (var v = 50; v >= 0; v -= 10) bHtml += '<span>' + v + '</span>';
+  bHtml += '</div><div class="burndown-bars-area" style="padding-bottom:30px;">';
+  quarters.forEach(function(q) {
+    bHtml += '<div class="burndown-bar-wrap"><div class="burndown-bar-stack">';
+    if (q.added) bHtml += '<div class="burndown-bar-seg added" style="height:' + (q.added / maxVal * barH) + 'px;">+' + q.added + '</div>';
+    bHtml += '<div class="burndown-bar-seg remaining" style="height:' + (q.remaining / maxVal * barH) + 'px;">' + q.remaining + '</div>';
+    if (q.completed) bHtml += '<div class="burndown-bar-seg completed" style="height:' + (q.completed / maxVal * barH) + 'px;">-' + q.completed + '</div>';
+    bHtml += '</div>';
+    bHtml += '<div class="burndown-bar-label">' + q.label + '</div></div>';
+  });
+  bHtml += '</div></div>';
+  document.getElementById('ovChartBurndown').innerHTML = bHtml;
 
   // Chart 3: Points Trend (line chart with CSS bars)
   var months = ['1月','2月','3月','4月','5月','6月'];
-  var pointsData = [3200, 4500, 3800, 5200, 6100, totalPoints || 5800];
+  var pointsData = [3200, 4500, 3800, 5200, 6100, totalReward || 5800];
   var maxPoints = Math.max.apply(null, pointsData);
   var trendHtml = '<div style="display:flex;align-items:flex-end;justify-content:space-around;height:160px;gap:8px;padding:0 10px;">';
   pointsData.forEach(function(v, i) {
@@ -7391,61 +7393,38 @@ function renderOverview() {
   deptHtml += '</div>';
   document.getElementById('ovChartDeptContribution').innerHTML = deptHtml;
 
-  // Leader Todos
-  var leaderTodos = tasks.filter(function(t) {
-    return t.assignee === '张明远' && (t.status === 'todo' || t.status === 'in_progress' || t.status === 'pending_review');
+  // Leader Todos (only pending_review tasks + knowledge reviews)
+  var leaderTodos = [];
+  tasks.forEach(function(t) {
+    if (t.assignee === '张明远' && t.status === 'pending_review') {
+      leaderTodos.push({ id: t.id, title: t.title, deadline: t.deadline, status: 'pending_review', projectId: t.projectId, type: 'task' });
+    }
+  });
+  _knowledgeReviews.forEach(function(r) {
+    if (r.status === 'pending_review') {
+      leaderTodos.push({ id: r.id, title: r.title, deadline: (r.uploadTime || '').split(' ')[0] || '-', status: 'pending_review', projectId: '', type: 'knowledge' });
+    }
   });
   document.getElementById('ovTodoCount').textContent = leaderTodos.length + ' 项';
   var todoHtml = '';
   if (leaderTodos.length === 0) {
     todoHtml = '<div style="text-align:center;padding:40px 0;color:var(--text-muted);font-size:13px;">暂无待办</div>';
   } else {
-    var statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回中' };
-    var statusColors = { todo:'#9ca3af', in_progress:'#3b82f6', pending_review:'#f59e0b', rejected:'#ef4444' };
     leaderTodos.forEach(function(t) {
       var proj = projects.find(function(p) { return p.id === t.projectId; });
-      var color = statusColors[t.status] || '#9ca3af';
-      todoHtml += '<div style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--border-light);border-radius:3px;cursor:pointer;" onclick="openTaskDetail(\'' + t.id + '\')">' +
+      var color = '#f59e0b';
+      var clickFn = t.type === 'knowledge' ? 'openKnowledgeReviewDetail(\'' + t.id + '\')' : 'openTaskDetail(\'' + t.id + '\')';
+      todoHtml += '<div style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--border-light);border-radius:3px;cursor:pointer;" onclick="' + clickFn + '">' +
         '<span style="width:6px;height:6px;border-radius:50%;background:' + color + ';flex-shrink:0;"></span>' +
         '<div style="flex:1;min-width:0;">' +
           '<div style="font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + t.title + '</div>' +
-          '<div style="font-size:11px;color:var(--text-muted);">' + (proj ? proj.name : '') + ' · ' + t.deadline + '</div>' +
+          '<div style="font-size:11px;color:var(--text-muted);">' + (proj ? proj.name : (t.type === 'knowledge' ? '知识审核' : '')) + ' · ' + t.deadline + '</div>' +
         '</div>' +
-        '<span style="font-size:11px;color:var(--text-muted);">' + statusLabels[t.status] + '</span>' +
+        '<span style="font-size:11px;color:var(--text-muted);">待审核</span>' +
       '</div>';
     });
   }
   document.getElementById('ovTodoList').innerHTML = todoHtml;
-
-  // Project Progress
-  var stageLabels = { research:'调研', initiation:'立项', execution:'执行', review:'验收', closed:'结项' };
-  var stageColors = { research:'#f59e0b', initiation:'#8b5cf6', execution:'#10b981', review:'#3b82f6', closed:'#64748b' };
-  var projHtml = '<div style="display:flex;flex-direction:column;gap:10px;">';
-  projects.forEach(function(p) {
-    var pct = Math.round((p.spent + p.frozen) / p.budget * 100);
-    var pTasks = tasks.filter(function(t) { return t.projectId === p.id; });
-    var pDone = pTasks.filter(function(t) { return t.status === 'done' || t.status === 'closed'; }).length;
-    var pPct = pTasks.length > 0 ? Math.round(pDone / pTasks.length * 100) : 0;
-    projHtml += '<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border-light);">' +
-      '<div style="flex:1;min-width:0;">' +
-        '<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;">' +
-          '<span style="font-size:13px;font-weight:500;">' + p.name + '</span>' +
-          '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:' + (stageColors[p.stage] || '#64748b') + ';"></span>' +
-          '<span style="font-size:11px;color:var(--text-muted);">' + (stageLabels[p.stage] || '') + '</span>' +
-        '</div>' +
-        '<div style="display:flex;gap:12px;font-size:11px;color:var(--text-muted);">' +
-          '<span>负责人: ' + p.lead + '</span>' +
-          '<span>任务: ' + pDone + '/' + pTasks.length + '</span>' +
-          '<span>预算: ' + pct + '%</span>' +
-        '</div>' +
-      '</div>' +
-      '<div style="width:60px;text-align:right;">' +
-        '<div style="font-size:18px;font-weight:700;color:var(--primary);">' + pPct + '%</div>' +
-      '</div>' +
-    '</div>';
-  });
-  projHtml += '</div>';
-  document.getElementById('ovProjectProgress').innerHTML = projHtml;
 }
 
 function renderWbStats() {
@@ -7456,16 +7435,14 @@ function renderWbStats() {
   var activeTasks = tasks.filter(function(t) { return t.status === 'in_progress'; }).length;
   var monthlyUploads = 3;
   var doneTasks = tasks.filter(function(t) { return t.status === 'done'; }).length;
-  var archivedProjects = projects.filter(function(p) { return p.stage === 'closed'; }).length;
   var stats = [
     { label: '待办任务', value: pendingTasks },
     { label: '在途项目', value: activeProjects },
     { label: '在途任务', value: activeTasks },
     { label: '本月上传知识数', value: monthlyUploads },
-    { label: '已完成任务', value: doneTasks },
-    { label: '已归档项目', value: archivedProjects }
+    { label: '已完成任务', value: doneTasks }
   ];
-  bar.style.gridTemplateColumns = 'repeat(6,1fr)';
+  bar.style.gridTemplateColumns = 'repeat(5,1fr)';
   bar.innerHTML = stats.map(function(s) {
     return '<div class="card" style="padding:16px;">' +
       '<div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;">' + s.label + '</div>' +
