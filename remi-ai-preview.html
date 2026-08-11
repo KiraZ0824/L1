@@ -1915,11 +1915,11 @@
       <div class="sidebar-divider"></div>
       <button class="sidebar-btn" data-page="projects">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-        <span class="sidebar-tooltip">项目管理</span>
+        <span class="sidebar-tooltip">项目任务管理</span>
       </button>
-      <button class="sidebar-btn" data-page="tasks">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-        <span class="sidebar-tooltip">任务管理</span>
+      <button class="sidebar-btn" data-page="knowledge-tasks">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/><line x1="9" y1="11" x2="15" y2="11"/></svg>
+        <span class="sidebar-tooltip">知识任务管理</span>
       </button>
       <button class="sidebar-btn" data-page="knowledge">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.5L10.5 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
@@ -2138,8 +2138,8 @@
           <div style="margin-bottom:24px;">
             <div style="min-width:0">
               <div class="wb-tabs">
-                <button class="wb-tab active" onclick="switchWbTab('backlog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>Backlog</button>
-                <button class="wb-tab" onclick="switchWbTab('task')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>任务</button>
+                <button class="wb-tab active" onclick="switchWbTab('backlog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>待办任务</button>
+                <button class="wb-tab" onclick="switchWbTab('task')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>项目任务</button>
                 <button class="wb-tab" onclick="switchWbTab('project')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>项目</button>
                 <button class="wb-tab" onclick="switchWbTab('timeline')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><polyline points="8 5 3 12 8 19"/></svg>时间线</button>
               </div>
@@ -2148,10 +2148,8 @@
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;">
                   <div class="select-wrap"><select id="wbTaskProjectFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div>
                   <div class="select-wrap"><select id="wbTaskPriorityFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部优先级</option><option>P0</option><option>P1</option><option>P2</option><option>P3</option></select></div>
-                  <div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="tvKanban" onclick="switchWbTaskView('kanban')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">看板</button><button class="tab-bar-item" id="tvList" onclick="switchWbTaskView('list')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">列表</button></div></div>
                 </div>
-                <div id="wbTaskKanbanWrap"><div class="card wb-panel-scroll" style="padding:12px;"><div id="wbKanbanBoard"></div></div></div>
-                <div id="wbTaskListWrap" style="display:none;"><div class="card wb-panel-scroll" style="padding:12px;"><div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;"><div class="conv-search" style="margin-top:0;flex:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="wbListSearch" placeholder="搜索任务..." oninput="renderWbList()" style="font-size:12px;"></div></div><table style="width:100%;border-collapse:collapse;font-size:12px;"><thead><tr style="background:var(--bg);border-bottom:1px solid var(--border-light);"><th style="padding:8px 10px;text-align:left;">任务</th><th style="padding:8px 10px;text-align:left;">项目</th><th style="padding:8px 10px;text-align:left;">优先级</th><th style="padding:8px 10px;text-align:left;">项目阶段</th><th style="padding:8px 10px;text-align:left;">任务状态</th><th style="padding:8px 10px;text-align:left;">负责人</th><th style="padding:8px 10px;text-align:left;">奖励</th><th style="padding:8px 10px;text-align:left;">截止日期</th><th style="padding:8px 10px;text-align:left;">操作</th></tr></thead><tbody id="wbListBody"></tbody></table></div></div>
+                <div class="card wb-panel-scroll" style="padding:12px;"><div id="wbKanbanBoard"></div></div>
               </div>
               <div class="wb-panel" id="wb-panel-project"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div class="select-wrap"><select id="wbProjectFilter" onchange="onWbProjectFilterChange()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div><div id="wbProjectInfo" style="font-size:12px;color:var(--text-muted);"></div><div style="margin-left:auto;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="wbProjectViewBoard" onclick="switchWbProjectView('board')" style="font-size:12px;padding:4px 12px;border-radius:3px;border:none;cursor:pointer;">阶段看板</button><button class="tab-bar-item" id="wbProjectViewRelease" onclick="switchWbProjectView('release')" style="font-size:12px;padding:4px 12px;border-radius:3px;border:none;cursor:pointer;background:transparent;color:var(--text-muted);">项目总览</button></div></div></div><div id="wbProjectBoardWrap" class="card wb-panel-scroll" style="padding:12px;"><div id="wbProjectCards"></div></div><div id="wbProjectReleaseWrap" class="card wb-panel-scroll" style="padding:12px;display:none;"><div id="wbProjectReleaseBoard"></div></div></div>
               <div class="wb-panel" id="wb-panel-timeline" style="overflow:hidden;width:100%"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="tlModeProject" onclick="switchTimelineMode('project')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">项目</button><button class="tab-bar-item" id="tlModeTask" onclick="switchTimelineMode('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button></div><div id="tlProjectFilterWrap" style="display:none;"><select id="timelineProjectFilter" onchange="renderWbTimeline()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div></div><div class="card wb-panel-scroll" style="padding:12px;"><div class="timeline-container" id="timelineContainer"></div></div></div>
@@ -2209,6 +2207,49 @@
               </div>
             </div>
             <div id="pointsLineChart" style="width:100%;height:180px;position:relative;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== KNOWLEDGE TASKS ===== -->
+      <div class="page" id="page-knowledge-tasks">
+        <div class="page-inner">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+              <h1 style="font-size:20px;font-weight:700;">知识任务管理</h1>
+              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">知识上传任务 · 审核流程 · 贡献积分追踪</p>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <select id="ktStatusFilter" onchange="renderKnowledgeTasks()" style="padding:6px 10px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:var(--card);color:var(--text);cursor:pointer;outline:none;">
+                <option value="">全部状态</option>
+                <option value="pending_review">待审核</option>
+                <option value="done">已通过</option>
+              </select>
+              <input id="ktSearchInput" oninput="renderKnowledgeTasks()" placeholder="搜索知识名称..." style="padding:6px 10px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:var(--card);color:var(--text);outline:none;width:180px;">
+            </div>
+          </div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>知识编号</th>
+                    <th>知识标题</th>
+                    <th>知识类型</th>
+                    <th>上传人</th>
+                    <th>贡献者</th>
+                    <th>所属部门</th>
+                    <th>知识来源</th>
+                    <th>奖励积分</th>
+                    <th>上传时间</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
+                <tbody id="ktTableBody"></tbody>
+              </table>
+            </div>
+            <div id="ktPager"></div>
           </div>
         </div>
       </div>
@@ -2383,7 +2424,7 @@
                 <div><div style="font-size:11px;color:var(--text-muted);">部门总数</div><div style="font-size:20px;font-weight:700;margin-top:2px;">7</div></div>
                 <div><div style="font-size:11px;color:var(--text-muted);">总人数</div><div style="font-size:20px;font-weight:700;margin-top:2px;">28</div></div>
                 <div><div style="font-size:11px;color:var(--text-muted);">管理员</div><div style="font-size:20px;font-weight:700;margin-top:2px;">2</div></div>
-                <div><div style="font-size:11px;color:var(--text-muted);">审核员</div><div style="font-size:20px;font-weight:700;margin-top:2px;">1</div></div>
+                <div><div style="font-size:11px;color:var(--text-muted);">在线</div><div style="font-size:20px;font-weight:700;margin-top:2px;">12</div></div>
               </div>
             </div>
           </div>
@@ -2391,7 +2432,7 @@
             <div style="display:flex;gap:8px;align-items:center;margin-bottom:12px;flex-wrap:wrap;">
               <input type="text" id="userSearchInput" placeholder="搜索姓名/邮箱/部门..." oninput="filterUserList()" style="flex:1;min-width:180px;padding:8px 10px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;">
               <select id="userDeptFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;"><option value="">全部部门</option><option>总经办</option><option>BD</option><option>合规部</option><option>产品研发部</option><option>技术部</option><option>产品部</option><option>运维部</option><option>财务部</option><option>人事部</option><option>战略投资部</option></select>
-              <select id="userRoleFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;"><option value="">全部角色</option><option>管理员</option><option>审核员</option><option>普通用户</option></select>
+              <select id="userRoleFilter" onchange="filterUserList()" style="padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;"><option value="">全部角色</option><option>管理员</option><option>普通用户</option></select>
               <div id="userTableBody_colsel" style="margin-left:auto;"></div>
             </div>
             <div class="table-wrap">
@@ -2417,7 +2458,7 @@
                   <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">运营团队</td><td style="text-align:center;padding:4px 4px;">5</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">项目中心全生命周期管理，含特邀管理与运营配置</td><td style="text-align:center;padding:4px 4px;"><span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">不可编辑</span></td></tr>
                   <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">发布者</td><td style="text-align:center;padding:4px 4px;">12</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">可以创建与管理项目特邀，但无法调整系统配置</td><td style="text-align:center;padding:4px 4px;"><span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">不可编辑</span></td></tr>
                   <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">普通终端用户</td><td style="text-align:center;padding:4px 4px;">128</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">外部注册用户默认角色，仅可参与被分配的特邀任务</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('普通终端用户')">编辑权限</button></td></tr>
-                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">内容审核员</td><td style="text-align:center;padding:4px 4px;">3</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">负责内容质量审核与合规检查</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('内容审核员')">编辑权限</button></td></tr>
+                  <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">普通用户</td><td style="text-align:center;padding:4px 4px;">3</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">日常使用平台的基础权限</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('普通用户')">编辑权限</button></td></tr>
                   <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">技术支持</td><td style="text-align:center;padding:4px 4px;">4</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">负责系统运维与技术问题处理</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('技术支持')">编辑权限</button></td></tr>
                   <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">财务专员</td><td style="text-align:center;padding:4px 4px;">2</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">负责费用结算与财务对账</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('财务专员')">编辑权限</button></td></tr>
                   <tr><td style="text-align:left;padding:4px 14px;font-weight:600;">访客</td><td style="text-align:center;padding:4px 4px;">0</td><td style="color:var(--text-muted);font-size:12px;padding:4px 14px;">无特殊权限的只读角色</td><td style="text-align:center;padding:4px 4px;"><button class="btn btn-xs btn-outline" onclick="showPermissionPanel('访客')">编辑权限</button></td></tr>
@@ -2588,6 +2629,11 @@
       </div><!-- ===== PROJECT MANAGEMENT ===== -->
       <div class="page" id="page-projects">
         <div class="page-inner">
+          <div class="tabs" style="margin-bottom:20px;">
+            <button class="tab active" onclick="switchPTTab(this,'projects')">项目管理</button>
+            <button class="tab" onclick="switchPTTab(this,'tasks')">任务管理</button>
+          </div>
+          <div id="pt-projects-content">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
             <div>
               <h1 style="font-size:20px;font-weight:700;">项目管理</h1>
@@ -2603,9 +2649,8 @@
           <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
             <div class="conv-search" style="margin-top:0;flex:1;max-width:280px;">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-              <input type="text" id="projectSearch" placeholder="搜索项目名称/编号..." oninput="renderProjects()">
+              <input type="text" id="projectSearch" placeholder="搜索项目名称/编号/阶段..." oninput="renderProjects()">
             </div>
-            <div class="select-wrap"><select id="projectStatusFilter" onchange="renderProjects()"><option value="all">全部状态</option><option value="research">调研阶段</option><option value="initiation">立项阶段</option><option value="execution">项目执行</option><option value="review">项目验收</option><option value="closed">项目结项</option></select></div>
             <div class="select-wrap"><select id="projectLeadFilter" onchange="renderProjects()"><option value="all">全部负责人</option><option>张明远</option><option>李晓华</option><option>赵明</option><option>王思远</option><option>陈雨桐</option></select></div>
             <div class="select-wrap"><select id="projectSort" onchange="renderProjects()"><option value="created">按创建时间</option><option value="budget">按预算</option><option value="progress">按进度</option></select></div>
             <div id="projectListBody_colsel" style="margin-left:auto;"></div>
@@ -2613,18 +2658,14 @@
           <div id="projectListView" class="card" style="padding:0;overflow:hidden;">
             <div class="table-wrap" style="border:none;">
               <table>
-                <thead><tr><th>项目名称</th><th>编号</th><th>负责人</th><th>状态</th><th>预算</th><th>进度</th><th>关联任务</th><th>操作</th></tr></thead>
+                <thead><tr><th>项目名称</th><th>编号</th><th>描述</th><th>类型</th><th>阶段</th><th>负责人</th><th>部门</th><th>项目成员</th><th>开始日期</th><th>结束日期</th><th>预算使用</th><th>任务数</th><th>操作</th></tr></thead>
                 <tbody id="projectListBody"></tbody>
               </table>
             </div>
             <div id="projectListBody_pager"></div>
           </div>
         </div>
-      </div>
-
-      <!-- ===== TASK MANAGEMENT ===== -->
-      <div class="page" id="page-tasks">
-        <div class="page-inner">
+          <div id="pt-tasks-content" style="display:none;">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
             <div>
               <h1 style="font-size:20px;font-weight:700;">任务管理</h1>
@@ -2664,6 +2705,7 @@
             </div>
             <div id="taskListBody_pager"></div>
           </div>
+        </div>
         </div>
       </div>
 
@@ -2740,6 +2782,7 @@
             <button class="tab active" onclick="switchPTConfigTab(this,'project')">项目配置</button>
             <button class="tab" onclick="switchPTConfigTab(this,'task')">任务配置</button>
             <button class="tab" onclick="switchPTConfigTab(this,'knowledge')">知识类型配置</button>
+            <button class="tab" onclick="switchPTConfigTab(this,'source')">知识来源配置</button>
             <button class="tab" onclick="switchPTConfigTab(this,'rules')">积分规则</button>
           </div>
           <div id="ptc-project">
@@ -2794,6 +2837,29 @@
               </div>
             </div>
           </div>
+          <div id="ptc-source" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">知识来源配置</div>
+                <button class="btn btn-sm" onclick="addKnowledgeSource()">+ 新增来源</button>
+              </div>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th style="min-width:100px;">来源名称</th>
+                      <th style="min-width:140px;">英文名称</th>
+                      <th>描述</th>
+                      <th style="width:80px;">排序</th>
+                      <th style="width:65px;">状态</th>
+                      <th style="min-width:50px;">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="kbSourceTableBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
           <div id="ptc-rules" style="display:none;">
             <div style="display:flex;gap:20px;">
               <div style="flex:1;">
@@ -2809,12 +2875,12 @@
                 <div style="font-size:14px;font-weight:600;margin-bottom:12px;">难度系数积分规则</div>
                 <div class="table-wrap">
                   <table>
-                    <thead><tr><th>难度系数范围</th><th>积分倍率</th><th>说明</th></tr></thead>
+                    <thead><tr><th>难度系数范围</th><th>对应积分</th><th>说明</th></tr></thead>
                     <tbody id="pointsDifficultyRuleBody"></tbody>
                   </table>
                 </div>
                 <div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:3px;font-size:13px;color:var(--text-secondary);">
-                  <strong>规则说明：</strong>贡献积分 =〔基础贡献值 × 对应积分 + 难度系数 × 积分倍率〕
+                  <strong>规则说明：</strong>贡献积分 = 基础贡献值 × 对应积分 + 难度系数 × 对应积分
                 </div>
               </div>
             </div>
@@ -3148,6 +3214,31 @@
   </div>
 </div>
 
+<!-- Dislike Feedback Modal -->
+<div class="modal-overlay" id="dislikeModalOverlay" style="display:none;z-index:10001;" onclick="closeDislikeModal()">
+  <div class="modal" style="width:440px;background:#fff;border-radius:8px;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,0.15);position:relative;" onclick="event.stopPropagation()">
+    <h3 style="font-size:16px;font-weight:700;margin-bottom:20px;">消息反馈</h3>
+    <input type="hidden" id="dislikeMsgIdx" value="">
+    <div style="display:flex;flex-direction:column;gap:16px;">
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">问题类型</label>
+        <div style="display:flex;gap:8px;">
+          <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;padding:6px 12px;border:1px solid var(--border-light);border-radius:6px;" onclick="document.querySelectorAll('#dislikeModalOverlay .type-label').forEach(l=>{l.style.borderColor='var(--border-light)';l.style.background='transparent';l.style.color='var(--text)';});this.style.borderColor='var(--primary)';this.style.background='rgba(59,130,246,0.05)';this.style.color='var(--primary)';"><input type="radio" name="dislikeType" value="ai_bug" style="display:none;"><span class="type-label">AI Bug</span></label>
+          <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer;padding:6px 12px;border:1px solid var(--border-light);border-radius:6px;" onclick="document.querySelectorAll('#dislikeModalOverlay .type-label').forEach(l=>{l.style.borderColor='var(--border-light)';l.style.background='transparent';l.style.color='var(--text)';});this.style.borderColor='var(--primary)';this.style.background='rgba(59,130,246,0.05)';this.style.color='var(--primary)';"><input type="radio" name="dislikeType" value="understanding_error" style="display:none;"><span class="type-label">理解错误</span></label>
+        </div>
+      </div>
+      <div>
+        <label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">详细描述</label>
+        <textarea id="dislikeTextInput" placeholder="请描述具体问题..." style="width:100%;min-height:80px;padding:8px 12px;border:1px solid var(--border-light);border-radius:6px;font-size:13px;outline:none;box-sizing:border-box;resize:vertical;font-family:inherit;"></textarea>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:20px;">
+      <button class="btn btn-sm btn-outline" onclick="closeDislikeModal()">取消</button>
+      <button class="btn btn-sm btn-primary" onclick="submitDislikeModal()">提交反馈</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ===== GLOBAL CLICK-OUTSIDE FOR DROPDOWN MENUS =====
 document.addEventListener('click', function(e) {
@@ -3282,6 +3373,62 @@ function navigateTo(page) {
   if (page === 'remi-ai') renderChat();
   if (page === 'knowledge') { vmCurrentPage = 1; vmRenderList(); }
   if (page === 'overview') renderOverview();
+  if (page === 'projects') { renderProjects(); }
+  if (page === 'knowledge-tasks') { renderKnowledgeTasks(); }
+}
+
+function switchPTTab(el, tab) {
+  document.querySelectorAll('#page-projects .tabs .tab').forEach(function(t) { t.classList.remove('active'); });
+  el.classList.add('active');
+  document.getElementById('pt-projects-content').style.display = tab === 'projects' ? '' : 'none';
+  document.getElementById('pt-tasks-content').style.display = tab === 'tasks' ? '' : 'none';
+  if (tab === 'projects') renderProjects();
+  if (tab === 'tasks') { renderKanban(); renderTaskListView(); }
+}
+
+// ===== KNOWLEDGE TASKS =====
+function renderKnowledgeTasks() {
+  var statusFilter = document.getElementById('ktStatusFilter');
+  var searchInput = document.getElementById('ktSearchInput');
+  var statusVal = statusFilter ? statusFilter.value : '';
+  var searchVal = searchInput ? searchInput.value.toLowerCase() : '';
+
+  var filtered = _knowledgeReviews.filter(function(r) {
+    if (r.status === 'rejected') return false;
+    if (statusVal && r.status !== statusVal) return false;
+    if (searchVal && r.title.toLowerCase().indexOf(searchVal) === -1) return false;
+    return true;
+  });
+
+  var statusLabels = { pending_review: '待审核', done: '已通过', rejected: '已不通过' };
+  var statusColors = { pending_review: 'var(--accent-amber)', done: 'var(--accent-emerald)', rejected: 'var(--accent-rose)' };
+
+  var html = '';
+  filtered.forEach(function(r) {
+    var sColor = statusColors[r.status] || 'var(--text-muted)';
+    var sLabel = statusLabels[r.status] || r.status;
+    var clickFn = r.status === 'pending_review' ? 'auditRewardTask(\'' + r.id + '\')' : 'openKnowledgeReviewDetail(\'' + r.id + '\')';
+    var opLabel = r.status === 'pending_review' ? '审核' : '查看';
+
+    html += '<tr style="cursor:pointer;" onclick="' + clickFn + '">' +
+      '<td style="font-family:monospace;font-size:12px;color:var(--text-muted);">' + (r.keyId || r.id.toUpperCase()) + '</td>' +
+      '<td style="font-size:12px;font-weight:600;">' + r.title + '</td>' +
+      '<td style="font-size:12px;">' + (r.primaryType || '-') + (r.subTag ? ' / ' + r.subTag : '') + '</td>' +
+      '<td style="font-size:12px;">' + (r.uploader || '-') + '</td>' +
+      '<td style="font-size:12px;">' + (r.contributor || '-') + '</td>' +
+      '<td style="font-size:12px;">' + (r.dept || '-') + '</td>' +
+      '<td style="font-size:12px;">' + (r.source || '-') + '</td>' +
+      '<td style="font-size:12px;font-weight:600;color:var(--primary);">' + (r.reward > 0 ? r.reward + ' RP' : '-') + '</td>' +
+      '<td style="font-size:11px;color:var(--text-muted);">' + (r.uploadTime || '-') + '</td>' +
+      '<td><span style="display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:500;color:' + sColor + ';"><span style="width:6px;height:6px;border-radius:50%;background:' + sColor + ';"></span>' + sLabel + '</span></td>' +
+      '<td><button class="btn btn-xs" onclick="event.stopPropagation();' + clickFn + '">' + opLabel + '</button></td>' +
+    '</tr>';
+  });
+
+  if (!html) html = '<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--text-muted);font-size:13px;">暂无知识任务</td></tr>';
+
+  var tbody = document.getElementById('ktTableBody');
+  if (tbody) tbody.innerHTML = html;
 }
 
 // ===== CHAT =====
@@ -3370,14 +3517,8 @@ function renderMessages() {
               <svg viewBox="0 0 24 24" width="14" height="14" fill="${m.feedback === 'dislike' ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
             </button>
           </div>
-          ${m.feedback === 'dislike' && m.showDislikeInput ? `
-            <div class="msg-dislike-feedback" style="margin-top:6px;">
-              <textarea id="dislikeInput_${idx}" placeholder="请输入反馈原因（非必填）..." style="width:100%;max-width:400px;min-height:40px;padding:6px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;box-sizing:border-box;background:var(--card);resize:vertical;font-family:inherit;"></textarea>
-              <button class="btn btn-xs btn-primary" style="margin-top:4px;padding:3px 10px;font-size:11px;" onclick="submitDislikeFeedback(${idx})">提交反馈</button>
-            </div>
-          ` : ''}
           ${m.feedback === 'dislike' && m.dislikeReason ? `
-            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">反馈原因：${m.dislikeReason}</div>
+            <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">反馈：${m.dislikeType ? '[' + (m.dislikeType === 'ai_bug' ? 'AI Bug' : '理解错误') + '] ' : ''}${m.dislikeReason}</div>
           ` : ''}
         ` : ''}
         <div class="msg-time">${m.time}</div>
@@ -3409,23 +3550,47 @@ function feedbackMessage(idx, type) {
   if (!m) return;
   if (m.feedback === type) {
     m.feedback = null;
-    m.showDislikeInput = false;
     m.dislikeReason = '';
+    m.dislikeType = '';
+    renderMessages();
   } else {
     m.feedback = type;
-    m.showDislikeInput = (type === 'dislike');
-    m.dislikeReason = '';
+    if (type === 'dislike') {
+      openDislikeModal(idx);
+    } else {
+      m.dislikeReason = '';
+      m.dislikeType = '';
+      renderMessages();
+    }
   }
-  renderMessages();
 }
 
-function submitDislikeFeedback(idx) {
+function openDislikeModal(idx) {
+  document.getElementById('dislikeMsgIdx').value = idx;
+  document.getElementById('dislikeTextInput').value = '';
+  document.querySelectorAll('#dislikeModalOverlay input[name="dislikeType"]').forEach(function(r) { r.checked = false; });
+  document.querySelectorAll('#dislikeModalOverlay .type-label').forEach(function(l) {
+    l.parentElement.style.borderColor = 'var(--border-light)';
+    l.parentElement.style.background = 'transparent';
+    l.parentElement.style.color = 'var(--text)';
+  });
+  document.getElementById('dislikeModalOverlay').style.display = 'flex';
+}
+
+function closeDislikeModal() {
+  document.getElementById('dislikeModalOverlay').style.display = 'none';
+}
+
+function submitDislikeModal() {
+  var idx = document.getElementById('dislikeMsgIdx').value;
   var m = chatMessages[idx];
   if (!m) return;
-  var input = document.getElementById('dislikeInput_' + idx);
-  var reason = input ? input.value.trim() : '';
+  var typeEl = document.querySelector('#dislikeModalOverlay input[name="dislikeType"]:checked');
+  var type = typeEl ? typeEl.value : '';
+  var reason = document.getElementById('dislikeTextInput').value.trim();
+  m.dislikeType = type;
   m.dislikeReason = reason || '无';
-  m.showDislikeInput = false;
+  closeDislikeModal();
   renderMessages();
 }
 
@@ -3713,12 +3878,12 @@ function toggleOrg(headerEl) {
 var userListData = [
   { name:'张明远', dept:'技术部', role:'管理员', email:'zhang@remi.ai', status:'在线', active:'刚刚', color:'var(--primary)' },
   { name:'李晓华', dept:'产品部', role:'普通用户', email:'li@remi.ai', status:'在线', active:'5分钟前', color:'#10b981' },
-  { name:'王思远', dept:'技术部', role:'审核员', email:'wang@remi.ai', status:'在线', active:'15分钟前', color:'#f59e0b' },
-  { name:'陈雨', dept:'技术部', role:'审核员', email:'chen@remi.ai', status:'在线', active:'20分钟前', color:'#8b5cf6' },
+  { name:'王思远', dept:'技术部', role:'普通用户', email:'wang@remi.ai', status:'在线', active:'15分钟前', color:'#f59e0b' },
+  { name:'陈雨', dept:'技术部', role:'普通用户', email:'chen@remi.ai', status:'在线', active:'20分钟前', color:'#8b5cf6' },
   { name:'赵明', dept:'合规部', role:'普通用户', email:'zhao@remi.ai', status:'离线', active:'1天前', color:'#ef4444' },
   { name:'刘思琪', dept:'财务部', role:'普通用户', email:'liu@remi.ai', status:'在线', active:'30分钟前', color:'#3b82f6' },
   { name:'孙浩然', dept:'技术部', role:'普通用户', email:'sun@remi.ai', status:'离线', active:'2小时前', color:'#6b7280' },
-  { name:'周静', dept:'产品部', role:'审核员', email:'zhou@remi.ai', status:'在线', active:'10分钟前', color:'#ec4899' },
+  { name:'周静', dept:'产品部', role:'普通用户', email:'zhou@remi.ai', status:'在线', active:'10分钟前', color:'#ec4899' },
   { name:'吴磊', dept:'BD', role:'普通用户', email:'wu@remi.ai', status:'离线', active:'3天前', color:'#14b8a6' },
   { name:'郑芳', dept:'财务部', role:'普通用户', email:'zheng@remi.ai', status:'在线', active:'1小时前', color:'#f97316' },
   { name:'林晓彤', dept:'人事部', role:'管理员', email:'lin@remi.ai', status:'在线', active:'刚刚', color:'#8b5cf6' },
@@ -3766,8 +3931,9 @@ function openAddUserModal() {
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>\n      添加用户',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:12px;">' +
       '<div class="form-row"><div class="form-group"><label class="form-label">姓名 *</label><input class="form-input" id="addUserName" placeholder="输入姓名"></div><div class="form-group"><label class="form-label">邮箱 *</label><input class="form-input" id="addUserEmail" placeholder="输入邮箱" type="email"></div></div>' +
-      '<div class="form-row"><div class="form-group"><label class="form-label">所属部门</label><select class="form-select" id="addUserDept">' + deptOpts + '</select></div><div class="form-group"><label class="form-label">角色</label><select class="form-select" id="addUserRole"><option>普通用户</option><option>审核员</option><option>管理员</option></select></div></div>' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">所属部门</label><select class="form-select" id="addUserDept">' + deptOpts + '</select></div><div class="form-group"><label class="form-label">角色</label><select class="form-select" id="addUserRole"><option>普通用户</option><option>管理员</option></select></div></div>' +
       '<div class="form-row"><div class="form-group"><label class="form-label">手机号</label><input class="form-input" id="addUserPhone" placeholder="输入手机号"></div><div class="form-group"><label class="form-label">状态</label><select class="form-select" id="addUserStatus"><option>在线</option><option>离线</option></select></div></div>' +
+      '<div class="form-row"><div class="form-group"><label class="form-label">部门负责人</label><label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--text);cursor:pointer;padding-top:6px;"><input type="checkbox" id="addUserIsDeptHead" style="width:16px;height:16px;">是否部门负责人</label></div><div class="form-group"></div></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitAddUser()">确认添加</button></div>' +
     '</div>'
   );
@@ -3777,7 +3943,8 @@ function submitAddUser() {
   const name = document.getElementById('addUserName').value.trim();
   const email = document.getElementById('addUserEmail').value.trim();
   if (!name || !email) { alert('请填写姓名和邮箱'); return; }
-  alert('用户 ' + name + ' 添加成功！\n邮箱：' + email);
+  const isDeptHead = document.getElementById('addUserIsDeptHead').checked;
+  alert('用户 ' + name + ' 添加成功！\n邮箱：' + email + '\n部门负责人：' + (isDeptHead ? '是' : '否'));
   closeProjectDetail();
 }
 
@@ -4279,6 +4446,139 @@ var _knowledgeReviews = [
       { type: 'cc', name: '自动抄送', status: 'pending', targets: ['李晓华', '王思远'] },
       { type: 'end', name: '结束', status: 'pending' }
     ]
+  },
+  {
+    id: 'kr3',
+    keyId: 'RemiKR003',
+    title: '产品需求文档PRD-客户管理模块',
+    status: 'done',
+    priority: 'P1',
+    project: '客户管理系统',
+    projectLead: '李晓华',
+    uploader: '王思远',
+    dept: '产品部',
+    contributor: '王思远',
+    ccUsers: ['李晓华'],
+    files: [
+      { name: '客户管理模块PRD.pdf', size: '1.8MB', type: 'pdf' }
+    ],
+    source: '员工创作',
+    primaryType: '需求文档',
+    subTag: '功能需求',
+    baseValue: 7,
+    difficulty: 3,
+    reward: 350,
+    uploadTime: '2026-07-10 09:20',
+    desc: '客户管理模块完整产品需求文档，包含用户画像、功能清单、交互流程图和验收标准。',
+    auditFlow: [
+      { type: 'initiate', name: '发起', status: 'done', operator: '王思远', time: '2026-07-10 09:20', comment: '' },
+      { type: 'review', name: '审核', status: 'done', operators: [
+        { name: '李晓华', status: 'done', time: '2026-07-10 14:00', comment: '需求清晰完整，交互流程合理，通过' },
+        { name: '赵明', status: 'done', time: '2026-07-10 16:30', comment: '验收标准明确，同意发布' }
+      ]},
+      { type: 'cc', name: '自动抄送', status: 'done', targets: ['李晓华'] },
+      { type: 'end', name: '结束', status: 'done' }
+    ]
+  },
+  {
+    id: 'kr4',
+    keyId: 'RemiKR004',
+    title: '合规风控手册-数据安全篇',
+    status: 'done',
+    priority: 'P0',
+    project: '合规体系建设',
+    projectLead: '赵明',
+    uploader: '陈雨桐',
+    dept: '合规部',
+    contributor: '陈雨桐, 赵明',
+    ccUsers: ['赵明'],
+    files: [
+      { name: '数据安全合规手册.pdf', size: '4.2MB', type: 'pdf' },
+      { name: '数据分类分级标准.xlsx', size: '320KB', type: 'xlsx' }
+    ],
+    source: '员工创作',
+    primaryType: '合规与风控',
+    subTag: '数据安全',
+    baseValue: 9,
+    difficulty: 5,
+    reward: 600,
+    uploadTime: '2026-06-28 11:00',
+    desc: '数据安全合规管理手册，涵盖数据分类分级标准、安全管控措施、应急预案及合规检查清单。',
+    auditFlow: [
+      { type: 'initiate', name: '发起', status: 'done', operator: '陈雨桐', time: '2026-06-28 11:00', comment: '' },
+      { type: 'review', name: '审核', status: 'done', operators: [
+        { name: '赵明', status: 'done', time: '2026-06-29 10:00', comment: '内容全面，标准清晰，通过' },
+        { name: '张明远', status: 'done', time: '2026-06-29 15:20', comment: '合规要求覆盖完整，同意发布' }
+      ]},
+      { type: 'cc', name: '自动抄送', status: 'done', targets: ['赵明'] },
+      { type: 'end', name: '结束', status: 'done' }
+    ]
+  },
+  {
+    id: 'kr5',
+    keyId: 'RemiKR005',
+    title: '技术架构设计文档-微服务拆分方案',
+    status: 'done',
+    priority: 'P1',
+    project: '技术架构升级',
+    projectLead: '张明远',
+    uploader: '李晓华',
+    dept: '技术部',
+    contributor: '李晓华, 王思远',
+    ccUsers: ['张明远'],
+    files: [
+      { name: '微服务架构设计方案.pdf', size: '2.7MB', type: 'pdf' },
+      { name: '服务拆分对照表.xlsx', size: '450KB', type: 'xlsx' }
+    ],
+    source: '员工创作',
+    primaryType: '技术文档',
+    subTag: '架构设计',
+    baseValue: 8,
+    difficulty: 6,
+    reward: 500,
+    uploadTime: '2026-07-05 13:45',
+    desc: '微服务架构拆分设计方案，包含领域驱动设计分析、服务边界划分、接口协议和数据一致性保障方案。',
+    auditFlow: [
+      { type: 'initiate', name: '发起', status: 'done', operator: '李晓华', time: '2026-07-05 13:45', comment: '' },
+      { type: 'review', name: '审核', status: 'done', operators: [
+        { name: '王思远', status: 'done', time: '2026-07-05 17:00', comment: '架构设计合理，服务边界清晰' },
+        { name: '张明远', status: 'done', time: '2026-07-06 09:30', comment: '方案可行，数据一致性保障到位，通过' }
+      ]},
+      { type: 'cc', name: '自动抄送', status: 'done', targets: ['张明远'] },
+      { type: 'end', name: '结束', status: 'done' }
+    ]
+  },
+  {
+    id: 'kr6',
+    keyId: 'RemiKR006',
+    title: '项目验收报告-客户管理系统V1.0',
+    status: 'done',
+    priority: 'P1',
+    project: '客户管理系统',
+    projectLead: '李晓华',
+    uploader: '王思远',
+    dept: '产品部',
+    contributor: '王思远',
+    ccUsers: ['李晓华'],
+    files: [
+      { name: '验收报告V1.0.pdf', size: '1.5MB', type: 'pdf' }
+    ],
+    source: '员工创作',
+    primaryType: '产品文档',
+    subTag: '验收报告',
+    baseValue: 5,
+    difficulty: 2,
+    reward: 200,
+    uploadTime: '2026-07-15 10:00',
+    desc: '客户管理系统V1.0版本项目验收报告，包含功能完成度、测试结果和遗留问题清单。',
+    auditFlow: [
+      { type: 'initiate', name: '发起', status: 'done', operator: '王思远', time: '2026-07-15 10:00', comment: '' },
+      { type: 'review', name: '审核', status: 'done', operators: [
+        { name: '李晓华', status: 'done', time: '2026-07-15 15:00', comment: '验收报告内容完整，测试数据充分，通过' }
+      ]},
+      { type: 'cc', name: '自动抄送', status: 'done', targets: ['李晓华'] },
+      { type: 'end', name: '结束', status: 'done' }
+    ]
   }
 ];
 
@@ -4596,14 +4896,17 @@ function closeProjectDetail() {
 // ===== PROJECTS =====
 function renderProjects() {
   const search = (document.getElementById('projectSearch')?.value || '').toLowerCase();
-  const statusFilter = document.getElementById('projectStatusFilter')?.value || 'all';
   const leadFilter = document.getElementById('projectLeadFilter')?.value || 'all';
   const sortBy = document.getElementById('projectSort')?.value || 'created';
 
+  const stageLabels = { research:'调研', initiation:'立项', execution:'执行', review:'验收', closed:'结项' };
+
   let filtered = projects.filter(p => {
-    if (statusFilter !== 'all' && p.stage !== statusFilter) return false;
     if (leadFilter !== 'all' && p.lead !== leadFilter) return false;
-    if (search && !p.name.toLowerCase().includes(search) && !p.id.toLowerCase().includes(search)) return false;
+    if (search) {
+      const stageText = (stageLabels[p.stage] || '') + p.stage;
+      if (!p.name.toLowerCase().includes(search) && !p.id.toLowerCase().includes(search) && !stageText.toLowerCase().includes(search)) return false;
+    }
     return true;
   });
 
@@ -4617,15 +4920,17 @@ function renderProjects() {
     const totalSpent = projects.reduce((s, p) => s + p.spent, 0);
     const totalFrozen = projects.reduce((s, p) => s + p.frozen, 0);
     const activeProjects = projects.filter(p => p.stage === 'execution' || p.stage === 'research' || p.stage === 'initiation').length;
+    const archivedProjects = projects.filter(p => p.stage === 'closed').length;
     const totalTasks = tasks.length;
     const completedTasks = tasks.filter(t => t.status === 'done').length;
     const budgetUsage = totalBudget > 0 ? Math.round((totalSpent + totalFrozen) / totalBudget * 100) : 0;
 
     const stats = [
-      { label: '活跃项目', value: activeProjects, sub: '个', color: '#f97316', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>' },
+      { label: '项目总数', value: projects.length, sub: '个', color: '#f97316', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>' },
       { label: '总预算', value: totalBudget.toLocaleString(), sub: ' RP', color: '#3b82f6', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>' },
       { label: '已验收任务', value: completedTasks + '/' + totalTasks, sub: ' 个', color: '#10b981', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>' },
-      { label: '预算使用率', value: budgetUsage, sub: '%', color: '#8b5cf6', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h4v4"/><path d="M21 3 9 15"/><path d="M12 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/></svg>' }
+      { label: '预算使用率', value: budgetUsage, sub: '%', color: '#8b5cf6', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h4v4"/><path d="M21 3 9 15"/><path d="M12 3H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-8"/></svg>' },
+      { label: '已归档项目', value: archivedProjects, sub: '个', color: '#64748b', icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8v13H3V8M1 3h22v5H1z"/><path d="M10 12h4"/></svg>' }
     ];
 
     statsGrid.innerHTML = stats.map((s, i) => `
@@ -4637,7 +4942,7 @@ function renderProjects() {
     `).join('');
   }
 
-  var projCols = [{label:'项目名称'},{label:'编号'},{label:'负责人'},{label:'阶段'},{label:'预算'},{label:'使用率'},{label:'任务数'},{label:'操作'}];
+  var projCols = [{label:'项目名称'},{label:'编号'},{label:'描述'},{label:'类型'},{label:'阶段'},{label:'负责人'},{label:'部门'},{label:'项目成员'},{label:'开始日期'},{label:'结束日期'},{label:'预算使用'},{label:'任务数'},{label:'操作'}];
   if (!_mpStates['projectListBody']) {
     mpInit('projectListBody', projCols, {
       containerId: 'projectListBody_pager',
@@ -4651,12 +4956,24 @@ function renderProjects() {
         var statusTag = '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:' + stageColor + ';margin-right:4px;"></span>' + (stageLabels[p.stage] || '未知');
         const taskCount = tasks.filter(function(t) { return t.projectId === p.id; }).length;
         return '<tr style="cursor:pointer;" onclick="openProjectDetail(\'' + p.id + '\')">' +
-          '<td style="font-size:12px;">' + p.name + '</td>' +
+          '<td style="font-size:12px;font-weight:600;">' + p.name + '</td>' +
           '<td style="font-family:monospace;font-size:12px;color:var(--text-muted);">' + p.id.toUpperCase() + '</td>' +
-          '<td style="font-size:12px;">' + p.lead + '</td>' +
+          '<td style="font-size:11px;color:var(--text-muted);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + p.desc + '</td>' +
+          '<td style="font-size:12px;">' + p.type + '</td>' +
           '<td style="font-size:12px;">' + statusTag + '</td>' +
-          '<td style="font-size:12px;">' + p.budget.toLocaleString() + ' RP</td>' +
-          '<td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:80px;height:6px;background:var(--border-light);border-radius:3px;"><div style="height:6px;border-radius:3px;width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div><span style="font-size:11px;color:var(--text-muted);">' + pct + '%</span></div></td>' +
+          '<td style="font-size:12px;">' + p.lead + '</td>' +
+          '<td style="font-size:12px;">' + p.dept + '</td>' +
+          (function() {
+            var pTasks = tasks.filter(function(t) { return t.projectId === p.id; });
+            var memberSet = new Set();
+            pTasks.forEach(function(t) { memberSet.add(t.assignee); });
+            memberSet.add(p.lead);
+            var members = Array.from(memberSet);
+            return '<td style="font-size:12px;">' + members.join('、') + '</td>';
+          })() +
+          '<td style="font-size:11px;color:var(--text-muted);">' + p.startDate + '</td>' +
+          '<td style="font-size:11px;color:var(--text-muted);">' + p.endDate + '</td>' +
+          '<td><div style="display:flex;align-items:center;gap:6px;"><div style="flex:1;max-width:100px;height:6px;background:var(--border-light);border-radius:3px;"><div style="height:6px;border-radius:3px;width:' + pct + '%;background:' + (pct > 80 ? 'var(--accent-rose)' : pct > 50 ? 'var(--accent-amber)' : 'var(--accent-emerald)') + ';"></div></div><span style="font-size:11px;color:var(--text-muted);white-space:nowrap;">' + pct + '%</span></div></td>' +
           '<td style="font-size:12px;"><a href="javascript:void(0)" onclick="event.stopPropagation();goToProjectTasks(\'' + p.id + '\')" style="color:var(--primary);text-decoration:none;font-weight:600;">' + taskCount + ' 个任务</a></td>' +
           '<td>' + renderActionMenu([{ label:'追加奖励', action:"openBonusModal('" + p.id + "')", cls:'btn-ghost' }], 'proj_' + p.id) + '</td>' +
         '</tr>';
@@ -4667,10 +4984,13 @@ function renderProjects() {
 }
 
 function goToProjectTasks(projectId) {
+  navigateTo('projects');
+  var taskTab = document.querySelectorAll('#page-projects .tabs .tab')[1];
+  if (taskTab) switchPTTab(taskTab, 'tasks');
   var filter = document.getElementById('taskProjectFilter');
   if (filter) filter.value = projectId;
-  navigateTo('tasks');
   renderKanban();
+  renderTaskListView();
 }
 
 // ===== BACKLOG STAGES (dynamic) =====
@@ -4953,6 +5273,7 @@ function _taskDetailHtml(t) {
       '<div style="font-size:13px;font-weight:500;">' + (t.delivery || '无需交付') + '</div>' +
     '</div>' +
     (t.desc ? '<div style="font-size:13px;color:var(--text-secondary);padding:10px 12px;background:var(--bg);border-radius:3px;margin-bottom:12px;line-height:1.6;">' + t.desc + '</div>' : '') +
+    (t.reward && t.reward > 0 && t.status === 'done' ? '<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">奖励审批</label><a href="javascript:void(0)" onclick="openRewardAuditDetail(\'' + t.id + '\')" style="font-size:13px;color:var(--primary);text-decoration:none;">查看奖励审批详情 →</a></div>' : '') +
     _taskAuditFlowHtml(t) +
     (t.completedAt ? '<div style="font-size:12px;color:var(--accent-emerald);padding:8px;background:rgba(16,185,129,0.1);border-radius:3px;margin-top:12px;">✅ 完成时间：' + t.completedAt + '</div>' : '') +
   '</div>';
@@ -5012,6 +5333,24 @@ function _deliveryUploadHtml(t) {
 }
 
 // ===== TASK ACTIONS =====
+
+function openRewardAuditDetail(refId) {
+  var kr = _knowledgeReviews.find(function(r) { return r.id === refId; });
+  var task = tasks.find(function(t) { return t.id === refId; });
+  if (kr) {
+    if (kr.status === 'pending_review') {
+      auditRewardTask(refId);
+    } else {
+      openKnowledgeReviewDetail(refId);
+    }
+  } else if (task) {
+    if (task.status === 'pending_review') {
+      auditTask(refId);
+    } else {
+      openTaskDetail(refId);
+    }
+  }
+}
 
 function openTaskDetail(taskId) {
   const t = tasks.find(x => x.id === taskId);
@@ -5463,8 +5802,10 @@ function switchPTConfigTab(el, tab) {
   document.getElementById('ptc-project').style.display = tab === 'project' ? '' : 'none';
   document.getElementById('ptc-task').style.display = tab === 'task' ? '' : 'none';
   document.getElementById('ptc-knowledge').style.display = tab === 'knowledge' ? '' : 'none';
+  document.getElementById('ptc-source').style.display = tab === 'source' ? '' : 'none';
   document.getElementById('ptc-rules').style.display = tab === 'rules' ? '' : 'none';
   if (tab === 'knowledge' && !document.getElementById('kbTypeTableBody').innerHTML) renderKnowledgeTypes();
+  if (tab === 'source' && !document.getElementById('kbSourceTableBody').innerHTML) renderKnowledgeSources();
   if (tab === 'rules') renderPointsRules();
 }
 
@@ -5971,6 +6312,70 @@ function renderKnowledgeTypes() {
   tbody.innerHTML = html;
 }
 
+// ===== Knowledge Source Data =====
+const knowledgeSourceData = [
+  { cn: '上传', en: 'Upload', desc: '用户通过页面上传的知识文档', sort: 1, enabled: true },
+  { cn: 'API导入', en: 'API Import', desc: '通过API接口批量导入的知识数据', sort: 2, enabled: true },
+  { cn: '系统生成', en: 'System Generated', desc: '系统自动生成的知识记录', sort: 3, enabled: true },
+  { cn: '邮件采集', en: 'Email Collection', desc: '从邮件中自动采集的知识内容', sort: 4, enabled: false },
+  { cn: '网页抓取', en: 'Web Scraping', desc: '从指定网页自动抓取的知识', sort: 5, enabled: false },
+  { cn: '数据库同步', en: 'DB Sync', desc: '从外部数据库同步的知识数据', sort: 6, enabled: false }
+];
+
+function renderKnowledgeSources() {
+  var tbody = document.getElementById('kbSourceTableBody');
+  if (!tbody) return;
+  var html = '';
+  for (var i = 0; i < knowledgeSourceData.length; i++) {
+    var s = knowledgeSourceData[i];
+    html += '<tr>' +
+      '<td><strong>' + s.cn + '</strong></td>' +
+      '<td>' + s.en + '</td>' +
+      '<td style="font-size:12px;color:var(--text-muted);max-width:260px;">' + s.desc + '</td>' +
+      '<td style="text-align:center;">' + s.sort + '</td>' +
+      '<td><label class="toggle-switch"><input type="checkbox" ' + (s.enabled ? 'checked' : '') + ' onchange="toggleKbSourceStatus(' + i + ', this.checked)"><span class="toggle-slider"></span></label></td>' +
+      '<td>' +
+        '<div style="position:relative;display:inline-block;">' +
+          '<button class="btn btn-xs" onclick="event.stopPropagation();toggleKbSourceOpsMenu(' + i + ')" style="font-size:14px;padding:0 4px;line-height:22px;">⋮</button>' +
+          '<div class="dropdown-menu" id="kbSourceOps_' + i + '" style="display:none;position:absolute;right:0;top:24px;z-index:10;background:var(--card);border:1px solid var(--border);border-radius:3px;box-shadow:0 4px 12px rgba(0,0,0,0.1);min-width:80px;">' +
+            '<a href="javascript:void(0)" onclick="editKnowledgeSource(' + i + ')" style="display:block;padding:6px 12px;font-size:12px;color:var(--text);text-decoration:none;">编辑</a>' +
+            '<a href="javascript:void(0)" onclick="deleteKnowledgeSource(' + i + ')" style="display:block;padding:6px 12px;font-size:12px;color:var(--accent-rose);text-decoration:none;">删除</a>' +
+          '</div>' +
+        '</div>' +
+      '</td>' +
+    '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function toggleKbSourceStatus(index, enabled) {
+  knowledgeSourceData[index].enabled = enabled;
+}
+
+function toggleKbSourceOpsMenu(index) {
+  var menu = document.getElementById('kbSourceOps_' + index);
+  if (!menu) return;
+  var isOpen = menu.style.display !== 'none';
+  document.querySelectorAll('[id^="kbSourceOps_"]').forEach(function(m) { m.style.display = 'none'; });
+  if (!isOpen) menu.style.display = 'block';
+}
+
+function addKnowledgeSource() {
+  knowledgeSourceData.push({ cn: '新来源', en: 'New Source', desc: '请编辑描述', sort: knowledgeSourceData.length + 1, enabled: true });
+  renderKnowledgeSources();
+}
+
+function editKnowledgeSource(index) {
+  alert('编辑知识来源：' + knowledgeSourceData[index].cn);
+}
+
+function deleteKnowledgeSource(index) {
+  if (confirm('确定删除「' + knowledgeSourceData[index].cn + '」？')) {
+    knowledgeSourceData.splice(index, 1);
+    renderKnowledgeSources();
+  }
+}
+
 function manageKbSubTags(index) {
   var t = knowledgeTypeData[index];
   if (!t) return;
@@ -6084,10 +6489,10 @@ var pointsBaseRules = [
 ];
 
 var pointsDifficultyRules = [
-  { min: 0, max: 2, multiplier: 1.0, desc: '简单难度，积分倍率1.0x' },
-  { min: 3, max: 5, multiplier: 1.5, desc: '中等难度，积分倍率1.5x' },
-  { min: 6, max: 8, multiplier: 2.0, desc: '困难难度，积分倍率2.0x' },
-  { min: 9, max: 10, multiplier: 3.0, desc: '极难难度，积分倍率3.0x' }
+  { min: 0, max: 2, points: 100, desc: '难度系数0-2，对应100积分' },
+  { min: 3, max: 5, points: 200, desc: '难度系数3-5，对应200积分' },
+  { min: 6, max: 8, points: 300, desc: '难度系数6-8，对应300积分' },
+  { min: 9, max: 10, points: 500, desc: '难度系数9-10，对应500积分' }
 ];
 
 function switchPointsTab(el, tab) {
@@ -6151,7 +6556,7 @@ function renderPointsRules() {
       var rule = pointsDifficultyRules[i];
       diffHtml += '<tr>' +
         '<td style="text-align:center;">' + rule.min + ' - ' + rule.max + '</td>' +
-        '<td><input type="number" step="0.1" value="' + rule.multiplier + '" onchange="updateDifficultyRule(' + i + ', this.value)" style="width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);"></td>' +
+        '<td><input type="number" value="' + rule.points + '" onchange="updateDifficultyRule(' + i + ', this.value)" style="width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);"></td>' +
         '<td style="font-size:12px;color:var(--text-muted);">' + rule.desc + '</td>' +
       '</tr>';
     }
@@ -6165,8 +6570,8 @@ function updateBaseRulePoints(index, value) {
 }
 
 function updateDifficultyRule(index, value) {
-  pointsDifficultyRules[index].multiplier = Number(value);
-  pointsDifficultyRules[index].desc = '难度系数' + pointsDifficultyRules[index].min + '-' + pointsDifficultyRules[index].max + '，积分倍率' + value + 'x';
+  pointsDifficultyRules[index].points = Number(value);
+  pointsDifficultyRules[index].desc = '难度系数' + pointsDifficultyRules[index].min + '-' + pointsDifficultyRules[index].max + '，对应' + value + '积分';
 }
 
 // ===== BACKEND ADMIN =====
@@ -7213,7 +7618,7 @@ function switchWbTab(tab) {
   if (panel) panel.classList.add('active');
   if (tab === 'backlog') renderWbBacklog();
   if (tab === 'project') renderWbProjects();
-  if (tab === 'task') { renderWbKanban(); }
+  if (tab === 'task') renderWbKanban();
   if (tab === 'timeline') renderWbTimeline();
 }
 
@@ -7595,7 +8000,7 @@ function renderWbBacklog() {
   allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
   const statusLabels = { todo: '待开始', in_progress: '进行中', pending_review: '待审核', rejected: '驳回' };
   const today = '2026-07-23';
-  let html = '<div class="backlog-count">Backlog <strong>(' + allItems.length + ' 个任务)</strong></div>';
+  let html = '<div class="backlog-count">待办任务 <strong>(' + allItems.length + ' 个任务)</strong></div>';
   html += '<div><div class="backlog-header"><div class="backlog-header-col col-key">编号</div><div class="backlog-header-col col-title">标题</div><div class="backlog-header-col col-priority">优先级</div><div class="backlog-header-col col-project">项目</div><div class="backlog-header-col col-status">状态</div><div class="backlog-header-col col-start">开始时间</div><div class="backlog-header-col col-deadline">截止时间</div><div class="backlog-header-col col-updated">更新时间</div><div class="backlog-header-col col-assignee">负责人</div></div>';
   html += '<div class="backlog-list">';
   allItems.forEach(function(item) {
@@ -7627,7 +8032,7 @@ function renderWbBacklog() {
 function openKnowledgeReviewDetail(reviewId) {
   var r = _knowledgeReviews.find(function(x) { return x.id === reviewId; });
   if (!r) return;
-  if (r.reward && r.reward > 0) { auditRewardTask(reviewId); return; }
+  if (r.reward && r.reward > 0 && r.status === 'pending_review') { auditRewardTask(reviewId); return; }
   var fileIcons = { pdf: '📄', doc: '', docx: '📝', xlsx: '📊', xls: '', ppt: '📽️', pptx: '📽️', txt: '', md: '📋', csv: '📊' };
   var filesHtml = '';
   for (var i = 0; i < r.files.length; i++) {
@@ -7765,7 +8170,7 @@ function openKnowledgeReviewDetail(reviewId) {
       '</div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识类型</label><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;"><span style="font-size:12px;color:var(--text-muted);">一级类型：</span><span class="tag" style="background:var(--primary-light);color:var(--primary);">' + r.primaryType + '</span><span style="font-size:12px;color:var(--text-muted);margin-left:4px;">二级类型：</span><span class="tag" style="background:var(--bg);color:var(--text-muted);">' + r.subTag + '</span></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识附件</label>' + filesHtml + '</div>' +
-
+      (r.status === 'done' && ((r.reward && r.reward > 0) || (r.baseValue && r.baseValue > 0)) ? '<div style="margin-bottom:4px;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">奖励审批</label><a href="javascript:void(0)" onclick="openRewardAuditDetail(\'' + r.id + '\')" style="font-size:13px;color:var(--primary);text-decoration:none;">查看奖励审批详情 →</a></div>' : '') +
       auditFlowHtml +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;">' +
         '<button class="btn btn-ghost" onclick="closeProjectDetail()">关闭</button>' +
