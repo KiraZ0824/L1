@@ -1861,6 +1861,23 @@
     .burndown-grid-line { width: 100%; height: 1px; background: var(--border-light); }
     .tl-bar { height: 24px; border-radius: 4px; position: relative; min-width: 20px; }
 
+    /* ===== Overview Dashboard - Dark Theme ===== */
+    .ov-page { background: #0f1117; min-height: 100vh; color: #e4e7ec; }
+    .ov-card { background: #181a23; border: 1px solid #252836; border-radius: 16px; padding: 20px; transition: border-color 0.3s; }
+    .ov-card:hover { border-color: #3b82f6; }
+    .ov-kpi { background: linear-gradient(135deg, #181a23 0%, #1e2230 100%); border: 1px solid #252836; border-radius: 16px; padding: 20px; position: relative; overflow: hidden; }
+    .ov-kpi::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--ov-accent), transparent); }
+    .ov-kpi-value { font-size: 36px; font-weight: 700; line-height: 1.1; background: linear-gradient(135deg, #fff 0%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .ov-kpi-label { font-size: 12px; color: #6b7280; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+    .ov-kpi-sub { font-size: 11px; color: #4b5563; margin-top: 6px; }
+    .ov-kpi-growth { font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 20px; }
+    .ov-section-title { font-size: 13px; font-weight: 600; color: #9ca3af; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .ov-section-title::before { content: ''; width: 3px; height: 14px; background: #3b82f6; border-radius: 2px; }
+    .ov-progress-track { height: 6px; background: #1e2230; border-radius: 3px; overflow: hidden; }
+    .ov-progress-fill { height: 6px; border-radius: 3px; transition: width 0.5s ease; }
+    .ov-badge { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+    .ov-legend-dot { width: 8px; height: 8px; border-radius: 2px; display: inline-block; }
+
     /* ===== RESPONSIVE ===== */
     @media (max-width: 1024px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -2006,58 +2023,70 @@
       </div>
       <!-- ===== OVERVIEW DASHBOARD ===== -->
       <div class="page" id="page-overview">
-        <div class="page-inner" style="background:#f5f5f5;min-height:100vh;">
+        <div class="page-inner ov-page">
           <!-- Title Row -->
-          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
             <div>
-              <h2 style="font-size:22px;font-weight:700;color:var(--text);margin:0;">Overview Dashboard</h2>
-              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">L1 全景数据汇总与领导决策视图</p>
+              <h2 style="font-size:24px;font-weight:700;color:#fff;margin:0;">Overview Dashboard</h2>
+              <p style="font-size:13px;color:#6b7280;margin-top:4px;">L1 全景数据汇总与领导决策视图</p>
             </div>
             <div style="display:flex;gap:8px;">
-              <select id="ovPeriodSelect" onchange="renderOverview()" style="padding:6px 10px;font-size:12px;border:1px solid var(--border);border-radius:3px;background:var(--card);color:var(--text);cursor:pointer;outline:none;">
+              <select id="ovPeriodSelect" onchange="renderOverview()" style="padding:6px 12px;font-size:12px;border:1px solid #252836;border-radius:8px;background:#181a23;color:#9ca3af;cursor:pointer;outline:none;">
                 <option value="week">本周</option><option value="month" selected>本月</option><option value="quarter">本季度</option>
               </select>
             </div>
           </div>
 
           <!-- KPI Cards -->
-          <div id="ovKpiCards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;"></div>
+          <div id="ovKpiCards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;"></div>
 
-          <!-- Row: My Todos (left) + Project Progress (right) -->
-          <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:16px;">
-            <div class="card" style="padding:16px;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
-                <div style="font-size:14px;font-weight:600;">我的待办</div>
-                <span id="ovTodoCount" style="font-size:12px;color:var(--text-muted);"></span>
+          <!-- Row 1: Project Progress (2fr) + Task Status Donut (1fr) -->
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="ov-card">
+              <div class="ov-section-title">项目进度概览</div>
+              <div id="ovChartProjectProgress"></div>
+            </div>
+            <div class="ov-card">
+              <div class="ov-section-title">任务状态分布</div>
+              <div id="ovChartTaskDonut"></div>
+            </div>
+          </div>
+
+          <!-- Row 2: Quarterly Burndown (1fr) + Team Workload (1fr) -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="ov-card">
+              <div class="ov-section-title">季度燃尽图</div>
+              <div id="ovChartBurndown"></div>
+            </div>
+            <div class="ov-card">
+              <div class="ov-section-title">团队负载</div>
+              <div id="ovChartTeamWorkload"></div>
+            </div>
+          </div>
+
+          <!-- Row 3: Leader Todos (1fr) + Points Trend (1fr) -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="ov-card">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+                <div class="ov-section-title" style="margin-bottom:0;">待审核事项</div>
+                <span id="ovTodoCount" style="font-size:11px;color:#6b7280;"></span>
               </div>
               <div id="ovTodoList" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;"></div>
             </div>
-            <div class="card" style="padding:16px;">
-              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">项目进度</div>
-              <div id="ovChartProjectProgress"></div>
-            </div>
-          </div>
-
-          <!-- Charts Row 1.5: Quarterly Burndown + Knowledge Growth -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div class="card" style="padding:16px;">
-              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">季度燃尽图</div>
-              <div id="ovChartBurndown"></div>
-            </div>
-            <div class="card" style="padding:16px;">
-              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">知识库增长</div>
-              <div id="ovChartKnowledgeGrowth"></div>
-            </div>
-          </div>
-
-          <!-- Charts Row 2 -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div class="card" style="padding:16px;">
-              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">积分发放趋势</div>
+            <div class="ov-card">
+              <div class="ov-section-title">积分发放趋势</div>
               <div id="ovChartPointsTrend"></div>
             </div>
-            <div class="card" style="padding:16px;">
-              <div style="font-size:14px;font-weight:600;margin-bottom:12px;">知识贡献分布</div>
+          </div>
+
+          <!-- Row 4: Knowledge Growth (1fr) + Dept Contribution (1fr) -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+            <div class="ov-card">
+              <div class="ov-section-title">知识库增长</div>
+              <div id="ovChartKnowledgeGrowth"></div>
+            </div>
+            <div class="ov-card">
+              <div class="ov-section-title">知识贡献分布</div>
               <div id="ovChartDeptContribution"></div>
             </div>
           </div>
@@ -2098,10 +2127,6 @@
               <button class="btn btn-outline btn-sm" onclick="openTaskModal()">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 创建任务
-              </button>
-              <button class="btn btn-outline btn-sm" onclick="openUploadDocModal()">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-                上传知识
               </button>
             </div>
           </div>
@@ -2198,7 +2223,6 @@
     </div>
     <div class="tabs" style="margin-bottom:20px;">
       <button class="tab active" onclick="switchKbTab(this,'vector')">向量数据管理</button>
-      <button class="tab" onclick="switchKbTab(this,'types')">知识类型设置</button>
     </div>
     <div id="kb-vector">
   <div class="vm-header">
@@ -2271,30 +2295,6 @@
   </div>
 </div>
 
-<div id="kb-types" style="display:none;">
-  <div class="card">
-    <div class="card-header">
-      <div class="card-title">知识类型管理</div>
-      <button class="btn btn-sm" onclick="addKnowledgeType()">+ 新增类型</button>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th style="min-width:100px;">类型名称</th>
-            <th style="min-width:140px;">英文名称</th>
-            <th>描述</th>
-            <th style="width:80px;">二级标签</th>
-            <th style="width:80px;">贡献基础值</th>
-            <th style="width:65px;">状态</th>
-            <th style="min-width:50px;">操作</th>
-          </tr>
-        </thead>
-        <tbody id="kbTypeTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</div>
   </div>
 </div>
 
@@ -2701,7 +2701,6 @@
               <div class="tab-bar" id="pointsTabBar" style="margin-bottom:0;">
                 <button class="tab-bar-item active" onclick="switchPointsTab(this, 'history')">积分明细</button>
                 <button class="tab-bar-item" onclick="switchPointsTab(this, 'budget')">项目预算概览</button>
-                <button class="tab-bar-item" onclick="switchPointsTab(this, 'rules')">积分规则</button>
               </div>
             </div>
             <!-- 积分明细 -->
@@ -2726,32 +2725,6 @@
                 </table>
               </div>
             </div>
-            <!-- 积分规则 -->
-            <div id="points-rules" style="display:none;padding:20px;">
-              <div style="display:flex;gap:20px;">
-                <div style="flex:1;">
-                  <div style="font-size:14px;font-weight:600;margin-bottom:12px;">基础贡献值积分规则</div>
-                  <div class="table-wrap">
-                    <table>
-                      <thead><tr><th>基础贡献值</th><th>对应积分</th><th>说明</th></tr></thead>
-                      <tbody id="pointsBaseRuleBody"></tbody>
-                    </table>
-                  </div>
-                </div>
-                <div style="flex:1;">
-                  <div style="font-size:14px;font-weight:600;margin-bottom:12px;">难度系数积分规则</div>
-                  <div class="table-wrap">
-                    <table>
-                      <thead><tr><th>难度系数范围</th><th>积分倍率</th><th>说明</th></tr></thead>
-                      <tbody id="pointsDifficultyRuleBody"></tbody>
-                    </table>
-                  </div>
-                  <div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:3px;font-size:13px;color:var(--text-secondary);">
-                    <strong>规则说明：</strong>贡献积分 =〔基础贡献值 × 对应积分 + 难度系数 × 积分倍率〕
-                  </div>
-                </div>
-              </div>
-            </div>
             </div>
           </div>
         </div>
@@ -2761,12 +2734,13 @@
         <div class="page-inner">
           <div style="margin-bottom:20px;">
             <h1 style="font-size:20px;font-weight:700;">基础配置</h1>
-            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">项目类型、任务类型与知识类型配置管理</p>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">项目类型、任务类型、知识类型与积分规则配置</p>
           </div>
           <div class="tabs" style="margin-bottom:20px;">
             <button class="tab active" onclick="switchPTConfigTab(this,'project')">项目配置</button>
             <button class="tab" onclick="switchPTConfigTab(this,'task')">任务配置</button>
-            <button class="tab" onclick="switchPTConfigTab(this,'knowledge')">知识配置</button>
+            <button class="tab" onclick="switchPTConfigTab(this,'knowledge')">知识类型配置</button>
+            <button class="tab" onclick="switchPTConfigTab(this,'rules')">积分规则</button>
           </div>
           <div id="ptc-project">
             <div class="card">
@@ -2799,14 +2773,49 @@
           <div id="ptc-knowledge" style="display:none;">
             <div class="card">
               <div class="card-header">
-                <div class="card-title">知识类型配置</div>
-                <button class="btn btn-sm" onclick="addConfigItem('knowledge')">+ 新增类型</button>
+                <div class="card-title">知识类型管理</div>
+                <button class="btn btn-sm" onclick="addKnowledgeType()">+ 新增类型</button>
               </div>
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>类型名称</th><th>英文名称</th><th>描述</th><th>创建时间</th><th>操作</th></tr></thead>
-                  <tbody id="knowledgeTypeTableBody"></tbody>
+                  <thead>
+                    <tr>
+                      <th style="min-width:100px;">类型名称</th>
+                      <th style="min-width:140px;">英文名称</th>
+                      <th>描述</th>
+                      <th style="width:80px;">二级标签</th>
+                      <th style="width:80px;">贡献基础值</th>
+                      <th style="width:65px;">状态</th>
+                      <th style="min-width:50px;">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="kbTypeTableBody"></tbody>
                 </table>
+              </div>
+            </div>
+          </div>
+          <div id="ptc-rules" style="display:none;">
+            <div style="display:flex;gap:20px;">
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;margin-bottom:12px;">基础贡献值积分规则</div>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>基础贡献值</th><th>对应积分</th><th>说明</th></tr></thead>
+                    <tbody id="pointsBaseRuleBody"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div style="flex:1;">
+                <div style="font-size:14px;font-weight:600;margin-bottom:12px;">难度系数积分规则</div>
+                <div class="table-wrap">
+                  <table>
+                    <thead><tr><th>难度系数范围</th><th>积分倍率</th><th>说明</th></tr></thead>
+                    <tbody id="pointsDifficultyRuleBody"></tbody>
+                  </table>
+                </div>
+                <div style="margin-top:12px;padding:12px;background:var(--bg);border-radius:3px;font-size:13px;color:var(--text-secondary);">
+                  <strong>规则说明：</strong>贡献积分 =〔基础贡献值 × 对应积分 + 难度系数 × 积分倍率〕
+                </div>
               </div>
             </div>
           </div>
@@ -2879,7 +2888,6 @@
             <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能配置</button>
             <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型配置</button>
             <button class="tab" data-admin-tab="safety" onclick="switchAdminTab('safety')">内容安全配置</button>
-            <button class="tab" data-admin-tab="retrieval" onclick="switchAdminTab('retrieval')">知识检索规则</button>
           </div>
 
           <!-- 技能配置 -->
@@ -3011,32 +3019,6 @@
             </div>
           </div>
           <!-- 知识检索规则 -->
-          <div class="admin-tab-content" id="admin-retrieval" style="display:none;">
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">相似度阈值</div>
-                <span style="font-size:12px;color:var(--text-muted);">设置向量检索的最低相似度阈值</span>
-              </div>
-              <div style="padding:16px;">
-                <div class="form-group" style="max-width:300px;">
-                  <label class="form-label">阈值设置</label>
-                  <select class="form-input" style="appearance:auto;">
-                    <option>0.50</option>
-                    <option>0.60</option>
-                    <option selected>0.70</option>
-                    <option>0.75</option>
-                    <option>0.80</option>
-                    <option>0.85</option>
-                    <option>0.90</option>
-                  </select>
-                  <span style="font-size:11px;color:var(--text-muted);margin-top:4px;display:block;">低于此阈值的文档将被过滤</span>
-                </div>
-                <div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:16px;margin-top:16px;">
-                  <button class="btn btn-primary btn-sm">保存配置</button>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -3220,7 +3202,7 @@ const tasks = [
   { id:'t19', title:'翻译引擎性能对比', desc:'完成3款翻译引擎的性能基准测试对比', projectId:'p4', stage:'research', status:'in_progress', priority:'P0', assignee:'王思远', reward:750, deadline:'2026-07-20', backlog:'调研阶段', delivery:'文档链接' },
   { id:'t20', title:'多语言UI适配方案', desc:'设计前端多语言UI适配的技术方案', projectId:'p4', stage:'research', status:'todo', priority:'P2', assignee:'王思远', reward:500, deadline:'2026-07-25', backlog:'调研阶段', delivery:'无需交付' },
   { id:'t21', title:'审批流程设计文档', desc:'设计任务验收审批流程的完整文档', projectId:'p1', stage:'execution', status:'pending_review', priority:'P1', assignee:'张明远', reward:450, deadline:'2026-06-22', backlog:'项目执行', delivery:'文档链接' },
-  { id:'t22', title:'结算模块代码审查', desc:'审查结算模块的代码质量和安全漏洞', projectId:'p2', stage:'execution', status:'rejected', priority:'P0', assignee:'李晓华', reward:600, deadline:'2026-06-18', backlog:'项目执行', delivery:'附件' },
+  { id:'t22', title:'结算模块代码审查', desc:'审查结算模块的代码质量和安全漏洞', projectId:'p2', stage:'execution', status:'rejected', priority:'P0', assignee:'李晓华', reward:600, deadline:'2026-06-18', backlog:'项目执行', delivery:'附件', auditor:'张明远', rejectTime:'2026-06-16 14:00', rejectReason:'审查报告缺少关键漏洞的修复建议和影响范围分析' },
   { id:'t23', title:'API接口规范V2.1技术评审', desc:'组织技术评审会议，审核API接口规范文档的技术可行性和规范性', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:0, deadline:'2026-06-25', backlog:'项目验收', delivery:'无需交付' },
   { id:'t24', title:'Q2财报数据合规审核', desc:'审核Q2财报数据的合规性，确认数据来源和计算方法的准确性', projectId:'p2', stage:'review', status:'todo', priority:'P0', assignee:'赵明', reward:0, deadline:'2026-06-28', backlog:'项目验收', delivery:'无需交付' },
   { id:'t25', title:'API接口文档知识贡献奖励审核', desc:'审核API接口文档V2.1的知识贡献，确认贡献者名单及奖励分配方案', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:500, deadline:'2026-06-30', backlog:'项目验收', delivery:'无需交付' },
@@ -3228,6 +3210,9 @@ const tasks = [
   { id:'t27', title:'跨平台数据同步方案', desc:'调研并设计多端数据同步的技术方案，支持离线编辑与冲突合并', projectId:'p4', stage:'research', status:'draft', priority:'P1', assignee:'张明远', reward:800, deadline:'2026-07-15', backlog:'调研阶段', delivery:'文档链接' },
   { id:'t28', title:'权限粒度配置优化', desc:'优化RBAC权限模型，支持更细粒度的资源级权限配置', projectId:'p1', stage:'initiation', status:'draft', priority:'P0', assignee:'赵明', reward:600, deadline:'2026-07-10', backlog:'立项阶段', delivery:'无需交付' },
   { id:'t29', title:'Q3预算规划草案', desc:'起草Q3季度项目预算分配方案，含人力、资源、风险预留', projectId:'p2', stage:'initiation', status:'draft', priority:'P1', assignee:'李晓华', reward:500, deadline:'2026-07-08', backlog:'立项阶段', delivery:'附件' },
+  { id:'t30', title:'前端组件库文档补充', desc:'补充前端组件库的使用文档和示例代码', projectId:'p1', stage:'execution', status:'rejected', priority:'P2', assignee:'王思远', reward:400, deadline:'2026-06-25', backlog:'项目执行', delivery:'文档链接', auditor:'张明远', rejectTime:'2026-06-19 09:30', rejectReason:'文档缺少API参数说明和异常处理章节' },
+  { id:'t31', title:'知识库标签体系重构', desc:'重构知识库标签分类体系，支持多级标签和智能推荐', projectId:'p1', stage:'execution', status:'rejected', priority:'P1', assignee:'陈雨桐', reward:550, deadline:'2026-06-28', backlog:'项目执行', delivery:'附件', auditor:'赵明', rejectTime:'2026-06-20 15:00', rejectReason:'标签层级设计不合理，需与产品确认后再提交' },
+  { id:'t32', title:'安全审计报告V2', desc:'更新安全审计报告，覆盖新增的API端点和数据流', projectId:'p3', stage:'review', status:'rejected', priority:'P0', assignee:'赵明', reward:800, deadline:'2026-07-02', backlog:'项目验收', delivery:'附件', auditor:'李晓华', rejectTime:'2026-06-22 11:20', rejectReason:'缺少渗透测试结果和修复优先级排序' },
 ];
 
 // Auto-generate time fields for backlog display
@@ -3630,7 +3615,6 @@ function openBonusModal(projectId) {
         '<div id="bonusRewardRows" style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' +
           _buildBonusRow(p.lead, '') +
         '</div>' +
-        '<button class="btn btn-xs btn-outline" onclick="addBonusRow()" style="margin-top:6px;font-size:11px;">+ 添加人员</button>' +
       '</div>' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">审核流程</label>' +
@@ -4969,8 +4953,52 @@ function _taskDetailHtml(t) {
       '<div style="font-size:13px;font-weight:500;">' + (t.delivery || '无需交付') + '</div>' +
     '</div>' +
     (t.desc ? '<div style="font-size:13px;color:var(--text-secondary);padding:10px 12px;background:var(--bg);border-radius:3px;margin-bottom:12px;line-height:1.6;">' + t.desc + '</div>' : '') +
-    (t.completedAt ? '<div style="font-size:12px;color:var(--accent-emerald);padding:8px;background:rgba(16,185,129,0.1);border-radius:3px;margin-bottom:12px;">✅ 完成时间：' + t.completedAt + '</div>' : '') +
+    _taskAuditFlowHtml(t) +
+    (t.completedAt ? '<div style="font-size:12px;color:var(--accent-emerald);padding:8px;background:rgba(16,185,129,0.1);border-radius:3px;margin-top:12px;">✅ 完成时间：' + t.completedAt + '</div>' : '') +
   '</div>';
+}
+
+function _taskAuditFlowHtml(t) {
+  // Only show audit flow for tasks that have been submitted for review
+  var auditStatuses = ['pending_review', 'rejected', 'done'];
+  if (auditStatuses.indexOf(t.status) === -1) return '';
+
+  var avatarDone = 'width:20px;height:20px;border-radius:50%;border:1.5px solid var(--primary);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
+  var avatarGreen = 'width:20px;height:20px;border-radius:50%;border:1.5px solid #10b981;display:flex;align-items:center;justify-content:center;color:#10b981;font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
+  var avatarGray = 'width:20px;height:20px;border-radius:50%;border:1.5px solid var(--text-muted);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
+  var avatarRed = 'width:20px;height:20px;border-radius:50%;border:1.5px solid #ef4444;display:flex;align-items:center;justify-content:center;color:#ef4444;font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
+  var lineStyle = 'width:2px;flex-shrink:0;background:var(--border-light);min-height:20px;margin-left:9px;';
+
+  var html = '<div style="padding:12px;background:var(--bg);border-radius:3px;border:1px solid var(--border-light);margin-bottom:12px;">' +
+    '<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:10px;">审核流程</div>' +
+    '<div style="display:flex;flex-direction:column;gap:0;">';
+
+  // Node 1: 提交审核
+  var submitTime = t.submitTime || '2026-06-' + (20 - (t.id.charCodeAt(2) % 10)) + ' 14:30';
+  html += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarDone + '">' + t.assignee[0] + '</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">提交审核</span><span style="font-size:11px;color:#10b981;">已完成</span></div><div style="font-size:11px;color:var(--text-muted);">' + t.assignee + ' · ' + submitTime + '</div></div></div>';
+
+  if (t.status === 'rejected') {
+    // Node 2: 审核驳回
+    html += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
+    var rejectTime = t.rejectTime || '2026-06-' + (21 - (t.id.charCodeAt(2) % 8)) + ' 10:15';
+    html += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarRed + '">'+ (t.auditor ? t.auditor[0] : '审') + '</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">审核驳回</span><span style="font-size:11px;color:#ef4444;">已驳回</span></div><div style="font-size:11px;color:var(--text-muted);">' + (t.auditor || '李晓华') + ' · ' + rejectTime + (t.rejectReason ? ' · ' + t.rejectReason : ' · 交付物不完整，请补充测试报告') + '</div></div></div>';
+    // Node 3: 等待重新提交
+    html += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
+    html += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarGray + '">○</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">等待重新提交</span><span style="font-size:11px;color:var(--text-muted);">待处理</span></div><div style="font-size:11px;color:var(--text-muted);">' + t.assignee + ' 待重新提交审核</div></div></div>';
+  } else if (t.status === 'pending_review') {
+    // Node 2: 等待审核
+    html += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
+    var pendingTime = t.submitTime || '2026-06-' + (20 - (t.id.charCodeAt(2) % 10)) + ' 14:30';
+    html += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarGray + '">○</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">等待审核</span><span style="font-size:11px;color:var(--text-muted);">待处理</span></div><div style="font-size:11px;color:var(--text-muted);">' + (t.auditor || '李晓华') + ' 待审核 · 提交于 ' + pendingTime + '</div></div></div>';
+  } else if (t.status === 'done') {
+    // Node 2: 审核通过
+    html += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
+    var approveTime = t.approveTime || (t.completedAt ? t.completedAt + ' 16:00' : '2026-06-20 16:00');
+    html += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarGreen + '">✓</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">审核通过</span><span style="font-size:11px;color:#10b981;">已通过</span></div><div style="font-size:11px;color:var(--text-muted);">' + (t.auditor || '李晓华') + ' · ' + approveTime + (t.approveComment ? ' · ' + t.approveComment : ' · 审核通过，交付物符合要求') + '</div></div></div>';
+  }
+
+  html += '</div></div>';
+  return html;
 }
 
 function _deliveryUploadHtml(t) {
@@ -4997,28 +5025,34 @@ function openTaskDetail(taskId) {
 function editTask(id) {
   const t = tasks.find(x => x.id === id);
   if (!t) return;
+  var startDate = t.startDate || t.deadline;
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>\n      编辑任务 · ' + t.id.toUpperCase(),
-    _taskDetailHtml(t) +
-    '<div style="padding:0 20px 20px;display:flex;flex-direction:column;gap:10px;">' +
+    '<div style="padding:20px;display:flex;flex-direction:column;gap:10px;">' +
       '<input type="hidden" id="editTaskId" value="' + id + '">' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务标题 *</label><input id="editTitle" value="' + t.title + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务描述 *</label><textarea id="editDesc" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;">' + (t.desc||'') + '</textarea></div>' +
       '<div class="form-row">' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="editProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;">' + projects.map(p => '<option value="' + p.id + '"' + (p.id===t.projectId?' selected':'') + '>' + p.name + '</option>').join('') + '</select></div>' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属Backlog</label><input id="editBacklog" value="' + (t.backlog||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目 *</label><select id="editProject" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;">' + projects.map(p => '<option value="' + p.id + '"' + (p.id===t.projectId?' selected':'') + '>' + p.name + '</option>').join('') + '</select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属Backlog *</label><select id="editBacklog" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (t.backlog==='调研阶段'?' selected':'') + '>调研阶段</option><option' + (t.backlog==='立项阶段'?' selected':'') + '>立项阶段</option><option' + (t.backlog==='项目执行'?' selected':'') + '>项目执行</option><option' + (t.backlog==='项目验收'?' selected':'') + '>项目验收</option><option' + (t.backlog==='项目结项'?' selected':'') + '>项目结项</option></select></div>' +
       '</div>' +
       '<div class="form-row">' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">优先级</label><select id="editPriority" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (t.priority==='P0'?' selected':'') + '>P0紧急</option><option' + (t.priority==='P1'?' selected':'') + '>P1高</option><option' + (t.priority==='P2'?' selected':'') + '>P2中</option><option' + (t.priority==='P3'?' selected':'') + '>P3低</option></select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">优先级 *</label><select id="editPriority" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (t.priority==='P0'?' selected':'') + '>P0紧急</option><option' + (t.priority==='P1'?' selected':'') + '>P1高</option><option' + (t.priority==='P2'?' selected':'') + '>P2中</option><option' + (t.priority==='P3'?' selected':'') + '>P3低</option></select></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">任务负责人</label><select id="editAssignee" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (t.assignee==='张明远'?' selected':'') + '>张明远</option><option' + (t.assignee==='李晓华'?' selected':'') + '>李晓华</option><option' + (t.assignee==='王思远'?' selected':'') + '>王思远</option><option' + (t.assignee==='赵明'?' selected':'') + '>赵明</option><option' + (t.assignee==='陈雨桐'?' selected':'') + '>陈雨桐</option></select></div>' +
       '</div>' +
       '<div class="form-row">' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">截止日期</label><input id="editDeadline" type="date" value="' + t.deadline + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计奖励 (RP)</label><input id="editReward" type="number" value="' + t.reward + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">开始日期 *</label><input id="editStartDate" type="date" value="' + startDate + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">截止日期 *</label><input id="editDeadline" type="date" value="' + t.deadline + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
       '</div>' +
       '<div class="form-row">' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (!t.delivery?' selected':'') + '>无需交付</option><option' + (t.delivery==='附件'?' selected':'') + '>附件</option><option' + (t.delivery==='文档链接'?' selected':'') + '>文档链接</option></select></div>' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预期工作量 (人天)</label><input id="editEffort" value="' + (t.effort||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;" placeholder="如 3"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计奖励 (RP)</label><input id="editReward" type="number" value="' + t.reward + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (!t.delivery||t.delivery==='无需交付'?' selected':'') + '>无需交付</option><option' + (t.delivery==='附件'?' selected':'') + '>附件</option><option' + (t.delivery==='文档链接'?' selected':'') + '>文档链接</option></select></div>' +
       '</div>' +
+      '<div class="form-row">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预期工作量 (人天)</label><input id="editEffort" value="' + (t.effort||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;" placeholder="如 3"></div>' +
+        '<div style="flex:1;"></div>' +
+      '</div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">验收标准 *</label><textarea id="editAcceptance" rows="2" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="任务完成时对照验收的标准描述">' + (t.acceptance||'') + '</textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="saveEditTask()">保存修改</button></div>' +
     '</div>'
   );
@@ -5028,14 +5062,17 @@ function saveEditTask() {
   const t = tasks.find(x => x.id === document.getElementById('editTaskId').value);
   if (!t) return;
   t.title = document.getElementById('editTitle').value;
+  t.desc = document.getElementById('editDesc').value;
   t.projectId = document.getElementById('editProject').value;
   t.backlog = document.getElementById('editBacklog').value;
   t.priority = document.getElementById('editPriority').value;
   t.assignee = document.getElementById('editAssignee').value;
+  t.startDate = document.getElementById('editStartDate').value;
   t.deadline = document.getElementById('editDeadline').value;
   t.reward = parseInt(document.getElementById('editReward').value) || t.reward;
   t.delivery = document.getElementById('editDelivery').value || '';
   t.effort = document.getElementById('editEffort').value;
+  t.acceptance = document.getElementById('editAcceptance').value;
   refreshAllTaskViews();
   closeProjectDetail();
 }
@@ -5164,9 +5201,8 @@ function auditTask(id) {
             return _buildRewardRow(m, share);
           }).join('') +
         '</div>' +
-        '<button class="btn btn-xs btn-outline" onclick="addRewardRow()" style="margin-top:6px;font-size:11px;">+ 添加人员</button>' +
       '</div>' : '') +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见 <span style="color:var(--accent-rose);">*</span></label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">' +
         '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
         '<button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectAudit()">驳回</button>' +
@@ -5264,12 +5300,11 @@ function auditRewardTask(id) {
       '<div>' +
         '<div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:6px;">奖励分配 <span style="font-weight:400;font-size:11px;color:var(--text-muted);">（默认按预计奖励平均分配，改动需填原因）</span></div>' +
         '<div id="auditRewardRows" style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' + rewardRowsHtml + '</div>' +
-        '<button class="btn btn-xs btn-outline" onclick="addRewardRow()" style="margin-top:6px;font-size:11px;">+ 添加人员</button>' +
       '</div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见 <span style="color:var(--accent-rose);">*</span></label><textarea id="auditNote" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="填写审核通过或驳回的意见..."></textarea></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;">' +
         '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
-        '<button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectAudit()">拒绝</button>' +
+        '<button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectAudit()">审核不通过</button>' +
         '<button class="btn btn-primary" onclick="doApproveAudit()">审核通过</button>' +
       '</div>' +
     '</div>'
@@ -5279,6 +5314,7 @@ function auditRewardTask(id) {
 function doApproveAudit() {
   const t = tasks.find(x => x.id === document.getElementById('auditTaskId').value);
   if (!t) return;
+  if (!document.getElementById('auditNote').value.trim()) { alert('请填写审核意见'); return; }
   const rows = document.querySelectorAll('#auditRewardRows .reward-row');
   let totalAllocated = 0;
   const allocations = [];
@@ -5427,6 +5463,9 @@ function switchPTConfigTab(el, tab) {
   document.getElementById('ptc-project').style.display = tab === 'project' ? '' : 'none';
   document.getElementById('ptc-task').style.display = tab === 'task' ? '' : 'none';
   document.getElementById('ptc-knowledge').style.display = tab === 'knowledge' ? '' : 'none';
+  document.getElementById('ptc-rules').style.display = tab === 'rules' ? '' : 'none';
+  if (tab === 'knowledge' && !document.getElementById('kbTypeTableBody').innerHTML) renderKnowledgeTypes();
+  if (tab === 'rules') renderPointsRules();
 }
 
 
@@ -5455,11 +5494,14 @@ function openTaskModal() {
         <div class="form-group"><label class="form-label">任务负责人</label><select class="form-select"><option>张明远</option><option>李晓华</option><option>王思远</option><option>赵明</option><option>陈雨桐</option></select></div>
       </div>
       <div class="form-row">
+        <div class="form-group"><label class="form-label">开始日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
         <div class="form-group"><label class="form-label">截止日期 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" type="date"></div>
-        <div class="form-group"><label class="form-label">预计奖励 (RP)</label><input class="form-input" type="number" placeholder="≤ 项目预算余额"></div>
       </div>
       <div class="form-row">
+        <div class="form-group"><label class="form-label">预计奖励 (RP)</label><input class="form-input" type="number" placeholder="≤ 项目预算余额"></div>
         <div class="form-group"><label class="form-label">交付形式</label><select class="form-select"><option>附件</option><option>文档链接</option><option>无需交付</option></select></div>
+      </div>
+      <div class="form-row">
         <div class="form-group"><label class="form-label">预期工作量</label><input class="form-input" type="number" placeholder="单位：人天"></div>
       </div>
       <div class="form-group"><label class="form-label">验收标准 <span style="color:var(--accent-rose);">*</span></label><textarea class="form-textarea" placeholder="任务完成时对照验收的标准描述" style="min-height:60px;"></textarea></div>
@@ -5883,9 +5925,7 @@ function switchKbTab(el, tab) {
   document.querySelectorAll('#page-knowledge .tabs .tab').forEach(function(t) { t.classList.remove('active'); });
   el.classList.add('active');
   document.getElementById('kb-vector').style.display = tab === 'vector' ? '' : 'none';
-  document.getElementById('kb-types').style.display = tab === 'types' ? '' : 'none';
   if (tab === 'vector') { vmCurrentPage = 1; vmRenderList(); }
-  if (tab === 'types') { renderKnowledgeTypes(); }
 }
 
 // ===== Knowledge Type Data (12 types from L1 doc) =====
@@ -6055,9 +6095,7 @@ function switchPointsTab(el, tab) {
   el.classList.add('active');
   document.getElementById('points-history').style.display = tab === 'history' ? '' : 'none';
   document.getElementById('points-budget').style.display = tab === 'budget' ? '' : 'none';
-  document.getElementById('points-rules').style.display = tab === 'rules' ? '' : 'none';
   if (tab === 'budget') { renderProjectBudget(); }
-  if (tab === 'rules') { renderPointsRules(); }
 }
 
 function renderProjectBudget() {
@@ -6728,13 +6766,13 @@ function openBonusReview(requestId) {
       '</div>' +
       '<input type="hidden" id="bonusReviewId" value="' + requestId + '">' +
       '<div>' +
-        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见</label>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审核意见 <span style="color:var(--accent-rose);">*</span></label>' +
         '<textarea id="bonusReviewOpinion" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="请填写审核意见..."></textarea>' +
       '</div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;">' +
         '<button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button>' +
-        '<button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectBonus()">驳回</button>' +
-        '<button class="btn btn-primary" onclick="doApproveBonus()">同意</button>' +
+        '<button class="btn btn-outline" style="color:var(--accent-rose);" onclick="doRejectBonus()">审核不通过</button>' +
+        '<button class="btn btn-primary" onclick="doApproveBonus()">审核通过</button>' +
       '</div>' +
     '</div>'
   );
@@ -6745,7 +6783,7 @@ function doApproveBonus() {
   const r = bonusRequests.find(function(x) { return x.id === requestId; });
   if (!r) return;
   const opinion = document.getElementById('bonusReviewOpinion').value.trim();
-  if (!opinion) { return; }
+  if (!opinion) { alert('请填写审核意见'); return; }
   const p = projects.find(function(x) { return x.id === r.projectId; });
   const totalAmount = r.allocations.reduce(function(sum, a) { return sum + a.amount; }, 0);
   r.status = 'approved';
@@ -6762,7 +6800,7 @@ function doRejectBonus() {
   const r = bonusRequests.find(function(x) { return x.id === requestId; });
   if (!r) return;
   const opinion = document.getElementById('bonusReviewOpinion').value.trim();
-  if (!opinion) { return; }
+  if (!opinion) { alert('请填写审核意见'); return; }
   r.status = 'rejected';
   r.opinion = opinion;
   closeProjectDetail();
@@ -7236,7 +7274,6 @@ function openTaskByStatus(taskId) {
   const t = tasks.find(x => x.id === taskId);
   if (!t) return;
   if (t.status === 'done' || t.status === 'closed') { openTaskDetail(taskId); return; }
-  if (t.status === 'todo') { editTask(taskId); return; }
   if (t.status === 'in_progress') { processTask(taskId); return; }
   if (t.status === 'pending_review') { if (taskId === 't25') { auditRewardTask('kr2'); return; } auditTask(taskId); return; }
   if (t.status === 'rejected') { resubmitTask(taskId); return; }
@@ -7279,43 +7316,44 @@ function renderOverview() {
   var totalReward = tasks.filter(function(t) { return t.status === 'done'; }).reduce(function(s, t) { return s + t.reward; }, 0);
 
   var kpis = [
-    { label: '在途项目', value: activeProjects, sub: projects.length + ' 个项目总数', growth: '+1', growthColor: '#10b981', color: 'var(--primary)' },
-    { label: '在途任务', value: activeTasks, sub: tasks.length + ' 个任务总数', growth: '+5', growthColor: '#10b981', color: '#3b82f6' },
-    { label: '知识上传', value: knowledgeUploads, sub: '条知识记录', growth: '+2', growthColor: '#10b981', color: '#8b5cf6' },
-    { label: '奖励发放', value: totalReward.toLocaleString(), sub: 'RP 已发放', growth: '+1,200', growthColor: '#10b981', color: '#f59e0b' }
+    { label: '在途项目', value: activeProjects, sub: projects.length + ' 个项目总数', growth: '+1', up: true, accent: '#3b82f6' },
+    { label: '在途任务', value: activeTasks, sub: tasks.length + ' 个任务总数', growth: '+5', up: true, accent: '#3b82f6' },
+    { label: '完成率', value: Math.round(doneTasks/totalTasks*100) + '%', sub: doneTasks + '/' + totalTasks + ' 已完成', growth: '+' + Math.round(doneTasks/totalTasks*100-30) + '%', up: true, accent: '#10b981' },
+    { label: '知识上传', value: knowledgeUploads, sub: '条知识记录', growth: '+2', up: true, accent: '#3b82f6' }
   ];
 
   document.getElementById('ovKpiCards').innerHTML = kpis.map(function(k) {
-    return '<div class="card" style="padding:16px;">' +
-      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">' +
-        '<div style="font-size:12px;color:var(--text-muted);">' + k.label + '</div>' +
-        '<span style="font-size:11px;font-weight:600;color:' + k.growthColor + ';">' + k.growth + '</span>' +
+    return '<div class="ov-kpi" style="--ov-accent:' + k.accent + ';">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">' +
+        '<div class="ov-kpi-label">' + k.label + '</div>' +
+        '<span class="ov-kpi-growth" style="color:' + (k.up ? '#10b981' : '#ef4444') + ';background:' + (k.up ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)') + ';">' +
+          (k.up ? '↑ ' : '↓ ') + k.growth + '</span>' +
       '</div>' +
-      '<div style="font-size:28px;font-weight:700;color:' + k.color + ';">' + k.value + '</div>' +
-      '<div style="font-size:11px;color:var(--text-muted);margin-top:4px;">' + k.sub + '</div>' +
+      '<div class="ov-kpi-value">' + k.value + '</div>' +
+      '<div class="ov-kpi-sub">' + k.sub + '</div>' +
     '</div>';
   }).join('');
 
   // Chart 1: Project Progress
   var stageLabels = { research:'调研', initiation:'立项', execution:'执行', review:'验收', closed:'结项' };
   var stageColors = { research:'#f59e0b', initiation:'#8b5cf6', execution:'#10b981', review:'#3b82f6', closed:'#64748b' };
-  var budgetHtml = '<div style="display:flex;flex-direction:column;gap:6px;">';
+  var budgetHtml = '<div style="display:flex;flex-direction:column;gap:10px;">';
   projects.forEach(function(p) {
     var pTasks = tasks.filter(function(t) { return t.projectId === p.id; });
     var pDone = pTasks.filter(function(t) { return t.status === 'done' || t.status === 'closed'; }).length;
     var pPct = pTasks.length > 0 ? Math.round(pDone / pTasks.length * 100) : 0;
     var sColor = stageColors[p.stage] || '#64748b';
-    budgetHtml += '<div style="padding:8px 0;border-bottom:1px solid var(--border-light);">' +
-      '<div style="display:flex;align-items:center;gap:8px;font-size:12px;width:100%;">' +
-        '<span style="width:6px;height:6px;border-radius:50%;background:' + sColor + ';flex-shrink:0;"></span>' +
-        '<span style="flex:0 0 150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;">' + p.name + '</span>' +
-        '<div style="flex:1;height:6px;background:var(--border-light);border-radius:3px;overflow:hidden;"><div style="height:6px;width:' + pPct + '%;background:' + sColor + ';border-radius:3px;"></div></div>' +
-        '<span style="flex:0 0 36px;font-weight:600;color:' + sColor + ';text-align:right;">' + pPct + '%</span>' +
-        '<span style="flex:0 0 50px;color:var(--text-muted);">' + (stageLabels[p.stage] || '') + '</span>' +
+    budgetHtml += '<div style="padding:10px 0;border-bottom:1px solid #1e2230;cursor:pointer;transition:padding 0.2s;" onclick="navigateTo(\'projects\')" onmouseover="this.style.paddingLeft=\'8px\'" onmouseout="this.style.paddingLeft=\'0\'">' +
+      '<div style="display:flex;align-items:center;gap:10px;font-size:13px;width:100%;">' +
+        '<span style="width:8px;height:8px;border-radius:50%;background:' + sColor + ';flex-shrink:0;box-shadow:0 0 8px ' + sColor + '80;"></span>' +
+        '<span style="flex:0 0 140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500;color:#e4e7ec;">' + p.name + '</span>' +
+        '<div class="ov-progress-track" style="flex:1;"><div class="ov-progress-fill" style="width:' + pPct + '%;background:linear-gradient(90deg,' + sColor + ',' + sColor + 'aa);box-shadow:0 0 6px ' + sColor + '60;"></div></div>' +
+        '<span style="flex:0 0 40px;font-weight:700;color:#fff;text-align:right;font-size:13px;">' + pPct + '%</span>' +
+        '<span class="ov-badge" style="flex:0 0 44px;text-align:center;color:' + sColor + ';background:' + sColor + '15;">' + (stageLabels[p.stage] || '') + '</span>' +
       '</div>' +
-      '<div style="display:flex;gap:12px;font-size:11px;color:var(--text-muted);margin-top:4px;padding-left:14px;">' +
-        '<span>负责人: ' + (p.lead || '-') + '</span>' +
-        '<span>任务: ' + pDone + '/' + pTasks.length + '</span>' +
+      '<div style="display:flex;gap:16px;font-size:11px;color:#4b5563;margin-top:6px;padding-left:18px;">' +
+        '<span>' + (p.lead || '-') + '</span>' +
+        '<span>' + pDone + '/' + pTasks.length + ' 任务</span>' +
         '<span>' + (p.startDate || '-') + ' ~ ' + (p.endDate || '-') + '</span>' +
       '</div>' +
     '</div>';
@@ -7323,7 +7361,34 @@ function renderOverview() {
   budgetHtml += '</div>';
   document.getElementById('ovChartProjectProgress').innerHTML = budgetHtml;
 
-  // Chart 2: Quarterly Burndown (compact, reusing .burndown-* CSS)
+  // Chart 2: Task Status Donut (CSS conic-gradient, dark theme)
+  var statusCounts = {};
+  var statusColors = { draft:'#6b7280', todo:'#9ca3af', in_progress:'#3b82f6', pending_review:'#f59e0b', rejected:'#ef4444', done:'#10b981', closed:'#4b5563' };
+  var statusLabels = { draft:'草稿', todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已验收', closed:'已关闭' };
+  tasks.forEach(function(t) { statusCounts[t.status] = (statusCounts[t.status] || 0) + 1; });
+  var donutTotal = tasks.length;
+  var donutAccum = 0;
+  var donutGradient = '';
+  var legendHtml = '';
+  Object.keys(statusCounts).forEach(function(s) {
+    var pct = statusCounts[s] / donutTotal * 100;
+    donutGradient += statusColors[s] + ' ' + donutAccum + '% ' + (donutAccum + pct) + '%';
+    donutAccum += pct;
+    if (donutAccum < 100) donutGradient += ', ';
+    legendHtml += '<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#9ca3af;"><span class="ov-legend-dot" style="background:' + statusColors[s] + ';"></span>' + statusLabels[s] + ' <span style="color:#4b5563;">' + statusCounts[s] + '</span></div>';
+  });
+  var donutHtml = '<div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0;">' +
+    '<div style="position:relative;width:150px;height:150px;border-radius:50%;background:conic-gradient(' + donutGradient + ');box-shadow:0 0 20px rgba(59,130,246,0.15);">' +
+      '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:110px;height:110px;border-radius:50%;background:#181a23;display:flex;flex-direction:column;align-items:center;justify-content:center;">' +
+        '<div style="font-size:32px;font-weight:700;color:#fff;line-height:1;">' + donutTotal + '</div>' +
+        '<div style="font-size:11px;color:#6b7280;margin-top:4px;">总任务数</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;">' + legendHtml + '</div>' +
+  '</div>';
+  document.getElementById('ovChartTaskDonut').innerHTML = donutHtml;
+
+  // Chart 3: Quarterly Burndown (dark theme)
   var quarters = [
     { label:'Q1', remaining:42, completed:18, added:8 },
     { label:'Q2', remaining:35, completed:25, added:12 },
@@ -7332,77 +7397,120 @@ function renderOverview() {
   ];
   var maxVal = 50;
   var barH = 150;
-  var bHtml = '<div class="burndown-legend"><span class="legend-item"><span class="legend-dot" style="background:var(--accent-emerald);"></span>已完成</span><span class="legend-item"><span class="legend-dot" style="background:var(--primary);"></span>剩余任务</span><span class="legend-item"><span class="legend-dot" style="background:var(--accent-blue);"></span>新增任务</span></div>';
-  bHtml += '<div class="burndown-chart" style="min-height:200px;"><div class="burndown-y-axis">';
-  for (var v = 50; v >= 0; v -= 10) bHtml += '<span>' + v + '</span>';
-  bHtml += '</div><div class="burndown-bars-area" style="padding-bottom:30px;">';
+  var bHtml = '<div style="display:flex;gap:16px;margin-bottom:12px;font-size:11px;color:#6b7280;"><span style="display:flex;align-items:center;gap:4px;"><span class="ov-legend-dot" style="background:#10b981;"></span>已完成</span><span style="display:flex;align-items:center;gap:4px;"><span class="ov-legend-dot" style="background:#3b82f6;"></span>剩余</span><span style="display:flex;align-items:center;gap:4px;"><span class="ov-legend-dot" style="background:#6366f1;"></span>新增</span></div>';
+  bHtml += '<div style="display:flex;align-items:flex-end;justify-content:space-around;height:180px;gap:12px;padding:0 8px;">';
   quarters.forEach(function(q) {
-    bHtml += '<div class="burndown-bar-wrap"><div class="burndown-bar-stack">';
-    if (q.added) bHtml += '<div class="burndown-bar-seg added" style="height:' + (q.added / maxVal * barH) + 'px;">+' + q.added + '</div>';
-    bHtml += '<div class="burndown-bar-seg remaining" style="height:' + (q.remaining / maxVal * barH) + 'px;">' + q.remaining + '</div>';
-    if (q.completed) bHtml += '<div class="burndown-bar-seg completed" style="height:' + (q.completed / maxVal * barH) + 'px;">-' + q.completed + '</div>';
-    bHtml += '</div>';
-    bHtml += '<div class="burndown-bar-label">' + q.label + '</div></div>';
+    var totalH = (q.remaining + q.completed + q.added) / maxVal * barH;
+    var doneH = q.completed / maxVal * barH;
+    var remainH = q.remaining / maxVal * barH;
+    var addedH = q.added / maxVal * barH;
+    bHtml += '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;">' +
+      '<div style="font-size:10px;color:#6b7280;font-weight:600;">' + (q.remaining + q.completed) + '</div>' +
+      '<div style="width:100%;max-width:44px;display:flex;flex-direction:column;border-radius:6px 6px 0 0;overflow:hidden;">';
+    if (q.added) bHtml += '<div style="height:' + addedH + 'px;background:linear-gradient(180deg,#818cf8,#6366f1);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;">+' + q.added + '</div>';
+    bHtml += '<div style="height:' + remainH + 'px;background:linear-gradient(180deg,#60a5fa,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;">' + q.remaining + '</div>';
+    if (q.completed) bHtml += '<div style="height:' + doneH + 'px;background:linear-gradient(180deg,#34d399,#10b981);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;">-' + q.completed + '</div>';
+    bHtml += '</div><div style="font-size:11px;color:#9ca3af;font-weight:500;">' + q.label + '</div></div>';
   });
-  bHtml += '</div></div>';
+  bHtml += '</div>';
   document.getElementById('ovChartBurndown').innerHTML = bHtml;
 
-  // Chart 3: Points Trend (line chart with CSS bars)
+  // Chart 4: Team Workload (dark theme)
+  var members = ['张明远','李晓华','王思远','赵明','陈雨桐'];
+  var workloadHtml = '<div style="display:flex;flex-direction:column;gap:14px;padding:4px 0;">';
+  members.forEach(function(m) {
+    var mTasks = tasks.filter(function(t) { return t.assignee === m; });
+    var mDone = mTasks.filter(function(t) { return t.status === 'done' || t.status === 'closed'; }).length;
+    var mActive = mTasks.filter(function(t) { return t.status === 'todo' || t.status === 'in_progress' || t.status === 'pending_review' || t.status === 'rejected'; }).length;
+    var mDraft = mTasks.filter(function(t) { return t.status === 'draft'; }).length;
+    var mTotal = mTasks.length;
+    var utilization = mTotal > 0 ? Math.round(mActive / mTotal * 100) : 0;
+    var utilColor = utilization > 70 ? '#ef4444' : utilization > 40 ? '#f59e0b' : '#10b981';
+    workloadHtml += '<div>' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
+        '<div style="display:flex;align-items:center;gap:10px;">' +
+          '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1e40af);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">' + m[0] + '</div>' +
+          '<span style="font-size:13px;font-weight:500;color:#e4e7ec;">' + m + '</span>' +
+        '</div>' +
+        '<div style="display:flex;gap:12px;font-size:11px;color:#6b7280;">' +
+          '<span>进行 <span style="color:#3b82f6;font-weight:600;">' + mActive + '</span></span>' +
+          '<span>完成 <span style="color:#10b981;font-weight:600;">' + mDone + '</span></span>' +
+          '<span style="font-weight:600;color:' + utilColor + ';">' + utilization + '%</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="ov-progress-track" style="display:flex;">' +
+        '<div style="height:6px;width:' + (mDone/Math.max(mTotal,1)*100) + '%;background:#10b981;border-radius:3px 0 0 3px;"></div>' +
+        '<div style="height:6px;width:' + (mActive/Math.max(mTotal,1)*100) + '%;background:#3b82f6;"></div>' +
+        '<div style="height:6px;width:' + (mDraft/Math.max(mTotal,1)*100) + '%;background:#374151;border-radius:0 3px 3px 0;"></div>' +
+      '</div>' +
+    '</div>';
+  });
+  workloadHtml += '<div style="display:flex;gap:16px;font-size:10px;color:#4b5563;justify-content:center;margin-top:8px;">' +
+    '<span><span class="ov-legend-dot" style="background:#10b981;margin-right:4px;"></span>已完成</span>' +
+    '<span><span class="ov-legend-dot" style="background:#3b82f6;margin-right:4px;"></span>进行中</span>' +
+    '<span><span class="ov-legend-dot" style="background:#374151;margin-right:4px;"></span>草稿</span>' +
+  '</div></div>';
+  document.getElementById('ovChartTeamWorkload').innerHTML = workloadHtml;
+
+  // Chart 5: Points Trend (dark theme with gradient bars)
   var months = ['1月','2月','3月','4月','5月','6月'];
   var pointsData = [3200, 4500, 3800, 5200, 6100, totalReward || 5800];
   var maxPoints = Math.max.apply(null, pointsData);
-  var trendHtml = '<div style="display:flex;align-items:flex-end;justify-content:space-around;height:160px;gap:8px;padding:0 10px;">';
+  var trendHtml = '<div style="display:flex;align-items:flex-end;justify-content:space-around;height:180px;gap:10px;padding:0 8px;">';
   pointsData.forEach(function(v, i) {
     var h = Math.round(v / maxPoints * 100);
-    trendHtml += '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;">' +
-      '<div style="font-size:10px;color:var(--text-muted);">' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v) + '</div>' +
-      '<div style="width:100%;max-width:30px;height:' + h + '%;min-height:4px;background:var(--primary);border-radius:3px 3px 0 0;opacity:' + (0.4 + i * 0.1) + ';"></div>' +
-      '<div style="font-size:10px;color:var(--text-muted);">' + months[i] + '</div>' +
+    var isLast = i === pointsData.length - 1;
+    trendHtml += '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">' +
+      '<div style="font-size:10px;color="#9ca3af;font-weight:600;">' + (v >= 1000 ? (v/1000).toFixed(1)+'k' : v) + '</div>' +
+      '<div style="width:100%;max-width:36px;height:' + h + '%;min-height:4px;background:' + (isLast ? 'linear-gradient(180deg,#60a5fa,#3b82f6)' : 'linear-gradient(180deg,#1e2230,#1e2230)') + ';border-radius:6px 6px 0 0;' + (isLast ? 'box-shadow:0 0 12px rgba(59,130,246,0.4);' : '') + '"></div>' +
+      '<div style="font-size:10px;color:#6b7280;">' + months[i] + '</div>' +
     '</div>';
   });
   trendHtml += '</div>';
   document.getElementById('ovChartPointsTrend').innerHTML = trendHtml;
 
-  // Chart 4: Knowledge Growth
+  // Chart 6: Knowledge Growth (dark theme)
   var kbData = [3, 5, 6, 7, 8, 9];
   var maxKb = Math.max.apply(null, kbData);
-  var kbHtml = '<div style="display:flex;align-items:flex-end;justify-content:space-around;height:160px;gap:8px;padding:0 10px;">';
+  var kbHtml = '<div style="display:flex;align-items:flex-end;justify-content:space-around;height:180px;gap:10px;padding:0 8px;">';
   kbData.forEach(function(v, i) {
     var h = Math.round(v / maxKb * 100);
-    kbHtml += '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;">' +
-      '<div style="font-size:10px;color:var(--text-muted);">' + v + '</div>' +
-      '<div style="width:100%;max-width:30px;height:' + h + '%;min-height:4px;background:#8b5cf6;border-radius:3px 3px 0 0;opacity:' + (0.4 + i * 0.1) + ';"></div>' +
-      '<div style="font-size:10px;color:var(--text-muted);">' + months[i] + '</div>' +
+    var isLast = i === kbData.length - 1;
+    kbHtml += '<div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;">' +
+      '<div style="font-size:10px;color:#9ca3af;font-weight:600;">' + v + '</div>' +
+      '<div style="width:100%;max-width:36px;height:' + h + '%;min-height:4px;background:' + (isLast ? 'linear-gradient(180deg,#a78bfa,#8b5cf6)' : 'linear-gradient(180deg,#1e2230,#1e2230)') + ';border-radius:6px 6px 0 0;' + (isLast ? 'box-shadow:0 0 12px rgba(139,92,246,0.4);' : '') + '"></div>' +
+      '<div style="font-size:10px;color:#6b7280;">' + months[i] + '</div>' +
     '</div>';
   });
   kbHtml += '</div>';
   document.getElementById('ovChartKnowledgeGrowth').innerHTML = kbHtml;
 
-  // Chart 5: Knowledge Contribution by Department (horizontal bars)
+  // Chart 7: Knowledge Contribution by Department (dark theme, single accent)
   var deptData = [
-    { name: '技术部', value: 30, color: '#3b82f6' },
-    { name: '产品部', value: 22, color: '#8b5cf6' },
-    { name: '合规部', value: 18, color: '#10b981' },
-    { name: '财务部', value: 15, color: '#f59e0b' },
-    { name: 'BD', value: 10, color: '#ef4444' },
-    { name: '其他', value: 5, color: '#64748b' }
+    { name: '技术部', value: 30 },
+    { name: '产品部', value: 22 },
+    { name: '合规部', value: 18 },
+    { name: '财务部', value: 15 },
+    { name: 'BD', value: 10 },
+    { name: '其他', value: 5 }
   ];
-  var deptHtml = '<div style="display:flex;flex-direction:column;gap:10px;">';
-  deptData.forEach(function(d) {
+  var deptHtml = '<div style="display:flex;flex-direction:column;gap:12px;">';
+  deptData.forEach(function(d, i) {
+    var opacity = 1 - i * 0.12;
     deptHtml += '<div>' +
-      '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;">' +
-        '<span>' + d.name + '</span>' +
-        '<span style="color:var(--text-muted);">' + d.value + '%</span>' +
+      '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;">' +
+        '<span style="color:#e4e7ec;font-weight:500;">' + d.name + '</span>' +
+        '<span style="color:#9ca3af;font-weight:600;">' + d.value + '%</span>' +
       '</div>' +
-      '<div style="height:8px;background:var(--border-light);border-radius:4px;overflow:hidden;">' +
-        '<div style="height:8px;width:' + d.value + '%;background:' + d.color + ';border-radius:4px;"></div>' +
+      '<div class="ov-progress-track">' +
+        '<div class="ov-progress-fill" style="width:' + d.value + '%;background:linear-gradient(90deg,rgba(59,130,246,' + opacity + '),rgba(59,130,246,' + (opacity*0.6) + '));"></div>' +
       '</div>' +
     '</div>';
   });
   deptHtml += '</div>';
   document.getElementById('ovChartDeptContribution').innerHTML = deptHtml;
 
-  // Leader Todos (only pending_review tasks + knowledge reviews)
+  // Leader Todos (dark theme)
   var leaderTodos = [];
   tasks.forEach(function(t) {
     if (t.assignee === '张明远' && t.status === 'pending_review') {
@@ -7417,19 +7525,18 @@ function renderOverview() {
   document.getElementById('ovTodoCount').textContent = leaderTodos.length + ' 项';
   var todoHtml = '';
   if (leaderTodos.length === 0) {
-    todoHtml = '<div style="text-align:center;padding:40px 0;color:var(--text-muted);font-size:13px;">暂无待办</div>';
+    todoHtml = '<div style="text-align:center;padding:40px 0;color:#4b5563;font-size:13px;">暂无待办</div>';
   } else {
     leaderTodos.forEach(function(t) {
       var proj = projects.find(function(p) { return p.id === t.projectId; });
-      var color = '#f59e0b';
       var clickFn = t.type === 'knowledge' ? 'openKnowledgeReviewDetail(\'' + t.id + '\')' : 'openTaskDetail(\'' + t.id + '\')';
-      todoHtml += '<div style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--border-light);border-radius:3px;cursor:pointer;" onclick="' + clickFn + '">' +
-        '<span style="width:6px;height:6px;border-radius:50%;background:' + color + ';flex-shrink:0;"></span>' +
+      todoHtml += '<div style="display:flex;align-items:center;gap:10px;padding:12px;background:#1e2230;border-radius:10px;cursor:pointer;transition:background 0.2s;" onclick="' + clickFn + '" onmouseover="this.style.background=\'#252836\'" onmouseout="this.style.background=\'#1e2230\'">' +
+        '<div style="width:6px;height:6px;border-radius:50%;background:#f59e0b;box-shadow:0 0 6px #f59e0b;flex-shrink:0;"></div>' +
         '<div style="flex:1;min-width:0;">' +
-          '<div style="font-size:12px;font-weight:500;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + t.title + '</div>' +
-          '<div style="font-size:11px;color:var(--text-muted);">' + (proj ? proj.name : (t.type === 'knowledge' ? '知识审核' : '')) + ' · ' + t.deadline + '</div>' +
+          '<div style="font-size:13px;font-weight:500;color:#e4e7ec;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + t.title + '</div>' +
+          '<div style="font-size:11px;color:#4b5563;margin-top:2px;">' + (proj ? proj.name : (t.type === 'knowledge' ? '知识审核' : '')) + ' · ' + t.deadline + '</div>' +
         '</div>' +
-        '<span style="font-size:11px;color:var(--text-muted);">待审核</span>' +
+        '<span class="ov-badge" style="color:#f59e0b;background:rgba(245,158,11,0.1);">待审核</span>' +
       '</div>';
     });
   }
@@ -7591,12 +7698,11 @@ function openKnowledgeReviewDetail(reviewId) {
             // Action area only for the first pending operator
             if (opPending && opIdx === node.operators.findIndex(function(o) { return o.status === 'pending'; })) {
               // Review opinion textarea
-              auditFlowHtml += '<textarea id="reviewOpinion_' + i + '_' + opIdx + '" placeholder="请输入审核意见..." style="width:calc(100% - 28px);min-height:40px;max-width:300px;padding:6px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;box-sizing:border-box;background:var(--card);resize:vertical;margin-top:6px;margin-left:28px;font-family:inherit;"></textarea>';
+              auditFlowHtml += '<textarea id="reviewOpinion_' + i + '_' + opIdx + '" placeholder="请输入审核意见（必填）..." style="width:calc(100% - 28px);min-height:40px;max-width:300px;padding:6px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;box-sizing:border-box;background:var(--card);resize:vertical;margin-top:6px;margin-left:28px;font-family:inherit;"></textarea>';
               // Action buttons - outline style
               auditFlowHtml += '<div style="display:flex;gap:6px;margin-top:6px;margin-left:28px;">';
-              auditFlowHtml += '<button class="btn btn-xs" style="background:white;color:var(--accent-amber);border:1px solid var(--accent-amber);padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;" onclick="reviewKnowledgeAction(\'' + r.id + '\', ' + i + ', ' + opIdx + ', \'reject\')">驳回</button>';
-              auditFlowHtml += '<button class="btn btn-xs" style="background:white;color:var(--accent-rose);border:1px solid var(--accent-rose);padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;" onclick="reviewKnowledgeAction(\'' + r.id + '\', ' + i + ', ' + opIdx + ', \'disagree\')">拒绝</button>';
-              auditFlowHtml += '<button class="btn btn-xs" style="background:white;color:var(--primary);border:1px solid var(--primary);padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;" onclick="reviewKnowledgeAction(\'' + r.id + '\', ' + i + ', ' + opIdx + ', \'approve\')">审核通过</button>';
+              auditFlowHtml += '<button class="btn btn-xs" style="background:white;color:var(--accent-rose);border:1px solid var(--accent-rose);padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;" onclick="reviewKnowledgeAction(\'' + r.id + '\', ' + i + ', ' + opIdx + ', \'disagree\')">不通过</button>';
+              auditFlowHtml += '<button class="btn btn-xs" style="background:white;color:var(--primary);border:1px solid var(--primary);padding:4px 12px;border-radius:3px;font-size:12px;cursor:pointer;" onclick="reviewKnowledgeAction(\'' + r.id + '\', ' + i + ', ' + opIdx + ', \'approve\')">通过</button>';
               auditFlowHtml += '</div>';
             }
             auditFlowHtml += '</div>';
@@ -7684,6 +7790,7 @@ function reviewKnowledgeAction(reviewId, nodeIndex, opIndex, action) {
   var opinion = opinionEl ? opinionEl.value.trim() : '';
 
   if (action === 'approve') {
+    if (!opinion) { alert('请填写审核意见'); return; }
     op.status = 'done';
     op.time = timeStr;
     op.comment = opinion || '同意';
@@ -7745,7 +7852,7 @@ function renderWbProjects() {
     { key:'closed', label:'项目结项' }
   ];
   const statusLabels = { todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已验收', closed:'已关闭' };
-  const statusColors = { todo:'var(--text-muted)', in_progress:'var(--accent-blue)', pending_review:'var(--accent-amber)', rejected:'var(--accent-rose)', done:'var(--accent-emerald)', closed:'var(--text-muted)' };
+  const statusColors = { draft:'var(--text-muted)', todo:'var(--text-muted)', in_progress:'var(--accent-blue)', pending_review:'var(--accent-amber)', rejected:'var(--accent-rose)', done:'var(--accent-emerald)', closed:'var(--text-muted)' };
   const today = '2026-07-23';
   let html = '';
   // 更新下拉框右侧负责人/预算信息
@@ -7827,11 +7934,11 @@ function renderWbKanban() {
   if (priFilter !== 'all') filtered = filtered.filter(t => t.priority === priFilter);
   const statusColors = { todo:'var(--text-muted)', in_progress:'var(--accent-blue)', pending_review:'var(--accent-amber)', rejected:'var(--accent-rose)', done:'var(--accent-emerald)', closed:'var(--text-muted)' };
   const today = '2026-07-23';
-  board.innerHTML = `<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;">${statusList.map(s => { const items = filtered.filter(t => t.status === s.key); return `<div style="background:var(--bg);border-radius:3px;padding:10px;"><div style="font-size:12px;font-weight:700;margin-bottom:8px;white-space:nowrap;">${s.label} <span style="color:var(--text-muted);font-weight:400;">(${items.length})</span></div>${items.map(t => {
+  board.innerHTML = `<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:10px;">${statusList.map(s => { const items = filtered.filter(t => t.status === s.key); return `<div style="background:var(--bg);border-radius:3px;padding:10px;"><div style="font-size:12px;font-weight:700;margin-bottom:8px;white-space:nowrap;">${s.label} <span style="color:var(--text-muted);font-weight:400;">(${items.length})</span></div>${items.map(t => {
     const isOverdue = t.status === 'in_progress' && t.deadline && t.deadline < today;
     const border = isOverdue ? 'border:1px solid var(--accent-rose);box-shadow:0 0 0 1px var(--accent-rose);' : 'border:1px solid var(--border-light);';
-    const mAct = t.status === 'todo' ? 'editTask' : t.status === 'in_progress' ? 'processTask' : t.status === 'pending_review' ? 'auditTask' : t.status === 'rejected' ? 'resubmitTask' : 'openTaskDetail';
-    const mLbl = t.status === 'todo' ? '编辑' : t.status === 'in_progress' ? '提交审核' : t.status === 'pending_review' ? '审核' : t.status === 'rejected' ? '重新提交' : '查看详情';
+    const mAct = (t.status === 'draft' || t.status === 'todo') ? 'editTask' : t.status === 'in_progress' ? 'processTask' : t.status === 'pending_review' ? 'auditTask' : t.status === 'rejected' ? 'resubmitTask' : 'openTaskDetail';
+    const mLbl = (t.status === 'draft' || t.status === 'todo') ? '编辑' : t.status === 'in_progress' ? '提交审核' : t.status === 'pending_review' ? '审核' : t.status === 'rejected' ? '重新提交' : '查看详情';
     return `<div style="padding:10px;background:var(--card);border-radius:3px;margin-bottom:8px;${border}cursor:pointer;" onclick="openTaskByStatus('${t.id}')"><div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;gap:4px;"><span style="font-size:12px;font-weight:600;line-height:1.4;flex:1;word-break:break-word;">${t.title}</span><div class="task-menu-wrap" onclick="event.stopPropagation();"><span class="task-menu-dots">⋮</span><div class="task-menu-dropdown"><div onclick="${mAct}('${t.id}');event.stopPropagation();">${mLbl}</div></div></div></div><div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;font-size:10px;color:var(--text-muted);margin-bottom:4px;"><span style="padding:1px 6px;border-radius:3px;background:var(--primary-light);color:var(--primary);">${wbGetProjectName(t.projectId)}</span><span>${t.priority}</span><span style="padding:1px 6px;border-radius:3px;font-size:10px;background:${statusColors[t.status]}15;color:${statusColors[t.status]};">${s.label}</span></div><div style="font-size:10px;color:var(--text-muted);display:flex;justify-content:space-between;"><span>${t.assignee}</span><span${isOverdue ? ' style="color:var(--accent-rose);font-weight:600;"' : ''}>${t.deadline || '-'}</span></div></div>`;
   }).join('')}</div>`; }).join('')}</div>`;
 }
