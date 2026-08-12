@@ -2040,32 +2040,8 @@
           <!-- KPI Cards -->
           <div id="ovKpiCards" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;"></div>
 
-          <!-- Row 1: Project Progress (2fr) + Task Status Donut (1fr) -->
-          <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;margin-bottom:16px;">
-            <div class="ov-card">
-              <div class="ov-section-title">项目进度概览</div>
-              <div id="ovChartProjectProgress"></div>
-            </div>
-            <div class="ov-card">
-              <div class="ov-section-title">任务状态分布</div>
-              <div id="ovChartTaskDonut"></div>
-            </div>
-          </div>
-
-          <!-- Row 2: Quarterly Burndown (1fr) + Team Workload (1fr) -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-            <div class="ov-card">
-              <div class="ov-section-title">季度燃尽图</div>
-              <div id="ovChartBurndown"></div>
-            </div>
-            <div class="ov-card">
-              <div class="ov-section-title">团队负载</div>
-              <div id="ovChartTeamWorkload"></div>
-            </div>
-          </div>
-
-          <!-- Row 3: Leader Todos (1fr) + Points Trend (1fr) -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <!-- Row 1: Leader Todos (1fr) + Project Progress (2fr) -->
+          <div style="display:grid;grid-template-columns:1fr 2fr;gap:16px;margin-bottom:16px;">
             <div class="ov-card">
               <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
                 <div class="ov-section-title" style="margin-bottom:0;">待审核事项</div>
@@ -2074,20 +2050,24 @@
               <div id="ovTodoList" style="display:flex;flex-direction:column;gap:8px;max-height:280px;overflow-y:auto;"></div>
             </div>
             <div class="ov-card">
+              <div class="ov-section-title">项目进度概览</div>
+              <div id="ovChartProjectProgress"></div>
+            </div>
+          </div>
+
+          <!-- Row 2: Points Trend -->
+          <div style="display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:16px;">
+            <div class="ov-card">
               <div class="ov-section-title">积分发放趋势</div>
               <div id="ovChartPointsTrend"></div>
             </div>
           </div>
 
-          <!-- Row 4: Knowledge Growth (1fr) + Dept Contribution (1fr) -->
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+          <!-- Row 4: Knowledge Growth -->
+          <div style="display:grid;grid-template-columns:1fr;gap:16px;margin-bottom:16px;">
             <div class="ov-card">
               <div class="ov-section-title">知识库增长</div>
               <div id="ovChartKnowledgeGrowth"></div>
-            </div>
-            <div class="ov-card">
-              <div class="ov-section-title">知识贡献分布</div>
-              <div id="ovChartDeptContribution"></div>
             </div>
           </div>
         </div>
@@ -4065,7 +4045,7 @@ function openUploadDocModal() {
       '<div style="display:flex;gap:12px;"><div style="flex:0 0 150px;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识编号</label><input type="text" value="审核通过后生成" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门 <span style="color:var(--text);">*</span></label><select id="uploadDocDept" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);">' + getDeptOptions(getUserDept('张明远')) + '</select></div></div>' +
       '<div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 <span style="color:var(--text);">*</span></label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()" style="display:flex;gap:4px;flex-wrap:wrap;min-height:34px;padding:4px 8px;align-items:center;"><span style="color:var(--text-muted);font-size:12px;" id="contributorPlaceholder">请选择知识贡献者</span></div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><div style="display:flex;align-items:center;gap:8px;"><input type="file" id="uploadDocFile" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx,.xls,.xlsx,.md,.csv" multiple onchange="onUploadFileChange(this)" style="display:none;"><button class="btn btn-sm btn-outline" onclick="document.getElementById(\'uploadDocFile\').click()" style="white-space:nowrap;">选择文件</button><span style="font-size:12px;color:var(--text-muted);">支持格式：DOC、DOCX、PDF、TXT、PPT、PPTX、XLS、XLSX、MD、CSV</span></div><div id="uploadFileList" style="display:flex;flex-direction:column;gap:4px;margin-top:8px;"></div></div>' +
-      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识说明</label><textarea id="uploadDocDesc" placeholder="请输入知识说明..." style="width:100%;min-height:80px;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);resize:vertical;font-family:inherit;"></textarea></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识说明 <span style="color:var(--accent-rose);">*</span></label><textarea id="uploadDocDesc" placeholder="请输入知识说明..." style="width:100%;min-height:80px;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);resize:vertical;font-family:inherit;"></textarea></div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="uploadDocProject" onchange="updateAuditFlowPreview()" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目（可选）</option>' + projectOpts + '</select></div>' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识类型 <span style="color:var(--text);">*</span></label>' +
@@ -4449,7 +4429,8 @@ var _knowledgeReviews = [
   },
   {
     id: 'kr3',
-    keyId: 'RemiKR003',
+    keyId: 'K06PD01001001',
+    auditNo: 'AP-K06PD01001001',
     title: '产品需求文档PRD-客户管理模块',
     status: 'done',
     priority: 'P1',
@@ -4482,7 +4463,8 @@ var _knowledgeReviews = [
   },
   {
     id: 'kr4',
-    keyId: 'RemiKR004',
+    keyId: 'K09CP01001001',
+    auditNo: 'AP-K09CP01001001',
     title: '合规风控手册-数据安全篇',
     status: 'done',
     priority: 'P0',
@@ -4516,7 +4498,8 @@ var _knowledgeReviews = [
   },
   {
     id: 'kr5',
-    keyId: 'RemiKR005',
+    keyId: 'K07TC01001001',
+    auditNo: 'AP-K07TC01001001',
     title: '技术架构设计文档-微服务拆分方案',
     status: 'done',
     priority: 'P1',
@@ -4550,7 +4533,8 @@ var _knowledgeReviews = [
   },
   {
     id: 'kr6',
-    keyId: 'RemiKR006',
+    keyId: 'K04PD01001001',
+    auditNo: 'AP-K04PD01001001',
     title: '项目验收报告-客户管理系统V1.0',
     status: 'done',
     priority: 'P1',
@@ -4703,6 +4687,8 @@ function previewUploadFile(index) {
 
 function submitUploadDoc() {
   if (_uploadFiles.length === 0) { alert('请选择要上传的文件'); return; }
+  const desc = document.getElementById('uploadDocDesc').value.trim();
+  if (!desc) { alert('请输入知识说明'); return; }
   const fileNames = _uploadFiles.map(function(f) { return f.name; }).join(', ');
   const projectId = document.getElementById('uploadDocProject').value;
   const contributor = document.getElementById('uploadDocContributor').value;
@@ -5554,6 +5540,7 @@ function auditTask(id) {
 function auditRewardTask(id) {
   var r = _knowledgeReviews.find(function(x) { return x.id === id; });
   if (!r) return;
+  if (!r.auditNo) r.auditNo = 'AP-' + (r.keyId || id);
 
   // Collect contributors as members
   var contributors = r.contributor.split(',').map(function(s) { return s.trim(); });
@@ -5621,11 +5608,13 @@ function auditRewardTask(id) {
   var statusText = '待审核';
 
   _showTaskPanel(
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>\n      奖励审核详情 — ' + r.keyId,
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>\n      【知识奖励】' + (r.subTag || '') + '奖励审核',
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
-      '<div style="display:flex;align-items:center;gap:8px;"><span class="' + statusClass + '"><span class="bl-status-dot ' + statusDot + '"></span>' + statusText + '</span><span style="font-size:18px;font-weight:700;">' + r.title + '</span></div>' +
+      '<div style="display:flex;align-items:center;gap:8px;"><span class="' + statusClass + '"><span class="bl-status-dot ' + statusDot + '"></span>' + statusText + '</span></div>' +
       '<div style="padding:12px;background:var(--bg);border-radius:3px;font-size:13px;color:var(--text-secondary);">' + r.desc + '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识编号</label><div style="font-size:13px;font-family:monospace;">' + (r.keyId || '审核通过后生成') + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审批编号</label><div style="font-size:13px;font-family:monospace;">' + (r.auditNo || '审核通过后生成') + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><div style="font-size:13px;">' + r.uploader + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门</label><div style="font-size:13px;">' + r.dept + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者</label><div style="font-size:13px;">' + r.contributor + '</div></div>' +
@@ -5651,7 +5640,36 @@ function auditRewardTask(id) {
 }
 
 function doApproveAudit() {
-  const t = tasks.find(x => x.id === document.getElementById('auditTaskId').value);
+  const auditId = document.getElementById('auditTaskId').value;
+  var r = _knowledgeReviews.find(function(x) { return x.id === auditId; });
+  if (r) {
+    if (!document.getElementById('auditNote').value.trim()) { alert('请填写审核意见'); return; }
+    const rows = document.querySelectorAll('#auditRewardRows .reward-row');
+    let totalAllocated = 0;
+    const allocations = [];
+    let hasModifiedWithoutReason = false;
+    rows.forEach(row => {
+      const idx = row.dataset.idx;
+      const person = document.getElementById('rp_' + idx).value;
+      const amount = parseInt(document.getElementById('ra_' + idx).value) || 0;
+      const reason = document.getElementById('rr_' + idx).value.trim();
+      const defaultVal = parseInt(row.dataset.default);
+      if (amount !== defaultVal && !reason) hasModifiedWithoutReason = true;
+      totalAllocated += amount;
+      allocations.push({ person:person, amount:amount, reason:reason });
+    });
+    if (hasModifiedWithoutReason) { alert('奖励金额已修改，请填写对应修改原因'); return; }
+    r.reward = totalAllocated;
+    r.rewardAllocation = allocations;
+    r.status = 'done';
+    r.keyId = generateKnowledgeNumber(r);
+    r.auditNo = 'AP-' + r.keyId;
+    renderKnowledgeTasks();
+    closeProjectDetail();
+    alert('审核通过！\n知识编号：' + r.keyId + '\n审批编号：' + r.auditNo + '\n奖励总额：' + totalAllocated + ' RP');
+    return;
+  }
+  const t = tasks.find(x => x.id === auditId);
   if (!t) return;
   if (!document.getElementById('auditNote').value.trim()) { alert('请填写审核意见'); return; }
   const rows = document.querySelectorAll('#auditRewardRows .reward-row');
@@ -5677,7 +5695,16 @@ function doApproveAudit() {
 }
 
 function doRejectAudit() {
-  const t = tasks.find(x => x.id === document.getElementById('auditTaskId').value);
+  const auditId = document.getElementById('auditTaskId').value;
+  var r = _knowledgeReviews.find(function(x) { return x.id === auditId; });
+  if (r) {
+    if (!document.getElementById('auditNote').value.trim()) { alert('请填写审核意见'); return; }
+    r.status = 'rejected';
+    renderKnowledgeTasks();
+    closeProjectDetail();
+    return;
+  }
+  const t = tasks.find(x => x.id === auditId);
   if (!t) return;
   if (!document.getElementById('auditNote').value.trim()) { alert('请填写审核意见'); return; }
   t.status = 'rejected';
@@ -5894,7 +5921,7 @@ function renderKnowledgeUploadForm(container) {
     '<div style="display:flex;gap:12px;"><div style="flex:0 0 150px;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识编号</label><input type="text" value="审核通过后生成" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:12px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><input type="text" id="uploadDocUploader" value="张明远" disabled style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--text-muted);"></div><div style="flex:1;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门 <span style="color:var(--text);">*</span></label><select id="uploadDocDept" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);">' + getDeptOptions(getUserDept('张明远')) + '</select></div></div>' +
     '<div class="contributor-wrap"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者 <span style="color:var(--text);">*</span></label><div class="contributor-trigger" id="contributorTrigger" onclick="toggleContributorDropdown()" style="display:flex;gap:4px;flex-wrap:wrap;min-height:34px;padding:4px 8px;align-items:center;"><span style="color:var(--text-muted);font-size:12px;" id="contributorPlaceholder">请选择知识贡献者</span></div><input type="hidden" id="uploadDocContributor" value=""><div class="contributor-dropdown" id="contributorDropdown"><input class="contributor-search" id="contributorSearch" placeholder="搜索部门或姓名..." oninput="filterContributors(this.value)"><div id="contributorList"></div></div></div>' +
     '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">选择文件 *</label><div style="display:flex;align-items:center;gap:8px;"><input type="file" id="uploadDocFile" accept=".doc,.docx,.pdf,.txt,.ppt,.pptx,.xls,.xlsx,.md,.csv" multiple onchange="onUploadFileChange(this)" style="display:none;"><button class="btn btn-sm btn-outline" onclick="document.getElementById(\'uploadDocFile\').click()" style="white-space:nowrap;">选择文件</button><span style="font-size:12px;color:var(--text-muted);">支持格式：DOC、DOCX、PDF、TXT、PPT、PPTX、XLS、XLSX、MD、CSV</span></div><div id="uploadFileList" style="display:flex;flex-direction:column;gap:4px;margin-top:8px;"></div></div>' +
-    '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识说明</label><textarea id="uploadDocDesc" placeholder="请输入知识说明..." style="width:100%;min-height:80px;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);resize:vertical;font-family:inherit;"></textarea></div>' +
+    '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识说明 <span style="color:var(--accent-rose);">*</span></label><textarea id="uploadDocDesc" placeholder="请输入知识说明..." style="width:100%;min-height:80px;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);resize:vertical;font-family:inherit;"></textarea></div>' +
     '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属项目</label><select id="uploadDocProject" onchange="updateAuditFlowPreview()" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;background:var(--card);"><option value="">请选择项目（可选）</option>' + projectOpts + '</select></div>' +
     '<div>' +
       '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">知识类型 <span style="color:var(--text);">*</span></label>' +
@@ -7153,7 +7180,7 @@ function openBonusReview(requestId) {
     '</div>';
   }).join('');
   _showTaskPanel(
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/></svg>\n      审核奖励申请 · ' + projectName,
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"/></svg>\n      【追加奖励】' + projectName,
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
       '<div style="font-size:13px;color:var(--text-muted);">项目：<strong style="color:var(--text);">' + projectName + '</strong></div>' +
       '<div style="font-size:13px;color:var(--text-muted);">申请人：<strong style="color:var(--text);">' + r.requester + '</strong></div>' +
@@ -7766,97 +7793,6 @@ function renderOverview() {
   budgetHtml += '</div>';
   document.getElementById('ovChartProjectProgress').innerHTML = budgetHtml;
 
-  // Chart 2: Task Status Donut (CSS conic-gradient, dark theme)
-  var statusCounts = {};
-  var statusColors = { draft:'#6b7280', todo:'#9ca3af', in_progress:'#3b82f6', pending_review:'#f59e0b', rejected:'#ef4444', done:'#10b981', closed:'#4b5563' };
-  var statusLabels = { draft:'草稿', todo:'待开始', in_progress:'进行中', pending_review:'待审核', rejected:'驳回', done:'已验收', closed:'已关闭' };
-  tasks.forEach(function(t) { statusCounts[t.status] = (statusCounts[t.status] || 0) + 1; });
-  var donutTotal = tasks.length;
-  var donutAccum = 0;
-  var donutGradient = '';
-  var legendHtml = '';
-  Object.keys(statusCounts).forEach(function(s) {
-    var pct = statusCounts[s] / donutTotal * 100;
-    donutGradient += statusColors[s] + ' ' + donutAccum + '% ' + (donutAccum + pct) + '%';
-    donutAccum += pct;
-    if (donutAccum < 100) donutGradient += ', ';
-    legendHtml += '<div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#9ca3af;"><span class="ov-legend-dot" style="background:' + statusColors[s] + ';"></span>' + statusLabels[s] + ' <span style="color:#4b5563;">' + statusCounts[s] + '</span></div>';
-  });
-  var donutHtml = '<div style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:8px 0;">' +
-    '<div style="position:relative;width:150px;height:150px;border-radius:50%;background:conic-gradient(' + donutGradient + ');box-shadow:0 0 20px rgba(59,130,246,0.15);">' +
-      '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:110px;height:110px;border-radius:50%;background:#181a23;display:flex;flex-direction:column;align-items:center;justify-content:center;">' +
-        '<div style="font-size:32px;font-weight:700;color:#fff;line-height:1;">' + donutTotal + '</div>' +
-        '<div style="font-size:11px;color:#6b7280;margin-top:4px;">总任务数</div>' +
-      '</div>' +
-    '</div>' +
-    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;">' + legendHtml + '</div>' +
-  '</div>';
-  document.getElementById('ovChartTaskDonut').innerHTML = donutHtml;
-
-  // Chart 3: Quarterly Burndown (dark theme)
-  var quarters = [
-    { label:'Q1', remaining:42, completed:18, added:8 },
-    { label:'Q2', remaining:35, completed:25, added:12 },
-    { label:'Q3', remaining:20, completed:30, added:6 },
-    { label:'Q4', remaining:15, completed:5, added:3 }
-  ];
-  var maxVal = 50;
-  var barH = 150;
-  var bHtml = '<div style="display:flex;gap:16px;margin-bottom:12px;font-size:11px;color:#6b7280;"><span style="display:flex;align-items:center;gap:4px;"><span class="ov-legend-dot" style="background:#10b981;"></span>已完成</span><span style="display:flex;align-items:center;gap:4px;"><span class="ov-legend-dot" style="background:#3b82f6;"></span>剩余</span><span style="display:flex;align-items:center;gap:4px;"><span class="ov-legend-dot" style="background:#6366f1;"></span>新增</span></div>';
-  bHtml += '<div style="display:flex;align-items:flex-end;justify-content:space-around;height:180px;gap:12px;padding:0 8px;">';
-  quarters.forEach(function(q) {
-    var totalH = (q.remaining + q.completed + q.added) / maxVal * barH;
-    var doneH = q.completed / maxVal * barH;
-    var remainH = q.remaining / maxVal * barH;
-    var addedH = q.added / maxVal * barH;
-    bHtml += '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;flex:1;">' +
-      '<div style="font-size:10px;color:#6b7280;font-weight:600;">' + (q.remaining + q.completed) + '</div>' +
-      '<div style="width:100%;max-width:44px;display:flex;flex-direction:column;border-radius:6px 6px 0 0;overflow:hidden;">';
-    if (q.added) bHtml += '<div style="height:' + addedH + 'px;background:linear-gradient(180deg,#818cf8,#6366f1);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;">+' + q.added + '</div>';
-    bHtml += '<div style="height:' + remainH + 'px;background:linear-gradient(180deg,#60a5fa,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;">' + q.remaining + '</div>';
-    if (q.completed) bHtml += '<div style="height:' + doneH + 'px;background:linear-gradient(180deg,#34d399,#10b981);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;font-weight:600;">-' + q.completed + '</div>';
-    bHtml += '</div><div style="font-size:11px;color:#9ca3af;font-weight:500;">' + q.label + '</div></div>';
-  });
-  bHtml += '</div>';
-  document.getElementById('ovChartBurndown').innerHTML = bHtml;
-
-  // Chart 4: Team Workload (dark theme)
-  var members = ['张明远','李晓华','王思远','赵明','陈雨桐'];
-  var workloadHtml = '<div style="display:flex;flex-direction:column;gap:14px;padding:4px 0;">';
-  members.forEach(function(m) {
-    var mTasks = tasks.filter(function(t) { return t.assignee === m; });
-    var mDone = mTasks.filter(function(t) { return t.status === 'done' || t.status === 'closed'; }).length;
-    var mActive = mTasks.filter(function(t) { return t.status === 'todo' || t.status === 'in_progress' || t.status === 'pending_review' || t.status === 'rejected'; }).length;
-    var mDraft = mTasks.filter(function(t) { return t.status === 'draft'; }).length;
-    var mTotal = mTasks.length;
-    var utilization = mTotal > 0 ? Math.round(mActive / mTotal * 100) : 0;
-    var utilColor = utilization > 70 ? '#ef4444' : utilization > 40 ? '#f59e0b' : '#10b981';
-    workloadHtml += '<div>' +
-      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">' +
-        '<div style="display:flex;align-items:center;gap:10px;">' +
-          '<div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#3b82f6,#1e40af);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;">' + m[0] + '</div>' +
-          '<span style="font-size:13px;font-weight:500;color:#e4e7ec;">' + m + '</span>' +
-        '</div>' +
-        '<div style="display:flex;gap:12px;font-size:11px;color:#6b7280;">' +
-          '<span>进行 <span style="color:#3b82f6;font-weight:600;">' + mActive + '</span></span>' +
-          '<span>完成 <span style="color:#10b981;font-weight:600;">' + mDone + '</span></span>' +
-          '<span style="font-weight:600;color:' + utilColor + ';">' + utilization + '%</span>' +
-        '</div>' +
-      '</div>' +
-      '<div class="ov-progress-track" style="display:flex;">' +
-        '<div style="height:6px;width:' + (mDone/Math.max(mTotal,1)*100) + '%;background:#10b981;border-radius:3px 0 0 3px;"></div>' +
-        '<div style="height:6px;width:' + (mActive/Math.max(mTotal,1)*100) + '%;background:#3b82f6;"></div>' +
-        '<div style="height:6px;width:' + (mDraft/Math.max(mTotal,1)*100) + '%;background:#374151;border-radius:0 3px 3px 0;"></div>' +
-      '</div>' +
-    '</div>';
-  });
-  workloadHtml += '<div style="display:flex;gap:16px;font-size:10px;color:#4b5563;justify-content:center;margin-top:8px;">' +
-    '<span><span class="ov-legend-dot" style="background:#10b981;margin-right:4px;"></span>已完成</span>' +
-    '<span><span class="ov-legend-dot" style="background:#3b82f6;margin-right:4px;"></span>进行中</span>' +
-    '<span><span class="ov-legend-dot" style="background:#374151;margin-right:4px;"></span>草稿</span>' +
-  '</div></div>';
-  document.getElementById('ovChartTeamWorkload').innerHTML = workloadHtml;
-
   // Chart 5: Points Trend (dark theme with gradient bars)
   var months = ['1月','2月','3月','4月','5月','6月'];
   var pointsData = [3200, 4500, 3800, 5200, 6100, totalReward || 5800];
@@ -7889,31 +7825,6 @@ function renderOverview() {
   });
   kbHtml += '</div>';
   document.getElementById('ovChartKnowledgeGrowth').innerHTML = kbHtml;
-
-  // Chart 7: Knowledge Contribution by Department (dark theme, single accent)
-  var deptData = [
-    { name: '技术部', value: 30 },
-    { name: '产品部', value: 22 },
-    { name: '合规部', value: 18 },
-    { name: '财务部', value: 15 },
-    { name: 'BD', value: 10 },
-    { name: '其他', value: 5 }
-  ];
-  var deptHtml = '<div style="display:flex;flex-direction:column;gap:12px;">';
-  deptData.forEach(function(d, i) {
-    var opacity = 1 - i * 0.12;
-    deptHtml += '<div>' +
-      '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px;">' +
-        '<span style="color:#e4e7ec;font-weight:500;">' + d.name + '</span>' +
-        '<span style="color:#9ca3af;font-weight:600;">' + d.value + '%</span>' +
-      '</div>' +
-      '<div class="ov-progress-track">' +
-        '<div class="ov-progress-fill" style="width:' + d.value + '%;background:linear-gradient(90deg,rgba(59,130,246,' + opacity + '),rgba(59,130,246,' + (opacity*0.6) + '));"></div>' +
-      '</div>' +
-    '</div>';
-  });
-  deptHtml += '</div>';
-  document.getElementById('ovChartDeptContribution').innerHTML = deptHtml;
 
   // Leader Todos (dark theme)
   var leaderTodos = [];
@@ -8161,6 +8072,8 @@ function openKnowledgeReviewDetail(reviewId) {
       '<div style="display:flex;align-items:center;gap:8px;"><span class="' + statusClass + '"><span class="bl-status-dot ' + statusDot + '"></span>' + statusText + '</span><span style="font-size:18px;font-weight:700;">' + r.title + '</span></div>' +
       '<div style="padding:12px;background:var(--bg);border-radius:3px;font-size:13px;color:var(--text-secondary);">' + r.desc + '</div>' +
       '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识编号</label><div style="font-size:13px;font-family:monospace;">' + (r.keyId || '审核通过后生成') + '</div></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">审批编号</label><div style="font-size:13px;font-family:monospace;">' + (r.auditNo || '审核通过后生成') + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识上传人</label><div style="font-size:13px;">' + r.uploader + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">所属部门</label><div style="font-size:13px;">' + r.dept + '</div></div>' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">知识贡献者</label><div style="font-size:13px;">' + r.contributor + '</div></div>' +
@@ -8177,6 +8090,37 @@ function openKnowledgeReviewDetail(reviewId) {
       '</div>' +
     '</div>'
   );
+}
+
+// ===== Knowledge Number Generation =====
+var _deptCodeMap = {
+  '技术部': 'TC', '产品部': 'PD', '合规部': 'CP', '财务部': 'FN',
+  'BD': 'BD', '市场部': 'MK', '运维部': 'OP', '人事部': 'HR',
+  '总经办': 'GM', '战略投资部': 'SI'
+};
+var _userSeqMap = {};
+
+function _getUserID(userName, dept) {
+  var deptCode = _deptCodeMap[dept] || 'XX';
+  var groupNo = '01';
+  var baseId = deptCode + groupNo;
+  if (!_userSeqMap[baseId]) _userSeqMap[baseId] = {};
+  if (!_userSeqMap[baseId][userName]) {
+    var seq = Object.keys(_userSeqMap[baseId]).length + 1;
+    _userSeqMap[baseId][userName] = String(seq).padStart(3, '0');
+  }
+  return baseId + _userSeqMap[baseId][userName];
+}
+
+function generateKnowledgeNumber(r) {
+  var typeIdx = knowledgeTypeData.findIndex(function(t) { return t.cn === r.primaryType; });
+  var typeCode = String(typeIdx >= 0 ? typeIdx + 1 : 0).padStart(2, '0');
+  var userId = _getUserID(r.uploader, r.dept);
+  var seqKey = 'K' + typeCode + userId;
+  if (!_userSeqMap[seqKey]) _userSeqMap[seqKey] = 0;
+  _userSeqMap[seqKey]++;
+  var seqStr = String(_userSeqMap[seqKey]).padStart(3, '0');
+  return seqKey + seqStr;
 }
 
 function reviewKnowledgeAction(reviewId, nodeIndex, opIndex, action) {
@@ -8203,7 +8147,9 @@ function reviewKnowledgeAction(reviewId, nodeIndex, opIndex, action) {
     if (allDone) {
       node.status = 'done';
       r.status = 'done';
-      alert('审核通过！\n贡献者：' + r.contributor + '\n预计积分：' + ((r.baseValue || 0) * 30 + (r.difficulty || 0) * 1.5) + ' RP');
+      r.keyId = generateKnowledgeNumber(r);
+      r.auditNo = 'AP-' + r.keyId;
+      alert('审核通过！\n知识编号：' + r.keyId + '\n审批编号：' + r.auditNo + '\n贡献者：' + r.contributor + '\n预计积分：' + ((r.baseValue || 0) * 30 + (r.difficulty || 0) * 1.5) + ' RP');
     } else {
       alert('已审核通过，等待其他审核人处理');
     }
