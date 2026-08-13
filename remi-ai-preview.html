@@ -3243,7 +3243,9 @@ const projectReleases = [
 ];
 
 // Bonus Requests
-const bonusRequests = [];
+const bonusRequests = [
+  { id:'br1', projectId:'p1', requester:'张明远', desc:'项目成员在API接口文档V2.1编写过程中表现突出，急需追加奖励以激励团队', reviewer:'李晓华', allocations:[ { person:'王思远', amount:300, reason:'前端页面优化贡献突出' }, { person:'陈雨', amount:200, reason:'后端接口文档编写质量高' } ], status:'pending', opinion:'', createdAt:'2026-07-22' }
+];
 
 // Tasks
 const tasks = [
@@ -7515,7 +7517,7 @@ function renderAdminData() {
 // ===== BONUS HELPERS =====
 let _bonusMembers = [];
 let _bonusRowIdx = 0;
-let _bonusRequestCounter = 0;
+let _bonusRequestCounter = 1; // br1 already exists in initial data
 
 function _buildBonusRow(person, amount) {
   _bonusRowIdx++;
@@ -8452,9 +8454,25 @@ function renderWbBacklog() {
       isKnowledgeReview: true
     };
   });
+  var bonusReviewItems = bonusRequests.filter(function(r) { return r.status === 'pending'; }).map(function(r) {
+    var p = projects.find(function(x) { return x.id === r.projectId; });
+    return {
+      id: r.id,
+      title: '【追加奖励】' + (p ? p.name : '未知项目'),
+      status: 'pending_review',
+      priority: 'P1',
+      projectId: r.projectId,
+      reward: 0,
+      assignee: r.requester,
+      createdAt: r.createdAt,
+      deadline: '-',
+      updatedAt: r.createdAt,
+      isBonusReview: true
+    };
+  });
   if (blFilterMode === 'task') allItems = tasks.filter(t => t.status !== 'done' && t.status !== 'closed');
-  else if (blFilterMode === 'review') allItems = tasks.filter(t => t.status === 'pending_review').concat(reviewItems);
-  else allItems = tasks.concat(reviewItems);
+  else if (blFilterMode === 'review') allItems = tasks.filter(t => t.status === 'pending_review').concat(reviewItems).concat(bonusReviewItems);
+  else allItems = tasks.concat(reviewItems).concat(bonusReviewItems);
   const priorityOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
   allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
   const statusLabels = { todo: '待开始', in_progress: '进行中', pending_review: '待审核', rejected: '驳回' };
@@ -8482,6 +8500,10 @@ function renderWbBacklog() {
         displayTitle = '【任务奖励】' + item.title;
         displayKey = 'RW-' + (item.taskId || item.id);
         html += '<div class="backlog-item" onclick="auditTaskReward(\'' + item.id + '\')">';
+      } else if (item.isBonusReview) {
+        displayTitle = item.title;
+        displayKey = 'BR-' + item.id;
+        html += '<div class="backlog-item" onclick="openBonusReview(\'' + item.id + '\')">';
       } else {
         displayTitle = item.title;
         html += '<div class="backlog-item" onclick="openTaskByStatus(\'' + item.id + '\')">';
@@ -8490,7 +8512,7 @@ function renderWbBacklog() {
     html +=
       '<div class="backlog-col col-key">' + displayKey + '</div>' +
       '<div class="backlog-col col-title">' + displayTitle + '</div>' +
-      '<div class="backlog-col col-priority' + (item.isKnowledgeReview || item.id === 't25' || (item.status === 'pending_review' && item.reward > 0) || !item.priority ? '' : ' ' + item.priority.toLowerCase()) + '">' + (item.isKnowledgeReview || item.id === 't25' || (item.status === 'pending_review' && item.reward > 0) ? '-' : (item.priority || '-')) + '</div>' +
+      '<div class="backlog-col col-priority' + (item.isKnowledgeReview || item.id === 't25' || (item.status === 'pending_review' && item.reward > 0) || item.isBonusReview || !item.priority ? '' : ' ' + item.priority.toLowerCase()) + '">' + (item.isKnowledgeReview || item.id === 't25' || (item.status === 'pending_review' && item.reward > 0) || item.isBonusReview ? '-' : (item.priority || '-')) + '</div>' +
       '<div class="backlog-col col-project">' + (projName || '-') + '</div>' +
       '<div class="backlog-col col-status"><span class="bl-status status-' + item.status + '"><span class="bl-status-dot status-' + item.status + '"></span>' + (statusLabels[item.status] || item.status) + '</span></div>' +
       '<div class="backlog-col col-start">' + (item.createdAt || '-') + '</div>' +
