@@ -3765,6 +3765,10 @@ function openBonusModal(projectId) {
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
       '<div style="font-size:13px;color:var(--text-muted);">项目：<strong style="color:var(--text);">' + p.name + '</strong>（' + (stageLabels[p.stage] || p.stage) + '）</div>' +
       '<div>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">事项描述 <span style="color:var(--accent-rose);">*</span></label>' +
+        '<textarea id="bonusDesc" rows="3" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="请描述追加奖励的原因和事项"></textarea>' +
+      '</div>' +
+      '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">奖励分配列表</label>' +
         '<div id="bonusRewardRows" style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' +
           _buildBonusRow(p.lead, '') +
@@ -7553,6 +7557,8 @@ function removeBonusRow(idx) {
 function submitBonusRequest(projectId) {
   const rows = document.querySelectorAll('#bonusRewardRows .reward-row');
   const reviewer = document.getElementById('bonusReviewer').value;
+  const desc = document.getElementById('bonusDesc').value.trim();
+  if (!desc) { alert('请填写事项描述'); return; }
   const allocations = [];
   let hasValidRow = false;
   rows.forEach(function(row) {
@@ -7573,6 +7579,7 @@ function submitBonusRequest(projectId) {
     id: 'br' + _bonusRequestCounter,
     projectId: projectId,
     requester: '张明远',
+    desc: desc,
     reviewer: reviewer,
     allocations: allocations,
     status: 'pending',
@@ -7717,6 +7724,10 @@ function openBonusReview(requestId) {
     '<div style="padding:20px;display:flex;flex-direction:column;gap:14px;">' +
       '<div style="font-size:13px;color:var(--text-muted);">项目：<strong style="color:var(--text);">' + projectName + '</strong></div>' +
       '<div style="font-size:13px;color:var(--text-muted);">申请人：<strong style="color:var(--text);">' + r.requester + '</strong></div>' +
+      '<div>' +
+        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">事项描述</label>' +
+        '<div style="font-size:13px;color:var(--text);padding:6px 8px;background:var(--bg);border-radius:3px;border:1px solid var(--border-light);">' + (r.desc || '-') + '</div>' +
+      '</div>' +
       '<div>' +
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">奖励分配列表</label>' +
         '<div style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' +
