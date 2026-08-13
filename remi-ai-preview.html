@@ -7703,10 +7703,10 @@ function openBonusReview(requestId) {
   const p = projects.find(function(x) { return x.id === r.projectId; });
   const projectName = p ? p.name : '未知项目';
   const totalAmount = r.allocations.reduce(function(sum, a) { return sum + a.amount; }, 0);
-  const allocHtml = r.allocations.map(function(a) {
+  const allocHtml = r.allocations.map(function(a, idx) {
     return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;">' +
       '<span style="flex:1;color:var(--text);">' + a.person + '</span>' +
-      '<span style="width:90px;text-align:right;color:var(--primary);font-weight:600;">' + a.amount + ' RP</span>' +
+      '<input type="number" id="bonusAllocAmt_' + idx + '" value="' + a.amount + '" style="width:90px;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:12px;text-align:right;background:var(--card);" min="0" onchange="updateBonusTotal()">' +
       '<span style="flex:0.7;color:var(--text-muted);">' + (a.reason || '-') + '</span>' +
     '</div>';
   }).join('');
@@ -7727,7 +7727,7 @@ function openBonusReview(requestId) {
           '</div>' +
           allocHtml +
           '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;font-weight:600;border-top:1px solid var(--border-light);margin-top:4px;padding-top:4px;">' +
-            '<span style="flex:1;">合计</span><span style="width:90px;text-align:right;color:var(--primary);">' + totalAmount + ' RP</span><span style="flex:0.7;"></span>' +
+            '<span style="flex:1;">合计</span><span id="bonusTotalDisplay" style="width:90px;text-align:right;color:var(--primary);">' + totalAmount + ' RP</span><span style="flex:0.7;"></span>' +
           '</div>' +
         '</div>' +
       '</div>' +
@@ -7745,10 +7745,28 @@ function openBonusReview(requestId) {
   );
 }
 
+function updateBonusTotal() {
+  var total = 0;
+  var idx = 0;
+  while (true) {
+    var input = document.getElementById('bonusAllocAmt_' + idx);
+    if (!input) break;
+    total += parseInt(input.value) || 0;
+    idx++;
+  }
+  var display = document.getElementById('bonusTotalDisplay');
+  if (display) display.textContent = total + ' RP';
+}
+
 function doApproveBonus() {
   const requestId = document.getElementById('bonusReviewId').value;
   const r = bonusRequests.find(function(x) { return x.id === requestId; });
   if (!r) return;
+  // Read updated amounts from inputs
+  r.allocations.forEach(function(a, idx) {
+    var input = document.getElementById('bonusAllocAmt_' + idx);
+    if (input) a.amount = parseInt(input.value) || 0;
+  });
   const opinion = document.getElementById('bonusReviewOpinion').value.trim();
   if (!opinion) { alert('请填写审核意见'); return; }
   const p = projects.find(function(x) { return x.id === r.projectId; });
