@@ -6785,7 +6785,7 @@ function _renderDeptSelectorBtn(tagId, selectedDepts) {
   var label = depts.length ? depts.join(', ') : '检索权限';
   return '<div style="position:relative;display:inline-block;">' +
     '<button class="btn btn-xs btn-outline" id="deptBtn_' + tagId + '" onclick="event.stopPropagation();_toggleDeptSelector(\'' + tagId + '\')" style="font-size:11px;padding:2px 6px;white-space:nowrap;" title="' + label + '">' + label + '</button>' +
-    '<div id="deptSelector_' + tagId + '" style="display:none;position:absolute;top:100%;right:0;z-index:1000;background:var(--card);border:1px solid var(--border-light);border-radius:3px;padding:6px;width:160px;box-shadow:0 4px 12px rgba(0,0,0,0.15);max-height:260px;overflow-y:auto;">' +
+    '<div id="deptSelector_' + tagId + '" onclick="event.stopPropagation()" style="display:none;position:absolute;top:100%;right:0;z-index:1000;background:var(--card);border:1px solid var(--border-light);border-radius:3px;padding:6px;width:160px;box-shadow:0 4px 12px rgba(0,0,0,0.15);max-height:260px;overflow-y:auto;">' +
     _DEPT_LIST.map(function(d) {
       var checked = depts.indexOf(d) !== -1;
       return '<label style="display:flex;align-items:center;gap:4px;padding:3px 4px;font-size:12px;cursor:pointer;white-space:nowrap;"><input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="_toggleDeptOption(\'' + tagId + '\',\'' + d + '\',this.checked)">' + d + '</label>';
