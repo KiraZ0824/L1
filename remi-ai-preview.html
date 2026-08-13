@@ -4089,7 +4089,8 @@ function openUploadDocModal() {
     if (knowledgeTypeData.length > 0) {
       var first = knowledgeTypeData[0].subTags || [];
       for (var j = 0; j < first.length; j++) {
-        subTagOpts += '<option value="' + first[j] + '">' + first[j] + '</option>';
+        var tag = typeof first[j] === 'string' ? first[j] : first[j].name;
+        subTagOpts += '<option value="' + tag + '">' + tag + '</option>';
       }
     }
     // Reset selected sub-tags
@@ -6034,7 +6035,8 @@ function renderKnowledgeUploadForm(container) {
   if (knowledgeTypeData.length > 0) {
     var first = knowledgeTypeData[0].subTags || [];
     for (var j = 0; j < first.length; j++) {
-      subTagOpts += '<option value="' + first[j] + '">' + first[j] + '</option>';
+      var tag = typeof first[j] === 'string' ? first[j] : first[j].name;
+      subTagOpts += '<option value="' + tag + '">' + tag + '</option>';
     }
   }
   container.innerHTML =
@@ -6418,18 +6420,156 @@ function switchKbTab(el, tab) {
 
 // ===== Knowledge Type Data (12 types from L1 doc) =====
 const knowledgeTypeData = [
-  { cn:'规范与标准', en:'Standards & Policies', desc:'公司制度、业务标准、操作规范、分类标准及统一执行要求。', subTags:['公司制度','流程规范/SOP','品牌视觉规范','业务分类标准','数据分类标准','风险管理制度','内控制度','合规指引','文档编写规范'], docCount:15, enabled:true },
-  { cn:'商务方案', en:'Business Proposals', desc:'用于客户开发、合作沟通、方案介绍、报价及商务汇报的材料。', subTags:['银行合作方案','支付机构合作方案','客户解决方案','合作建议书','商务提案/Proposal','报价方案','项目合作计划','对外演示材料/Deck'], docCount:12, enabled:true },
-  { cn:'模板', en:'Templates', desc:'可重复使用，用于快速生成标准文档的空白模板、母版或标准样例。', subTags:['商务Proposal模板','合作建议书模板','合同协议模板','NDA模板','报告模板','会议纪要模板','PRD模板','需求文档模板','技术文档模板','项目交付模板','验收模板','财务测算模板','客户分析模板'], docCount:8, enabled:true },
-  { cn:'合同与法律文件', en:'Legal & Contracts', desc:'正式合同、已签署协议、法律意见、授权文件及其他具有法律效力的材料。', subTags:['合作协议','保密协议/NDA','服务协议','补充协议','技术合作协议','数据处理协议','法律意见','授权文件','合同条款清单','已签署合同'], docCount:6, enabled:true },
-  { cn:'产品文档', en:'Product Docs', desc:'产品定位、功能、使用方法、版本及产品能力相关文档。', subTags:['产品介绍','产品手册','PRD','功能规格说明','产品解决方案','产品FAQ','版本发布说明','产品路线图','功能清单','产品演示脚本'], docCount:10, enabled:true },
-  { cn:'需求文档', en:'Requirements', desc:'用户、业务、产品、技术和合规相关的需求定义及变更记录。', subTags:['用户需求','业务需求','功能需求','技术需求','数据需求','合规需求','客户定制需求','需求变更','验收标准'], docCount:10, enabled:true },
-  { cn:'技术文档', en:'Technical Docs', desc:'API、系统架构、开发集成、数据结构、部署运维及安全相关文档。', subTags:['API规范','系统架构设计','技术方案','开发指南','系统集成指南','数据字典','接口字段说明','部署指南','运维手册','故障排查','安全设计','测试说明'], docCount:15, enabled:true },
-  { cn:'操作指南与演示', en:'User Guides & Demos', desc:'用于系统操作、用户培训、功能演示和快速上手的说明材料。', subTags:['系统操作指南','功能操作说明','快速入门','系统操作Demo','产品演示Demo','培训材料','视频操作教程','常见问题说明','管理后台操作指南'], docCount:5, enabled:true },
-  { cn:'合规与风控', en:'Compliance & Risk', desc:'监管法规解读、合规映射、反洗钱、客户识别、风险评估及内控管理等。', subTags:['监管法规解读','RegTech合规映射','FATF合规映射','AML/反洗钱','KYC/客户识别','风险评估','风险管理','内控管理','合规检查清单','审计材料','国家/地区合规指南','监管报送说明'], docCount:7, enabled:true },
-  { cn:'数据清单与数据库', en:'Data & Directory', desc:'客户、合作伙伴、业务机会、分类字典及其他结构化数据资料。', subTags:['BD客户数据库','潜在客户清单','合作伙伴清单','客户联系人清单','项目清单','商机清单','分类字典','标签字典','数据台账','资源目录'], docCount:9, enabled:true },
-  { cn:'分析与测算', en:'Analysis & Modeling', desc:'用于客户评估、商业决策、财务分析、收益预测和业务测算的材料。', subTags:['客户收益测算','银行收益测算','财务报表分析','客户经营分析','商业模式分析','定价测算','成本收益分析','ROI分析','市场分析','行业研究','客户价值评估','可行性分析'], docCount:11, enabled:true },
-  { cn:'会议纪要', en:'Meeting Notes', desc:'对会议背景、讨论内容、决策结论和后续行动项的正式记录。', subTags:['内部例会纪要','项目周会纪要','客户沟通会议纪要','合作伙伴会议纪要','需求评审会议纪要','产品评审会议纪要','技术评审会议纪要','合规评审会议纪要','风险评审会议纪要','管理决策会议纪要','培训/分享会议纪要','项目复盘会议纪要'], docCount:4, enabled:true }
+  { cn:'规范与标准', en:'Standards & Policies', desc:'公司制度、业务标准、操作规范、分类标准及统一执行要求。', subTags:[
+    { name:'公司制度', en:'Company Policies' },
+    { name:'流程规范/SOP', en:'Process/SOP' },
+    { name:'品牌视觉规范', en:'Brand Visual Guidelines' },
+    { name:'业务分类标准', en:'Business Classification Standards' },
+    { name:'数据分类标准', en:'Data Classification Standards' },
+    { name:'风险管理制度', en:'Risk Management System' },
+    { name:'内控制度', en:'Internal Control System' },
+    { name:'合规指引', en:'Compliance Guidelines' },
+    { name:'文档编写规范', en:'Documentation Standards' }
+  ], docCount:15, enabled:true },
+  { cn:'商务方案', en:'Business Proposals', desc:'用于客户开发、合作沟通、方案介绍、报价及商务汇报的材料。', subTags:[
+    { name:'银行合作方案', en:'Bank Partnership Plan' },
+    { name:'支付机构合作方案', en:'Payment Institution Plan' },
+    { name:'客户解决方案', en:'Client Solution' },
+    { name:'合作建议书', en:'Partnership Proposal' },
+    { name:'商务提案/Proposal', en:'Business Proposal' },
+    { name:'报价方案', en:'Quotation Plan' },
+    { name:'项目合作计划', en:'Project Collaboration Plan' },
+    { name:'对外演示材料/Deck', en:'External Presentation Deck' }
+  ], docCount:12, enabled:true },
+  { cn:'模板', en:'Templates', desc:'可重复使用，用于快速生成标准文档的空白模板、母版或标准样例。', subTags:[
+    { name:'商务Proposal模板', en:'Business Proposal Template' },
+    { name:'合作建议书模板', en:'Partnership Proposal Template' },
+    { name:'合同协议模板', en:'Contract Template' },
+    { name:'NDA模板', en:'NDA Template' },
+    { name:'报告模板', en:'Report Template' },
+    { name:'会议纪要模板', en:'Meeting Minutes Template' },
+    { name:'PRD模板', en:'PRD Template' },
+    { name:'需求文档模板', en:'Requirements Template' },
+    { name:'技术文档模板', en:'Technical Docs Template' },
+    { name:'项目交付模板', en:'Project Delivery Template' },
+    { name:'验收模板', en:'Acceptance Template' },
+    { name:'财务测算模板', en:'Financial Calculation Template' },
+    { name:'客户分析模板', en:'Client Analysis Template' }
+  ], docCount:8, enabled:true },
+  { cn:'合同与法律文件', en:'Legal & Contracts', desc:'正式合同、已签署协议、法律意见、授权文件及其他具有法律效力的材料。', subTags:[
+    { name:'合作协议', en:'Cooperation Agreement' },
+    { name:'保密协议/NDA', en:'NDA' },
+    { name:'服务协议', en:'Service Agreement' },
+    { name:'补充协议', en:'Supplementary Agreement' },
+    { name:'技术合作协议', en:'Technology Cooperation Agreement' },
+    { name:'数据处理协议', en:'Data Processing Agreement' },
+    { name:'法律意见', en:'Legal Opinion' },
+    { name:'授权文件', en:'Authorization Document' },
+    { name:'合同条款清单', en:'Contract Terms Checklist' },
+    { name:'已签署合同', en:'Signed Contract' }
+  ], docCount:6, enabled:true },
+  { cn:'产品文档', en:'Product Docs', desc:'产品定位、功能、使用方法、版本及产品能力相关文档。', subTags:[
+    { name:'产品介绍', en:'Product Introduction' },
+    { name:'产品手册', en:'Product Manual' },
+    { name:'PRD', en:'PRD' },
+    { name:'功能规格说明', en:'Functional Specification' },
+    { name:'产品解决方案', en:'Product Solution' },
+    { name:'产品FAQ', en:'Product FAQ' },
+    { name:'版本发布说明', en:'Release Notes' },
+    { name:'产品路线图', en:'Product Roadmap' },
+    { name:'功能清单', en:'Feature List' },
+    { name:'产品演示脚本', en:'Product Demo Script' }
+  ], docCount:10, enabled:true },
+  { cn:'需求文档', en:'Requirements', desc:'用户、业务、产品、技术和合规相关的需求定义及变更记录。', subTags:[
+    { name:'用户需求', en:'User Requirements' },
+    { name:'业务需求', en:'Business Requirements' },
+    { name:'功能需求', en:'Functional Requirements' },
+    { name:'技术需求', en:'Technical Requirements' },
+    { name:'数据需求', en:'Data Requirements' },
+    { name:'合规需求', en:'Compliance Requirements' },
+    { name:'客户定制需求', en:'Custom Requirements' },
+    { name:'需求变更', en:'Requirements Change' },
+    { name:'验收标准', en:'Acceptance Criteria' }
+  ], docCount:10, enabled:true },
+  { cn:'技术文档', en:'Technical Docs', desc:'API、系统架构、开发集成、数据结构、部署运维及安全相关文档。', subTags:[
+    { name:'API规范', en:'API Specification' },
+    { name:'系统架构设计', en:'System Architecture Design' },
+    { name:'技术方案', en:'Technical Solution' },
+    { name:'开发指南', en:'Development Guide' },
+    { name:'系统集成指南', en:'System Integration Guide' },
+    { name:'数据字典', en:'Data Dictionary' },
+    { name:'接口字段说明', en:'Interface Field Description' },
+    { name:'部署指南', en:'Deployment Guide' },
+    { name:'运维手册', en:'Operations Manual' },
+    { name:'故障排查', en:'Troubleshooting' },
+    { name:'安全设计', en:'Security Design' },
+    { name:'测试说明', en:'Testing Guide' }
+  ], docCount:15, enabled:true },
+  { cn:'操作指南与演示', en:'User Guides & Demos', desc:'用于系统操作、用户培训、功能演示和快速上手的说明材料。', subTags:[
+    { name:'系统操作指南', en:'System Operation Guide' },
+    { name:'功能操作说明', en:'Feature Operation Guide' },
+    { name:'快速入门', en:'Quick Start' },
+    { name:'系统操作Demo', en:'System Demo' },
+    { name:'产品演示Demo', en:'Product Demo' },
+    { name:'培训材料', en:'Training Materials' },
+    { name:'视频操作教程', en:'Video Tutorial' },
+    { name:'常见问题说明', en:'FAQ' },
+    { name:'管理后台操作指南', en:'Admin Panel Guide' }
+  ], docCount:5, enabled:true },
+  { cn:'合规与风控', en:'Compliance & Risk', desc:'监管法规解读、合规映射、反洗钱、客户识别、风险评估及内控管理等。', subTags:[
+    { name:'监管法规解读', en:'Regulatory Interpretation' },
+    { name:'RegTech合规映射', en:'RegTech Compliance Mapping' },
+    { name:'FATF合规映射', en:'FATF Compliance Mapping' },
+    { name:'AML/反洗钱', en:'AML' },
+    { name:'KYC/客户识别', en:'KYC' },
+    { name:'风险评估', en:'Risk Assessment' },
+    { name:'风险管理', en:'Risk Management' },
+    { name:'内控管理', en:'Internal Control' },
+    { name:'合规检查清单', en:'Compliance Checklist' },
+    { name:'审计材料', en:'Audit Materials' },
+    { name:'国家/地区合规指南', en:'Country/Region Compliance Guide' },
+    { name:'监管报送说明', en:'Regulatory Reporting Guide' }
+  ], docCount:7, enabled:true },
+  { cn:'数据清单与数据库', en:'Data & Directory', desc:'客户、合作伙伴、业务机会、分类字典及其他结构化数据资料。', subTags:[
+    { name:'BD客户数据库', en:'BD Client Database' },
+    { name:'潜在客户清单', en:'Prospect List' },
+    { name:'合作伙伴清单', en:'Partner List' },
+    { name:'客户联系人清单', en:'Client Contact List' },
+    { name:'项目清单', en:'Project List' },
+    { name:'商机清单', en:'Opportunity List' },
+    { name:'分类字典', en:'Classification Dictionary' },
+    { name:'标签字典', en:'Tag Dictionary' },
+    { name:'数据台账', en:'Data Ledger' },
+    { name:'资源目录', en:'Resource Directory' }
+  ], docCount:9, enabled:true },
+  { cn:'分析与测算', en:'Analysis & Modeling', desc:'用于客户评估、商业决策、财务分析、收益预测和业务测算的材料。', subTags:[
+    { name:'客户收益测算', en:'Client Revenue Estimation' },
+    { name:'银行收益测算', en:'Bank Revenue Estimation' },
+    { name:'财务报表分析', en:'Financial Statement Analysis' },
+    { name:'客户经营分析', en:'Client Business Analysis' },
+    { name:'商业模式分析', en:'Business Model Analysis' },
+    { name:'定价测算', en:'Pricing Estimation' },
+    { name:'成本收益分析', en:'Cost-Benefit Analysis' },
+    { name:'ROI分析', en:'ROI Analysis' },
+    { name:'市场分析', en:'Market Analysis' },
+    { name:'行业研究', en:'Industry Research' },
+    { name:'客户价值评估', en:'Client Value Assessment' },
+    { name:'可行性分析', en:'Feasibility Analysis' }
+  ], docCount:11, enabled:true },
+  { cn:'会议纪要', en:'Meeting Notes', desc:'对会议背景、讨论内容、决策结论和后续行动项的正式记录。', subTags:[
+    { name:'内部例会纪要', en:'Internal Meeting Minutes' },
+    { name:'项目周会纪要', en:'Weekly Meeting Minutes' },
+    { name:'客户沟通会议纪要', en:'Client Meeting Minutes' },
+    { name:'合作伙伴会议纪要', en:'Partner Meeting Minutes' },
+    { name:'需求评审会议纪要', en:'Requirements Review Minutes' },
+    { name:'产品评审会议纪要', en:'Product Review Minutes' },
+    { name:'技术评审会议纪要', en:'Technical Review Minutes' },
+    { name:'合规评审会议纪要', en:'Compliance Review Minutes' },
+    { name:'风险评审会议纪要', en:'Risk Review Minutes' },
+    { name:'管理决策会议纪要', en:'Management Decision Minutes' },
+    { name:'培训/分享会议纪要', en:'Training/Sharing Minutes' },
+    { name:'项目复盘会议纪要', en:'Project Retrospective Minutes' }
+  ], docCount:4, enabled:true }
 ];
 
 function renderKnowledgeTypes() {
@@ -6566,9 +6706,14 @@ function manageKbSubTags(index) {
   var listHtml = '';
   for (var i = 0; i < subTags.length; i++) {
     var tag = typeof subTags[i] === 'string' ? { name: subTags[i], difficulty: undefined } : subTags[i];
+    var tagEn = tag.en || '-';
+    var tagDepts = tag.permittedDepts || [];
+    var tagId = 'mgr_' + index + '_' + i;
+    _subTagDeptSelectors[tagId] = _subTagDeptSelectors[tagId] || { depts: tagDepts };
     listHtml += '<div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--bg);border-radius:3px;font-size:13px;margin-bottom:4px;">' +
-      '<span style="flex:1;">' + tag.name + '</span>' +
-      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateSubTagDifficulty(' + index + ',' + i + ', this.value)" style="width:90px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' +
+      '<div style="flex:1;min-width:80px;"><div style="font-size:13px;">' + tag.name + '</div><div style="font-size:11px;color:var(--text-muted);">' + tagEn + '</div></div>' +
+      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateSubTagDifficulty(' + index + ',' + i + ', this.value)" style="width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' +
+      _renderDeptSelectorBtn(tagId, tagDepts) +
       '<button class="btn btn-xs btn-danger" onclick="removeKbSubTag(' + index + ',' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
   }
   if (!listHtml) {
@@ -6578,8 +6723,9 @@ function manageKbSubTags(index) {
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;color:var(--primary);"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>二级标签管理 — ' + t.cn,
     '<div style="padding:20px;">' +
       '<div style="margin-bottom:14px;padding:10px 12px;background:var(--bg);border-radius:3px;"><p style="font-size:12px;color:var(--text-muted);margin-bottom:2px;">英文名称：' + t.en + '</p><p style="font-size:12px;color:var(--text-muted);">描述：' + t.desc + '</p></div>' +
-      '<div style="display:flex;gap:8px;margin-bottom:14px;">' +
-        '<input class="form-input" id="kbSubTagInput" placeholder="输入二级标签名称" style="flex:1;" onkeydown="if(event.key===\'Enter\')addKbSubTag(' + index + ')">' +
+      '<div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;">' +
+        '<input class="form-input" id="kbSubTagInput" placeholder="中文名称" style="flex:1;min-width:100px;" onkeydown="if(event.key===\'Enter\')addKbSubTag(' + index + ')">' +
+        '<input class="form-input" id="kbSubTagEnInput" placeholder="英文名称" style="flex:1;min-width:100px;" onkeydown="if(event.key===\'Enter\')addKbSubTag(' + index + ')">' +
         '<button class="btn btn-primary" onclick="addKbSubTag(' + index + ')">添加</button>' +
       '</div>' +
       '<div style="font-size:12px;color:var(--text-muted);margin-bottom:6px;">共 ' + subTags.length + ' 个二级标签</div>' +
@@ -6590,11 +6736,17 @@ function manageKbSubTags(index) {
 
 function addKbSubTag(index) {
   var input = document.getElementById('kbSubTagInput');
+  var enInput = document.getElementById('kbSubTagEnInput');
   var tag = input.value.trim();
   if (!tag) { alert('请输入二级标签名称'); return; }
+  var en = enInput.value.trim();
   if (!knowledgeTypeData[index].subTags) knowledgeTypeData[index].subTags = [];
-  knowledgeTypeData[index].subTags.push({ name: tag, difficulty: undefined });
+  var subTags = knowledgeTypeData[index].subTags;
+  var tagId = 'mgr_' + index + '_' + subTags.length;
+  _subTagDeptSelectors[tagId] = { depts: [] };
+  subTags.push({ name: tag, en: en, difficulty: undefined, permittedDepts: [] });
   input.value = '';
+  enInput.value = '';
   manageKbSubTags(index);
   renderKnowledgeTypes();
 }
@@ -6625,6 +6777,46 @@ function toggleKbStatus(index, enabled) {
 }
 
 // ===== 二级标签（集成在新增/编辑表单中） =====
+var _subTagDeptSelectors = {}; // { tagId: { open: bool, depts: [] } }
+var _DEPT_LIST = ['总经办','BD','合规部','产品研发部','技术部','产品部','运维部','财务部','人事部','战略投资部'];
+
+function _renderDeptSelectorBtn(tagId, selectedDepts) {
+  var depts = selectedDepts || [];
+  var label = depts.length ? depts.join(', ') : '检索权限';
+  return '<div style="position:relative;display:inline-block;">' +
+    '<button class="btn btn-xs btn-outline" id="deptBtn_' + tagId + '" onclick="event.stopPropagation();_toggleDeptSelector(\'' + tagId + '\')" style="font-size:11px;padding:2px 6px;white-space:nowrap;" title="' + label + '">' + label + '</button>' +
+    '<div id="deptSelector_' + tagId + '" style="display:none;position:absolute;top:100%;right:0;z-index:1000;background:var(--card);border:1px solid var(--border-light);border-radius:3px;padding:6px;width:160px;box-shadow:0 4px 12px rgba(0,0,0,0.15);max-height:260px;overflow-y:auto;">' +
+    _DEPT_LIST.map(function(d) {
+      var checked = depts.indexOf(d) !== -1;
+      return '<label style="display:flex;align-items:center;gap:4px;padding:3px 4px;font-size:12px;cursor:pointer;white-space:nowrap;"><input type="checkbox" ' + (checked ? 'checked' : '') + ' onchange="_toggleDeptOption(\'' + tagId + '\',\'' + d + '\',this.checked)">' + d + '</label>';
+    }).join('') +
+    '</div></div>';
+}
+
+function _toggleDeptSelector(tagId) {
+  var el = document.getElementById('deptSelector_' + tagId);
+  if (!el) return;
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+
+function _toggleDeptOption(tagId, dept, checked) {
+  if (!_subTagDeptSelectors[tagId]) _subTagDeptSelectors[tagId] = { depts: [] };
+  var data = _subTagDeptSelectors[tagId];
+  if (checked) {
+    if (data.depts.indexOf(dept) === -1) data.depts.push(dept);
+  } else {
+    var idx = data.depts.indexOf(dept);
+    if (idx !== -1) data.depts.splice(idx, 1);
+  }
+  // Update button text to show selected departments
+  var btn = document.getElementById('deptBtn_' + tagId);
+  if (btn) {
+    var label = data.depts.length ? data.depts.join(', ') : '检索权限';
+    btn.textContent = label;
+    btn.title = label;
+  }
+}
+
 var _addTempSubTags = [];
 
 function refreshAddTempSubTagList() {
@@ -6636,9 +6828,12 @@ function refreshAddTempSubTagList() {
   }
   var html = '';
   _addTempSubTags.forEach(function(tag, i) {
+    var tagId = 'add_' + i;
+    _subTagDeptSelectors[tagId] = _subTagDeptSelectors[tagId] || { depts: tag.permittedDepts || [] };
     html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border-radius:3px;font-size:13px;margin-bottom:4px;">' +
-      '<span style="flex:1;">' + tag.name + '</span>' +
-      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateAddTempSubTagDifficulty(' + i + ',this.value)" style="width:90px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' +
+      '<div style="flex:1;min-width:80px;"><div style="font-size:13px;">' + tag.name + '</div><div style="font-size:11px;color:var(--text-muted);">' + (tag.en || '-') + '</div></div>' +
+      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateAddTempSubTagDifficulty(' + i + ',this.value)" style="width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' +
+      _renderDeptSelectorBtn(tagId, tag.permittedDepts) +
       '<button class="btn btn-xs btn-danger" onclick="removeAddTempSubTag(' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
   });
   container.innerHTML = html;
@@ -6646,10 +6841,15 @@ function refreshAddTempSubTagList() {
 
 function addTempSubTag() {
   var input = document.getElementById('addKbSubTagInput');
+  var enInput = document.getElementById('addKbSubTagEnInput');
   var name = input.value.trim();
   if (!name) return;
-  _addTempSubTags.push({ name: name, difficulty: undefined });
+  var en = enInput.value.trim();
+  var tagId = 'add_' + _addTempSubTags.length;
+  _subTagDeptSelectors[tagId] = { depts: [] };
+  _addTempSubTags.push({ name: name, en: en, difficulty: undefined, permittedDepts: [] });
   input.value = '';
+  enInput.value = '';
   refreshAddTempSubTagList();
 }
 
@@ -6673,9 +6873,14 @@ function refreshEditSubTagList(index) {
   var html = '';
   subTags.forEach(function(tag, i) {
     var tagName = typeof tag === 'string' ? tag : tag.name;
+    var tagEn = (typeof tag === 'object' && tag.en) ? tag.en : '-';
+    var tagDepts = (typeof tag === 'object' && tag.permittedDepts) ? tag.permittedDepts : [];
+    var tagId = 'edit_' + index + '_' + i;
+    _subTagDeptSelectors[tagId] = _subTagDeptSelectors[tagId] || { depts: tagDepts };
     html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border-radius:3px;font-size:13px;margin-bottom:4px;">' +
-      '<span style="flex:1;">' + tagName + '</span>' +
-      '<input type="number" value="' + ((typeof tag === 'object' && tag.difficulty !== undefined) ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateEditSubTagDifficulty(' + index + ',' + i + ',this.value)" style="width:90px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' +
+      '<div style="flex:1;min-width:80px;"><div style="font-size:13px;">' + tagName + '</div><div style="font-size:11px;color:var(--text-muted);">' + tagEn + '</div></div>' +
+      '<input type="number" value="' + ((typeof tag === 'object' && tag.difficulty !== undefined) ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateEditSubTagDifficulty(' + index + ',' + i + ',this.value)" style="width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' +
+      _renderDeptSelectorBtn(tagId, tagDepts) +
       '<button class="btn btn-xs btn-danger" onclick="removeEditSubTag(' + index + ',' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
   });
   container.innerHTML = html;
@@ -6683,11 +6888,17 @@ function refreshEditSubTagList(index) {
 
 function addEditSubTag(index) {
   var input = document.getElementById('editKbSubTagInput');
+  var enInput = document.getElementById('editKbSubTagEnInput');
   var name = input.value.trim();
   if (!name) return;
+  var en = enInput.value.trim();
   if (!knowledgeTypeData[index].subTags) knowledgeTypeData[index].subTags = [];
-  knowledgeTypeData[index].subTags.push({ name: name, difficulty: undefined });
+  var subTags = knowledgeTypeData[index].subTags;
+  var tagId = 'edit_' + index + '_' + subTags.length;
+  _subTagDeptSelectors[tagId] = { depts: [] };
+  subTags.push({ name: name, en: en, difficulty: undefined, permittedDepts: [] });
   input.value = '';
+  enInput.value = '';
   refreshEditSubTagList(index);
 }
 
@@ -6714,7 +6925,7 @@ function addKnowledgeType() {
       '<div class="form-row"><div class="form-group"><label class="form-label">类型名称 *</label><input class="form-input" id="addKbTypeName" placeholder="输入中文名称"></div><div class="form-group"><label class="form-label">英文名称 *</label><input class="form-input" id="addKbTypeEn" placeholder="输入英文名称"></div></div>' +
       '<div class="form-group"><label class="form-label">描述</label><textarea class="form-textarea" id="addKbTypeDesc" rows="3" placeholder="可选：描述该类型的用途和范围" style="resize:vertical;"></textarea></div>' +
       '<div class="form-group"><label class="form-label">贡献基础值</label><input class="form-input" id="addKbBaseValue" type="number" placeholder="可选：输入数字"></div>' +
-      '<div class="form-group"><label class="form-label">二级标签</label><div style="display:flex;gap:8px;margin-bottom:8px;"><input class="form-input" id="addKbSubTagInput" placeholder="输入标签名称，回车添加" style="flex:1;" onkeydown="if(event.key===\'Enter\')addTempSubTag()"><button class="btn btn-primary" onclick="addTempSubTag()">添加</button></div><div id="addTempSubTagList"><p style="color:var(--text-muted);font-size:12px;text-align:center;padding:8px;">暂无二级标签</p></div></div>' +
+      '<div class="form-group"><label class="form-label">二级标签</label><div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><input class="form-input" id="addKbSubTagInput" placeholder="中文名称，回车添加" style="flex:1;min-width:100px;" onkeydown="if(event.key===\'Enter\')addTempSubTag()"><input class="form-input" id="addKbSubTagEnInput" placeholder="英文名称，回车添加" style="flex:1;min-width:100px;" onkeydown="if(event.key===\'Enter\')addTempSubTag()"><button class="btn btn-primary" onclick="addTempSubTag()">添加</button></div><div id="addTempSubTagList"><p style="color:var(--text-muted);font-size:12px;text-align:center;padding:8px;">暂无二级标签</p></div></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitAddKnowledgeType()">确认添加</button></div>' +
     '</div>'
   );
@@ -6727,6 +6938,13 @@ function submitAddKnowledgeType() {
   if (!en) { alert('请填写英文名称'); return; }
   const desc = document.getElementById('addKbTypeDesc').value.trim() || '-';
   const baseValue = document.getElementById('addKbBaseValue').value;
+  // Save dept selectors to sub-tags
+  _addTempSubTags.forEach(function(tag, i) {
+    var tagId = 'add_' + i;
+    if (_subTagDeptSelectors[tagId]) {
+      tag.permittedDepts = _subTagDeptSelectors[tagId].depts.slice();
+    }
+  });
   knowledgeTypeData.push({
     cn: name,
     en: en,
@@ -6751,9 +6969,14 @@ function editKnowledgeType(index) {
   } else {
     subTags.forEach(function(tag, i) {
       var tagName = typeof tag === 'string' ? tag : tag.name;
+      var tagEn = (typeof tag === 'object' && tag.en) ? tag.en : '-';
+      var tagDepts = (typeof tag === 'object' && tag.permittedDepts) ? tag.permittedDepts : [];
+      var tagId = 'edit_' + index + '_' + i;
+      _subTagDeptSelectors[tagId] = _subTagDeptSelectors[tagId] || { depts: tagDepts };
       subTagListHtml += '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border-radius:3px;font-size:13px;margin-bottom:4px;">' +
-        '<span style="flex:1;">' + tagName + '</span>' +
-        '<input type="number" value="' + ((typeof tag === 'object' && tag.difficulty !== undefined) ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateEditSubTagDifficulty(' + index + ',' + i + ',this.value)" style="width:90px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' +
+        '<div style="flex:1;min-width:80px;"><div style="font-size:13px;">' + tagName + '</div><div style="font-size:11px;color:var(--text-muted);">' + tagEn + '</div></div>' +
+        '<input type="number" value="' + ((typeof tag === 'object' && tag.difficulty !== undefined) ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateEditSubTagDifficulty(' + index + ',' + i + ',this.value)" style="width:80px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' +
+        _renderDeptSelectorBtn(tagId, tagDepts) +
         '<button class="btn btn-xs btn-danger" onclick="removeEditSubTag(' + index + ',' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
     });
   }
@@ -6763,7 +6986,7 @@ function editKnowledgeType(index) {
       '<div class="form-row"><div class="form-group"><label class="form-label">类型名称 *</label><input class="form-input" id="editKbTypeName" value="' + t.cn + '" placeholder="输入中文名称"></div><div class="form-group"><label class="form-label">英文名称 *</label><input class="form-input" id="editKbTypeEn" value="' + t.en + '" placeholder="输入英文名称"></div></div>' +
       '<div class="form-group"><label class="form-label">描述</label><textarea class="form-textarea" id="editKbTypeDesc" rows="3" placeholder="可选：描述该类型的用途和范围" style="resize:vertical;">' + (t.desc === '-' ? '' : t.desc) + '</textarea></div>' +
       '<div class="form-group"><label class="form-label">贡献基础值</label><input class="form-input" id="editKbBaseValue" type="number" value="' + (t.baseValue !== undefined ? t.baseValue : '') + '" placeholder="可选：输入数字"></div>' +
-      '<div class="form-group"><label class="form-label">二级标签</label><div style="display:flex;gap:8px;margin-bottom:8px;"><input class="form-input" id="editKbSubTagInput" placeholder="输入标签名称，回车添加" style="flex:1;" onkeydown="if(event.key===\'Enter\')addEditSubTag(' + index + ')"><button class="btn btn-primary" onclick="addEditSubTag(' + index + ')">添加</button></div><div id="editSubTagList">' + subTagListHtml + '</div></div>' +
+      '<div class="form-group"><label class="form-label">二级标签</label><div style="display:flex;gap:8px;margin-bottom:8px;flex-wrap:wrap;"><input class="form-input" id="editKbSubTagInput" placeholder="中文名称，回车添加" style="flex:1;min-width:100px;" onkeydown="if(event.key===\'Enter\')addEditSubTag(' + index + ')"><input class="form-input" id="editKbSubTagEnInput" placeholder="英文名称，回车添加" style="flex:1;min-width:100px;" onkeydown="if(event.key===\'Enter\')addEditSubTag(' + index + ')"><button class="btn btn-primary" onclick="addEditSubTag(' + index + ')">添加</button></div><div id="editSubTagList">' + subTagListHtml + '</div></div>' +
       '<input type="hidden" id="editKbTypeIndex" value="' + index + '">' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="submitEditKnowledgeType()">保存修改</button></div>' +
     '</div>'
@@ -6778,6 +7001,14 @@ function submitEditKnowledgeType() {
   if (!en) { alert('请填写英文名称'); return; }
   const desc = document.getElementById('editKbTypeDesc').value.trim() || '-';
   const baseValue = document.getElementById('editKbBaseValue').value;
+  // Save dept selectors to sub-tags
+  var subTags = knowledgeTypeData[index].subTags || [];
+  subTags.forEach(function(tag, i) {
+    var tagId = 'edit_' + index + '_' + i;
+    if (_subTagDeptSelectors[tagId]) {
+      tag.permittedDepts = _subTagDeptSelectors[tagId].depts.slice();
+    }
+  });
   knowledgeTypeData[index].cn = name;
   knowledgeTypeData[index].en = en;
   knowledgeTypeData[index].desc = desc;
