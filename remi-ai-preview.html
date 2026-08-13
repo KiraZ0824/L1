@@ -5362,14 +5362,13 @@ function _taskAuditFlowHtml(t) {
     html += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarGreen + '">✓</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">审核通过</span><span style="font-size:11px;color:#10b981;">已通过</span></div><div style="font-size:11px;color:var(--text-muted);">' + (t.auditor || '李晓华') + ' · ' + approveTime + (t.approveComment ? ' · ' + t.approveComment : ' · 审核通过，交付物符合要求') + '</div></div></div>';
   }
 
-  html += '</div></div>';
-
-  // CC node
+  // CC node (inside flow)
   if (t.ccUsers && t.ccUsers.length > 0) {
     html += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
-    html += '<div style="display:flex;gap:8px;padding:12px;background:var(--bg);border-radius:3px;border:1px solid var(--border-light);margin-bottom:12px;"><div style="display:flex;flex-direction:column;align-items:center;margin-right:8px;"><div style="' + avatarGray + '">📋</div></div><div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">自动抄送</span><span style="font-size:11px;color:#10b981;">已发送</span></div><div style="font-size:11px;color:var(--text-muted);">抄送：' + t.ccUsers.join('、') + '</div></div></div>';
+    html += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarGray + '">📋</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">自动抄送</span><span style="font-size:11px;color:#10b981;">已发送</span></div><div style="font-size:11px;color:var(--text-muted);">抄送：' + t.ccUsers.join('、') + '</div></div></div>';
   }
 
+  html += '</div></div>';
   return html;
 }
 
