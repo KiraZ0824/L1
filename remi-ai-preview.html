@@ -7528,7 +7528,7 @@ function _buildBonusRow(person, amount) {
   }).join('');
   return '<div class="reward-row" style="display:flex;align-items:center;gap:6px;padding:5px 0;" data-idx="' + idx + '">' +
     '<select id="bp_' + idx + '" style="flex:1;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);">' + opts + '</select>' +
-    '<input type="number" id="ba_' + idx + '" value="' + amount + '" placeholder="奖励值" style="width:90px;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:13px;text-align:right;" min="0">' +
+    '<input type="number" id="ba_' + idx + '" value="' + amount + '" placeholder="奖励值" style="width:90px;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:13px;text-align:left;" min="0">' +
     '<input type="text" id="br_' + idx + '" placeholder="奖励原因" style="flex:0.7;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:12px;">' +
     '<button class="btn btn-xs btn-ghost" onclick="removeBonusRow(' + idx + ')" style="color:var(--accent-rose);font-size:14px;padding:2px 6px;line-height:1;">✕</button>' +
     '</div>';
@@ -7706,7 +7706,7 @@ function openBonusReview(requestId) {
   const allocHtml = r.allocations.map(function(a, idx) {
     return '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;">' +
       '<span style="flex:1;color:var(--text);">' + a.person + '</span>' +
-      '<input type="number" id="bonusAllocAmt_' + idx + '" value="' + a.amount + '" style="width:90px;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:12px;text-align:right;background:var(--card);box-sizing:border-box;" min="0" onchange="updateBonusTotal()">' +
+      '<input type="number" id="bonusAllocAmt_' + idx + '" value="' + a.amount + '" style="width:90px;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:12px;text-align:left;background:var(--card);box-sizing:border-box;" min="0" onchange="updateBonusTotal()">' +
       '<span style="width:90px;text-align:left;color:var(--text-muted);">' + (a.reason || '-') + '</span>' +
     '</div>';
   }).join('');
@@ -7723,11 +7723,11 @@ function openBonusReview(requestId) {
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">奖励分配列表</label>' +
         '<div style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' +
           '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:11px;color:var(--text-muted);border-bottom:1px solid var(--border-light);margin-bottom:4px;">' +
-            '<span style="flex:1;">人员</span><span style="width:90px;text-align:right;">奖励值</span><span style="width:90px;text-align:left;">原因</span>' +
+            '<span style="flex:1;">人员</span><span style="width:90px;text-align:left;">奖励值</span><span style="width:90px;text-align:left;">原因</span>' +
           '</div>' +
           allocHtml +
           '<div style="display:flex;align-items:center;gap:6px;padding:4px 0;font-size:12px;font-weight:600;border-top:1px solid var(--border-light);margin-top:4px;padding-top:4px;">' +
-            '<span style="flex:1;">合计</span><span id="bonusTotalDisplay" style="width:90px;text-align:right;color:var(--primary);">' + totalAmount + ' RP</span><span style="width:90px;"></span>' +
+            '<span style="flex:1;">合计</span><span id="bonusTotalDisplay" style="width:90px;text-align:left;color:var(--primary);">' + totalAmount + ' RP</span><span style="width:90px;"></span>' +
           '</div>' +
         '</div>' +
       '</div>' +
