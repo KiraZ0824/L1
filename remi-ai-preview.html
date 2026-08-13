@@ -3756,9 +3756,6 @@ function openBonusModal(projectId) {
   if (!memberSet.has(p.lead)) memberSet.add(p.lead);
   _bonusMembers = Array.from(memberSet);
   _bonusRowIdx = 0;
-  const opts = _bonusMembers.map(function(m) {
-    return '<option value="' + m + '"' + (m === p.lead ? ' selected' : '') + '>' + m + '</option>';
-  }).join('');
   const stageLabels = { research:'调研阶段', initiation:'立项阶段', execution:'项目执行', review:'项目验收', closed:'项目结项' };
   _showTaskPanel(
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;color:var(--primary);"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>\n      追加奖励 · ' + p.name,
@@ -3772,13 +3769,6 @@ function openBonusModal(projectId) {
         '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:8px;">奖励分配列表</label>' +
         '<div id="bonusRewardRows" style="background:var(--bg);border-radius:3px;padding:6px 8px;border:1px solid var(--border-light);">' +
           _buildBonusRow(p.lead, '') +
-        '</div>' +
-      '</div>' +
-      '<div>' +
-        '<label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:6px;">审核流程</label>' +
-        '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;">' +
-          '<span style="font-size:12px;color:var(--text-muted);flex-shrink:0;">审核人：</span>' +
-          '<select id="bonusReviewer" style="flex:1;padding:6px 8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;background:var(--card);">' + opts + '</select>' +
         '</div>' +
       '</div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:14px;">' +
@@ -7556,7 +7546,6 @@ function removeBonusRow(idx) {
 
 function submitBonusRequest(projectId) {
   const rows = document.querySelectorAll('#bonusRewardRows .reward-row');
-  const reviewer = document.getElementById('bonusReviewer').value;
   const desc = document.getElementById('bonusDesc').value.trim();
   if (!desc) { alert('请填写事项描述'); return; }
   const allocations = [];
@@ -7572,7 +7561,6 @@ function submitBonusRequest(projectId) {
     allocations.push({ person: person, amount: amount, reason: reason });
   });
   if (!hasValidRow) { return; }
-  if (!reviewer) { return; }
   _bonusRequestCounter++;
   const totalAmount = allocations.reduce(function(sum, a) { return sum + a.amount; }, 0);
   bonusRequests.push({
@@ -7580,7 +7568,7 @@ function submitBonusRequest(projectId) {
     projectId: projectId,
     requester: '张明远',
     desc: desc,
-    reviewer: reviewer,
+    reviewer: '张明远',
     allocations: allocations,
     status: 'pending',
     opinion: '',
