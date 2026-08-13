@@ -6712,7 +6712,7 @@ function manageKbSubTags(index) {
     _subTagDeptSelectors[tagId] = _subTagDeptSelectors[tagId] || { depts: tagDepts };
     listHtml += '<div style="display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--bg);border-radius:3px;font-size:13px;margin-bottom:4px;">' +
       '<div style="flex:1;min-width:80px;"><div style="font-size:13px;">' + tag.name + '</div><div style="font-size:11px;color:var(--text-muted);">' + tagEn + '</div></div>' +
-      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度" onchange="updateSubTagDifficulty(' + index + ',' + i + ', this.value)" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);text-align:center;">' +
+      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateSubTagDifficulty(' + index + ',' + i + ', this.value)" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);text-align:center;">' +
       _renderDeptSelectorBtn(tagId, tagDepts) +
       '<button class="btn btn-xs btn-danger" onclick="removeKbSubTag(' + index + ',' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
   }
@@ -6849,7 +6849,7 @@ function refreshAddTempSubTagList() {
     _subTagDeptSelectors[tagId] = _subTagDeptSelectors[tagId] || { depts: tag.permittedDepts || [] };
     html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border-radius:3px;font-size:13px;margin-bottom:4px;">' +
       '<div style="flex:1;min-width:80px;"><div style="font-size:13px;">' + tag.name + '</div><div style="font-size:11px;color:var(--text-muted);">' + (tag.en || '-') + '</div></div>' +
-      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度" onchange="updateAddTempSubTagDifficulty(' + i + ',this.value)" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);text-align:center;">' +
+      '<input type="number" value="' + (tag.difficulty !== undefined ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateAddTempSubTagDifficulty(' + i + ',this.value)" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);text-align:center;">' +
       _renderDeptSelectorBtn(tagId, tag.permittedDepts) +
       '<button class="btn btn-xs btn-danger" onclick="removeAddTempSubTag(' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
   });
@@ -6896,7 +6896,7 @@ function refreshEditSubTagList(index) {
     _subTagDeptSelectors[tagId] = _subTagDeptSelectors[tagId] || { depts: tagDepts };
     html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border-radius:3px;font-size:13px;margin-bottom:4px;">' +
       '<div style="flex:1;min-width:80px;"><div style="font-size:13px;">' + tagName + '</div><div style="font-size:11px;color:var(--text-muted);">' + tagEn + '</div></div>' +
-      '<input type="number" value="' + ((typeof tag === 'object' && tag.difficulty !== undefined) ? tag.difficulty : '') + '" placeholder="难度" onchange="updateEditSubTagDifficulty(' + index + ',' + i + ',this.value)" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);text-align:center;">' +
+      '<input type="number" value="' + ((typeof tag === 'object' && tag.difficulty !== undefined) ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateEditSubTagDifficulty(' + index + ',' + i + ',this.value)" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);text-align:center;">' +
       _renderDeptSelectorBtn(tagId, tagDepts) +
       '<button class="btn btn-xs btn-danger" onclick="removeEditSubTag(' + index + ',' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
   });
@@ -6992,7 +6992,7 @@ function editKnowledgeType(index) {
       _subTagDeptSelectors[tagId] = _subTagDeptSelectors[tagId] || { depts: tagDepts };
       subTagListHtml += '<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--bg);border-radius:3px;font-size:13px;margin-bottom:4px;">' +
         '<div style="flex:1;min-width:80px;"><div style="font-size:13px;">' + tagName + '</div><div style="font-size:11px;color:var(--text-muted);">' + tagEn + '</div></div>' +
-        '<input type="number" value="' + ((typeof tag === 'object' && tag.difficulty !== undefined) ? tag.difficulty : '') + '" placeholder="难度" onchange="updateEditSubTagDifficulty(' + index + ',' + i + ',this.value)" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);text-align:center;">' +
+        '<input type="number" value="' + ((typeof tag === 'object' && tag.difficulty !== undefined) ? tag.difficulty : '') + '" placeholder="难度系数" onchange="updateEditSubTagDifficulty(' + index + ',' + i + ',this.value)" style="width:70px;padding:4px 8px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);text-align:center;">' +
         _renderDeptSelectorBtn(tagId, tagDepts) +
         '<button class="btn btn-xs btn-danger" onclick="removeEditSubTag(' + index + ',' + i + ')" style="font-size:11px;padding:2px 8px;">删除</button></div>';
     });
