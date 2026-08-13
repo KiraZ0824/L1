@@ -3267,18 +3267,18 @@ const tasks = [
   { id:'t18', title:'安全漏洞扫描报告', desc:'对平台进行全量安全漏洞扫描并出具修复方案', projectId:'p3', stage:'review', status:'done', priority:'P1', assignee:'赵明', reward:900, deadline:'2026-06-14', completedAt:'2026-06-16', backlog:'项目验收', delivery:'附件' },
   { id:'t19', title:'翻译引擎性能对比', desc:'完成3款翻译引擎的性能基准测试对比', projectId:'p4', stage:'research', status:'in_progress', priority:'P0', assignee:'王思远', reward:750, deadline:'2026-07-20', backlog:'调研阶段', delivery:'文档链接' },
   { id:'t20', title:'多语言UI适配方案', desc:'设计前端多语言UI适配的技术方案', projectId:'p4', stage:'research', status:'todo', priority:'P2', assignee:'王思远', reward:500, deadline:'2026-07-25', backlog:'调研阶段', delivery:'无需交付' },
-  { id:'t21', title:'审批流程设计文档', desc:'设计任务验收审批流程的完整文档', projectId:'p1', stage:'execution', status:'pending_review', priority:'P1', assignee:'张明远', reward:450, deadline:'2026-06-22', backlog:'项目执行', delivery:'文档链接' },
-  { id:'t22', title:'结算模块代码审查', desc:'审查结算模块的代码质量和安全漏洞', projectId:'p2', stage:'execution', status:'rejected', priority:'P0', assignee:'李晓华', reward:600, deadline:'2026-06-18', backlog:'项目执行', delivery:'附件', auditor:'张明远', rejectTime:'2026-06-16 14:00', rejectReason:'审查报告缺少关键漏洞的修复建议和影响范围分析' },
+  { id:'t21', title:'审批流程设计文档', desc:'设计任务验收审批流程的完整文档', projectId:'p1', stage:'execution', status:'pending_review', priority:'P1', assignee:'张明远', reward:450, deadline:'2026-06-22', backlog:'项目执行', delivery:'文档链接', ccUsers:['李晓华', '王思远'] },
+  { id:'t22', title:'结算模块代码审查', desc:'审查结算模块的代码质量和安全漏洞', projectId:'p2', stage:'execution', status:'rejected', priority:'P0', assignee:'李晓华', reward:600, deadline:'2026-06-18', backlog:'项目执行', delivery:'附件', auditor:'张明远', rejectTime:'2026-06-16 14:00', rejectReason:'审查报告缺少关键漏洞的修复建议和影响范围分析', ccUsers:['张明远'] },
   { id:'t23', title:'API接口规范V2.1技术评审', desc:'组织技术评审会议，审核API接口规范文档的技术可行性和规范性', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:0, deadline:'2026-06-25', backlog:'项目验收', delivery:'无需交付' },
   { id:'t24', title:'Q2财报数据合规审核', desc:'审核Q2财报数据的合规性，确认数据来源和计算方法的准确性', projectId:'p2', stage:'review', status:'todo', priority:'P0', assignee:'赵明', reward:0, deadline:'2026-06-28', backlog:'项目验收', delivery:'无需交付' },
-  { id:'t25', title:'API接口文档知识贡献奖励审核', desc:'审核API接口文档V2.1的知识贡献，确认贡献者名单及奖励分配方案', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:500, deadline:'2026-06-30', backlog:'项目验收', delivery:'无需交付' },
+  { id:'t25', title:'API接口文档知识贡献奖励审核', desc:'审核API接口文档V2.1的知识贡献，确认贡献者名单及奖励分配方案', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:500, deadline:'2026-06-30', backlog:'项目验收', delivery:'无需交付', ccUsers:['李晓华', '王思远'] },
   { id:'t26', title:'用户反馈收集机制设计', desc:'设计用户反馈收集流程与分类标签体系，提升产品迭代效率', projectId:'p1', stage:'initiation', status:'draft', priority:'P2', assignee:'王思远', reward:400, deadline:'2026-07-05', backlog:'立项阶段', delivery:'文档链接' },
   { id:'t27', title:'跨平台数据同步方案', desc:'调研并设计多端数据同步的技术方案，支持离线编辑与冲突合并', projectId:'p4', stage:'research', status:'draft', priority:'P1', assignee:'张明远', reward:800, deadline:'2026-07-15', backlog:'调研阶段', delivery:'文档链接' },
   { id:'t28', title:'权限粒度配置优化', desc:'优化RBAC权限模型，支持更细粒度的资源级权限配置', projectId:'p1', stage:'initiation', status:'draft', priority:'P0', assignee:'赵明', reward:600, deadline:'2026-07-10', backlog:'立项阶段', delivery:'无需交付' },
   { id:'t29', title:'Q3预算规划草案', desc:'起草Q3季度项目预算分配方案，含人力、资源、风险预留', projectId:'p2', stage:'initiation', status:'draft', priority:'P1', assignee:'李晓华', reward:500, deadline:'2026-07-08', backlog:'立项阶段', delivery:'附件' },
-  { id:'t30', title:'前端组件库文档补充', desc:'补充前端组件库的使用文档和示例代码', projectId:'p1', stage:'execution', status:'rejected', priority:'P2', assignee:'王思远', reward:400, deadline:'2026-06-25', backlog:'项目执行', delivery:'文档链接', auditor:'张明远', rejectTime:'2026-06-19 09:30', rejectReason:'文档缺少API参数说明和异常处理章节' },
-  { id:'t31', title:'知识库标签体系重构', desc:'重构知识库标签分类体系，支持多级标签和智能推荐', projectId:'p1', stage:'execution', status:'rejected', priority:'P1', assignee:'陈雨桐', reward:550, deadline:'2026-06-28', backlog:'项目执行', delivery:'附件', auditor:'赵明', rejectTime:'2026-06-20 15:00', rejectReason:'标签层级设计不合理，需与产品确认后再提交' },
-  { id:'t32', title:'安全审计报告V2', desc:'更新安全审计报告，覆盖新增的API端点和数据流', projectId:'p3', stage:'review', status:'rejected', priority:'P0', assignee:'赵明', reward:800, deadline:'2026-07-02', backlog:'项目验收', delivery:'附件', auditor:'李晓华', rejectTime:'2026-06-22 11:20', rejectReason:'缺少渗透测试结果和修复优先级排序' },
+  { id:'t30', title:'前端组件库文档补充', desc:'补充前端组件库的使用文档和示例代码', projectId:'p1', stage:'execution', status:'rejected', priority:'P2', assignee:'王思远', reward:400, deadline:'2026-06-25', backlog:'项目执行', delivery:'文档链接', auditor:'张明远', rejectTime:'2026-06-19 09:30', rejectReason:'文档缺少API参数说明和异常处理章节', ccUsers:['张明远'] },
+  { id:'t31', title:'知识库标签体系重构', desc:'重构知识库标签分类体系，支持多级标签和智能推荐', projectId:'p1', stage:'execution', status:'rejected', priority:'P1', assignee:'陈雨桐', reward:550, deadline:'2026-06-28', backlog:'项目执行', delivery:'附件', auditor:'赵明', rejectTime:'2026-06-20 15:00', rejectReason:'标签层级设计不合理，需与产品确认后再提交', ccUsers:['李晓华'] },
+  { id:'t32', title:'安全审计报告V2', desc:'更新安全审计报告，覆盖新增的API端点和数据流', projectId:'p3', stage:'review', status:'rejected', priority:'P0', assignee:'赵明', reward:800, deadline:'2026-07-02', backlog:'项目验收', delivery:'附件', auditor:'李晓华', rejectTime:'2026-06-22 11:20', rejectReason:'缺少渗透测试结果和修复优先级排序', ccUsers:['张明远'] },
 ];
 
 // Auto-generate time fields for backlog display
@@ -5363,6 +5363,13 @@ function _taskAuditFlowHtml(t) {
   }
 
   html += '</div></div>';
+
+  // CC node
+  if (t.ccUsers && t.ccUsers.length > 0) {
+    html += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
+    html += '<div style="display:flex;gap:8px;padding:12px;background:var(--bg);border-radius:3px;border:1px solid var(--border-light);margin-bottom:12px;"><div style="display:flex;flex-direction:column;align-items:center;margin-right:8px;"><div style="' + avatarGray + '">📋</div></div><div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">自动抄送</span><span style="font-size:11px;color:#10b981;">已发送</span></div><div style="font-size:11px;color:var(--text-muted);">抄送：' + t.ccUsers.join('、') + '</div></div></div>';
+  }
+
   return html;
 }
 
@@ -5643,46 +5650,37 @@ function auditRewardTask(id) {
   _auditMembers = contributors.slice();
   _auditRowIdx = 0;
 
-  // Build audit flow HTML (same as knowledge audit)
+  // Build audit flow HTML (simplified like task reward)
   var auditFlowHtml = '';
-  if (r.auditFlow && r.auditFlow.length > 0) {
-    auditFlowHtml = '<div style="padding:12px;background:var(--bg);border-radius:3px;border:1px solid var(--border-light);"><div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:10px;">审核流程</div><div style="display:flex;flex-direction:column;gap:0;">';
-    var avatarStyle = 'width:20px;height:20px;border-radius:50%;border:1.5px solid var(--primary);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
-    var avatarStyleGray = 'width:20px;height:20px;border-radius:50%;border:1.5px solid var(--text-muted);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
-    var lineStyle = 'width:2px;flex-shrink:0;background:var(--border-light);min-height:20px;margin-left:9px;';
-    for (var i = 0; i < r.auditFlow.length; i++) {
-      var node = r.auditFlow[i];
-      var isDone = node.status === 'done';
-      var isPending = node.status === 'pending';
-      var nodeIcon = isDone ? '<div style="' + avatarStyle + '">' + (node.operator ? node.operator[0] : '✓') + '</div>' : '<div style="' + avatarStyleGray + '">○</div>';
-      var nodeName = node.name || '';
-      var nodeStatus = isDone ? '<span style="font-size:11px;color:#10b981;">已完成</span>' : (isPending ? '<span style="font-size:11px;color:var(--text-muted);">待处理</span>' : '');
-      if (i === 0) {
-        auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarStyle + '">✓</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:12px;font-weight:500;">系统自动提交</span><span style="font-size:11px;color:#10b981;">已完成</span></div><div style="font-size:11px;color:var(--text-muted);">' + (node.time || '') + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">前序审核：<a href="javascript:void(0)" onclick="openKnowledgeReviewDetail(\'' + id + '\')" style="color:var(--primary);text-decoration:none;">查看知识审核详情</a></div></div></div>';
-      } else if (node.type === 'review' && node.operators) {
-        var opsHtml = node.operators.map(function(op) {
-          var opDone = op.status === 'done';
-          return '<div style="display:flex;align-items:center;gap:6px;padding:3px 0;">' +
-            '<span style="' + (opDone ? avatarStyle : avatarStyleGray) + '">' + op.name[0] + '</span>' +
-            '<span style="font-size:12px;color:' + (opDone ? 'var(--text)' : 'var(--text-muted)') + ';">' + op.name + '</span>' +
-            (opDone && op.time ? '<span style="font-size:11px;color:var(--text-muted);">' + op.time + '</span>' : '') +
-            (opDone && op.comment ? '<span style="font-size:11px;color:var(--text-muted);">· ' + op.comment + '</span>' : '') +
-            '<span style="font-size:11px;color:' + (opDone ? '#10b981' : 'var(--text-muted)') + ';">' + (opDone ? '已审核' : '待审核') + '</span>' +
-          '</div>';
-        }).join('');
-        auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;">' + nodeIcon + '</div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:12px;font-weight:500;">' + nodeName + '</span>' + nodeStatus + '</div>' + opsHtml + '</div></div>';
-      } else if (node.type === 'cc') {
-        var targets = (node.targets || []).join('、');
-        auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;">' + (isDone ? nodeIcon : '<div style="' + avatarStyleGray + '">📋</div>') + '</div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:12px;font-weight:500;">' + nodeName + '</span>' + nodeStatus + '</div><div style="font-size:12px;color:var(--text-muted);">抄送：' + targets + '</div></div></div>';
-      } else {
-        auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;">' + nodeIcon + '</div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;"><span style="font-size:12px;font-weight:500;">' + nodeName + '</span>' + nodeStatus + (node.operator ? '<span style="font-size:11px;color:var(--text-muted);">· ' + node.operator + '</span>' : '') + (node.time ? '<span style="font-size:11px;color:var(--text-muted);">· ' + node.time + '</span>' : '') + '</div></div></div>';
-      }
-      if (i < r.auditFlow.length - 1) {
-        auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
-      }
-    }
-    auditFlowHtml += '</div></div>';
+  var submitTime = r.uploadTime || '2026-06-20 14:30';
+  var avatarDone = 'width:20px;height:20px;border-radius:50%;border:1.5px solid var(--primary);display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
+  var avatarGray = 'width:20px;height:20px;border-radius:50%;border:1.5px solid var(--text-muted);display:flex;align-items:center;justify-content:center;color:var(--text-muted);font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
+  var avatarGreen = 'width:20px;height:20px;border-radius:50%;border:1.5px solid #10b981;display:flex;align-items:center;justify-content:center;color:#10b981;font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
+  var avatarRed = 'width:20px;height:20px;border-radius:50%;border:1.5px solid #ef4444;display:flex;align-items:center;justify-content:center;color:#ef4444;font-size:10px;font-weight:600;flex-shrink:0;background:var(--card);';
+  var lineStyle = 'width:2px;flex-shrink:0;background:var(--border-light);min-height:20px;margin-left:9px;';
+  auditFlowHtml = '<div style="padding:12px;background:var(--bg);border-radius:3px;border:1px solid var(--border-light);"><div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:10px;">审核流程</div><div style="display:flex;flex-direction:column;gap:0;">';
+  // Node 1: 系统自动提交
+  auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarDone + '">✓</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">系统自动提交</span><span style="font-size:11px;color:#10b981;">已完成</span></div><div style="font-size:11px;color:var(--text-muted);">' + submitTime + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">前序审核：<a href="javascript:void(0)" onclick="openKnowledgeReviewDetail(\'' + id + '\')" style="color:var(--primary);text-decoration:none;">查看知识审核详情</a></div></div></div>';
+  // Node 2: 审核节点
+  auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
+  var reviewer = (r.auditFlow && r.auditFlow.length > 1) ? (r.auditFlow[1].operators && r.auditFlow[1].operators.length > 0 ? r.auditFlow[1].operators[0].name : r.auditor || '李晓华') : (r.auditor || '李晓华');
+  if (r.status === 'rejected') {
+    var rejectTime = r.auditFlow && r.auditFlow[1] && r.auditFlow[1].operators && r.auditFlow[1].operators[0] && r.auditFlow[1].operators[0].time ? r.auditFlow[1].operators[0].time : '2026-06-21 10:15';
+    var rejectReason = r.auditFlow && r.auditFlow[1] && r.auditFlow[1].operators && r.auditFlow[1].operators[0] && r.auditFlow[1].operators[0].comment ? r.auditFlow[1].operators[0].comment : '审核不通过，请修改后重新提交';
+    auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarRed + '">' + reviewer[0] + '</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">审核驳回</span><span style="font-size:11px;color:#ef4444;">已驳回</span></div><div style="font-size:11px;color:var(--text-muted);">' + reviewer + ' · ' + rejectTime + ' · ' + rejectReason + '</div></div></div>';
+  } else if (r.status === 'pending_review') {
+    auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarGray + '">○</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">等待审核</span><span style="font-size:11px;color:var(--text-muted);">待处理</span></div><div style="font-size:11px;color:var(--text-muted);">' + reviewer + ' 待审核 · 提交于 ' + submitTime + '</div></div></div>';
+  } else if (r.status === 'done') {
+    var approveTime = r.auditFlow && r.auditFlow[1] && r.auditFlow[1].operators && r.auditFlow[1].operators[0] && r.auditFlow[1].operators[0].time ? r.auditFlow[1].operators[0].time : '2026-06-21 16:00';
+    var approveComment = r.auditFlow && r.auditFlow[1] && r.auditFlow[1].operators && r.auditFlow[1].operators[0] && r.auditFlow[1].operators[0].comment ? r.auditFlow[1].operators[0].comment : '审核通过，奖励分配合理';
+    auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarGreen + '">✓</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">审核通过</span><span style="font-size:11px;color:#10b981;">已通过</span></div><div style="font-size:11px;color:var(--text-muted);">' + reviewer + ' · ' + approveTime + ' · ' + approveComment + '</div></div></div>';
   }
+  // CC node
+  if (r.ccUsers && r.ccUsers.length > 0) {
+    auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="' + lineStyle + '"></div></div>';
+    auditFlowHtml += '<div style="display:flex;gap:8px;"><div style="display:flex;flex-direction:column;align-items:center;"><div style="' + avatarGray + '">📋</div></div><div style="flex:1;padding-bottom:8px;"><div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;"><span style="font-size:12px;font-weight:500;">自动抄送</span><span style="font-size:11px;color:#10b981;">已发送</span></div><div style="font-size:11px;color:var(--text-muted);">抄送：' + r.ccUsers.join('、') + '</div></div></div>';
+  }
+  auditFlowHtml += '</div></div>';
 
   // Build file list HTML
   var filesHtml = '';
