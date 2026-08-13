@@ -6871,6 +6871,7 @@ function addTempSubTag() {
 }
 
 function removeAddTempSubTag(i) {
+  if (!confirm('确定删除该二级标签？')) return;
   _addTempSubTags.splice(i, 1);
   refreshAddTempSubTagList();
 }
