@@ -2526,7 +2526,6 @@
                     <span style="font-size:13px;font-weight:600;">系统设置</span>
                   </div>
                   <div style="display:flex;flex-direction:column;gap:6px;">
-                    <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 模型路由配置</label>
                     <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 内容安全配置</label>
                     <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> ABAC/EBAC规则</label>
                     <label style="display:flex;align-items:center;gap:6px;font-size:12px;cursor:pointer;"><input type="checkbox"> 枚举多语言维护</label>
@@ -2759,6 +2758,7 @@
             <button class="tab" onclick="switchPTConfigTab(this,'knowledge')">知识类型配置</button>
             <button class="tab" onclick="switchPTConfigTab(this,'source')">知识来源配置</button>
             <button class="tab" onclick="switchPTConfigTab(this,'rules')">积分规则</button>
+            <button class="tab" onclick="switchPTConfigTab(this,'approval')">奖励审批配置</button>
           </div>
           <div id="ptc-project">
             <div class="card">
@@ -2860,6 +2860,28 @@
               </div>
             </div>
           </div>
+          <!-- 审批配置 -->
+          <div id="ptc-approval" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <div class="card-title">奖励审批配置</div>
+                <button class="btn btn-sm" onclick="addApprovalConfig()">+ 添加配置</button>
+              </div>
+              <p style="font-size:12px;color:var(--text-muted);padding:0 16px 8px;">奖励审核配置：根据不同发起部门配置不同的审核人</p>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>发起部门</th>
+                      <th>审核人</th>
+                      <th style="width:80px;text-align:center;">操作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="approvalConfigTbody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <!-- ===== PAGE: MESSAGE CONFIG ===== -->
@@ -2927,7 +2949,6 @@
           </div>
           <div class="tabs" style="margin-bottom:20px;">
             <button class="tab active" data-admin-tab="skills" onclick="switchAdminTab('skills')">技能配置</button>
-            <button class="tab" data-admin-tab="models" onclick="switchAdminTab('models')">模型配置</button>
             <button class="tab" data-admin-tab="safety" onclick="switchAdminTab('safety')">内容安全配置</button>
           </div>
 
@@ -2936,7 +2957,6 @@
             <div class="card">
               <div class="card-header">
                 <div class="card-title">系统预置技能</div>
-                <button class="btn btn-sm" onclick="alert('技能管理开发中')">+ 添加自定义技能</button>
               </div>
               <div class="table-wrap">
                 <table>
@@ -2966,38 +2986,11 @@
             </div>
           </div>
 
-          <!-- 模型配置 -->
-          <div class="admin-tab-content" id="admin-models" style="display:none;">
-            <div class="card">
-              <div class="card-header">
-                <div class="card-title">模型路由配置</div>
-                <button class="btn btn-sm" onclick="addModelRoute()">+ 新增路由</button>
-              </div>
-              <div class="table-wrap">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>业务场景</th>
-                      <th>模型</th>
-                      <th>API Endpoint</th>
-                      <th>优先级</th>
-                      <th>Fallback</th>
-                      <th>状态</th>
-                      <th>操作</th>
-                    </tr>
-                  </thead>
-                  <tbody id="modelRouteTableBody"></tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
           <!-- 内容安全配置 -->
           <div class="admin-tab-content" id="admin-safety" style="display:none;">
             <div class="card">
               <div class="card-header">
                 <div class="card-title">内容安全规则</div>
-                <button class="btn btn-sm">+ 新增规则</button>
               </div>
               <div class="table-wrap">
                 <table>
@@ -3014,7 +3007,6 @@
                     <tr><td>敏感词过滤</td><td>命中敏感词库</td><td>拦截并告警</td><td style="font-size:12px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;margin-right:4px;"></span>启用</td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
                     <tr><td>隐私信息检测</td><td>检测到身份证/手机号</td><td>自动脱敏</td><td style="font-size:12px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;margin-right:4px;"></span>启用</td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
                     <tr><td>恶意代码检测</td><td>检测到 SQL/XSS 注入</td><td>拦截并记录</td><td style="font-size:12px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#10b981;margin-right:4px;"></span>启用</td><td><button class="btn btn-sm btn-danger">关闭</button></td></tr>
-                    <tr><td>内容合规审核</td><td>输出内容涉政/涉黄</td><td>审核后放行</td><td style="font-size:12px;"><span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:#f59e0b;margin-right:4px;"></span>审核中</td><td><button class="btn btn-sm btn-ghost">配置</button></td></tr>
                   </tbody>
                 </table>
               </div>
@@ -3250,14 +3242,14 @@ const bonusRequests = [
 // Tasks
 const tasks = [
   { id:'t1', title:'API接口文档编写', desc:'编写Remi平台V2.1版本全部API接口文档', projectId:'p1', stage:'execution', status:'done', priority:'P0', assignee:'张明远', reward:800, deadline:'2026-06-10', completedAt:'2026-06-08', backlog:'项目执行', delivery:'文档链接' },
-  { id:'t2', title:'前端页面优化', desc:'优化知识库管理页面加载性能与交互体验', projectId:'p1', stage:'execution', status:'done', priority:'P1', assignee:'王思远', reward:600, deadline:'2026-06-08', completedAt:'2026-06-06', backlog:'项目执行', delivery:'无需交付' },
+  { id:'t2', title:'前端页面优化', desc:'优化知识库管理页面加载性能与交互体验', projectId:'p1', stage:'execution', status:'done', priority:'P1', assignee:'王思远', reward:600, deadline:'2026-06-08', completedAt:'2026-06-06', backlog:'项目执行', delivery:'' },
   { id:'t3', title:'后端架构评审', desc:'对AI对话模块后端架构进行技术评审', projectId:'p1', stage:'execution', status:'done', priority:'P0', assignee:'张明远', reward:500, deadline:'2026-06-15', completedAt:'2026-06-17', backlog:'项目执行', delivery:'文档链接' },
   { id:'t4', title:'数据安全合规审查', desc:'审查知识库数据安全合规性并出具报告', projectId:'p3', stage:'execution', status:'done', priority:'P0', assignee:'赵明', reward:1000, deadline:'2026-06-05', completedAt:'2026-06-05', backlog:'项目执行', delivery:'附件' },
   { id:'t5', title:'Q2财报数据分析', desc:'对Q2财务数据进行多维度分析并生成可视化报告', projectId:'p2', stage:'execution', status:'in_progress', priority:'P1', assignee:'李晓华', reward:1200, deadline:'2026-06-20', backlog:'项目执行', delivery:'文档链接' },
-  { id:'t6', title:'多语言翻译引擎选型', desc:'调研对比主流翻译引擎并进行POC验证', projectId:'p4', stage:'research', status:'todo', priority:'P0', assignee:'王思远', reward:900, deadline:'2026-07-15', backlog:'调研阶段', delivery:'无需交付' },
+  { id:'t6', title:'多语言翻译引擎选型', desc:'调研对比主流翻译引擎并进行POC验证', projectId:'p4', stage:'research', status:'todo', priority:'P0', assignee:'王思远', reward:900, deadline:'2026-07-15', backlog:'调研阶段', delivery:'' },
   { id:'t7', title:'用户权限模块测试', desc:'对RBAC+ABAC权限模块进行全量测试', projectId:'p1', stage:'execution', status:'todo', priority:'P1', assignee:'张明远', reward:400, deadline:'2026-06-25', backlog:'项目执行', delivery:'附件' },
   { id:'t8', title:'竞品分析报告', desc:'完成H1市场竞品分析报告并提交', projectId:'p5', stage:'closed', status:'done', priority:'P2', assignee:'陈雨桐', reward:500, deadline:'2026-05-20', completedAt:'2026-05-18', backlog:'项目结项', delivery:'文档链接' },
-  { id:'t9', title:'知识审核流程优化', desc:'优化知识审核SLA，将审核时间从48h缩短至24h', projectId:'p3', stage:'execution', status:'in_progress', priority:'P1', assignee:'赵明', reward:700, deadline:'2026-06-30', backlog:'项目执行', delivery:'无需交付' },
+  { id:'t9', title:'知识审核流程优化', desc:'优化知识审核SLA，将审核时间从48h缩短至24h', projectId:'p3', stage:'execution', status:'in_progress', priority:'P1', assignee:'赵明', reward:700, deadline:'2026-06-30', backlog:'项目执行', delivery:'' },
   { id:'t10', title:'预算管理模块开发', desc:'开发项目预算管理功能，支持预算设定/追加/冻结', projectId:'p1', stage:'execution', status:'todo', priority:'P2', assignee:'王思远', reward:600, deadline:'2026-07-10', backlog:'项目执行', delivery:'附件' },
   { id:'t11', title:'知识库搜索性能优化', desc:'优化Elasticsearch索引策略，目标P95延迟<200ms', projectId:'p1', stage:'execution', status:'in_progress', priority:'P0', assignee:'张明远', reward:1000, deadline:'2026-06-18', backlog:'项目执行', delivery:'文档链接' },
   { id:'t12', title:'文档版本管理功能', desc:'实现知识文档的版本对比与回滚功能', projectId:'p1', stage:'initiation', status:'todo', priority:'P1', assignee:'王思远', reward:700, deadline:'2026-06-22', backlog:'立项阶段', delivery:'附件' },
@@ -3265,18 +3257,18 @@ const tasks = [
   { id:'t14', title:'RAG引用溯源优化', desc:'优化引用溯源展示，支持点击跳转到原文位置', projectId:'p1', stage:'execution', status:'done', priority:'P1', assignee:'王思远', reward:550, deadline:'2026-06-12', completedAt:'2026-06-15', backlog:'项目执行', delivery:'文档链接' },
   { id:'t15', title:'Q2财报数据清洗', desc:'对Q2原始财务数据进行清洗与标准化处理', projectId:'p2', stage:'execution', status:'done', priority:'P1', assignee:'李晓华', reward:600, deadline:'2026-06-05', completedAt:'2026-06-04', backlog:'项目执行', delivery:'附件' },
   { id:'t16', title:'可视化报表模板设计', desc:'设计Q2财报可视化报表的图表模板与配色方案', projectId:'p2', stage:'execution', status:'in_progress', priority:'P1', assignee:'李晓华', reward:450, deadline:'2026-06-16', backlog:'项目执行', delivery:'文档链接' },
-  { id:'t17', title:'数据隐私合规清单', desc:'整理数据隐私合规检查清单并与法务对齐', projectId:'p3', stage:'initiation', status:'todo', priority:'P0', assignee:'赵明', reward:800, deadline:'2026-06-28', backlog:'立项阶段', delivery:'无需交付' },
+  { id:'t17', title:'数据隐私合规清单', desc:'整理数据隐私合规检查清单并与法务对齐', projectId:'p3', stage:'initiation', status:'todo', priority:'P0', assignee:'赵明', reward:800, deadline:'2026-06-28', backlog:'立项阶段', delivery:'' },
   { id:'t18', title:'安全漏洞扫描报告', desc:'对平台进行全量安全漏洞扫描并出具修复方案', projectId:'p3', stage:'review', status:'done', priority:'P1', assignee:'赵明', reward:900, deadline:'2026-06-14', completedAt:'2026-06-16', backlog:'项目验收', delivery:'附件' },
   { id:'t19', title:'翻译引擎性能对比', desc:'完成3款翻译引擎的性能基准测试对比', projectId:'p4', stage:'research', status:'in_progress', priority:'P0', assignee:'王思远', reward:750, deadline:'2026-07-20', backlog:'调研阶段', delivery:'文档链接' },
-  { id:'t20', title:'多语言UI适配方案', desc:'设计前端多语言UI适配的技术方案', projectId:'p4', stage:'research', status:'todo', priority:'P2', assignee:'王思远', reward:500, deadline:'2026-07-25', backlog:'调研阶段', delivery:'无需交付' },
+  { id:'t20', title:'多语言UI适配方案', desc:'设计前端多语言UI适配的技术方案', projectId:'p4', stage:'research', status:'todo', priority:'P2', assignee:'王思远', reward:500, deadline:'2026-07-25', backlog:'调研阶段', delivery:'' },
   { id:'t21', title:'审批流程设计文档', desc:'设计任务验收审批流程的完整文档', projectId:'p1', stage:'execution', status:'pending_review', priority:'P1', assignee:'张明远', reward:450, deadline:'2026-06-22', backlog:'项目执行', delivery:'文档链接', ccUsers:['李晓华', '王思远'] },
   { id:'t22', title:'结算模块代码审查', desc:'审查结算模块的代码质量和安全漏洞', projectId:'p2', stage:'execution', status:'rejected', priority:'P0', assignee:'李晓华', reward:600, deadline:'2026-06-18', backlog:'项目执行', delivery:'附件', auditor:'张明远', rejectTime:'2026-06-16 14:00', rejectReason:'审查报告缺少关键漏洞的修复建议和影响范围分析', ccUsers:['张明远'] },
-  { id:'t23', title:'API接口规范V2.1技术评审', desc:'组织技术评审会议，审核API接口规范文档的技术可行性和规范性', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:0, deadline:'2026-06-25', backlog:'项目验收', delivery:'无需交付' },
-  { id:'t24', title:'Q2财报数据合规审核', desc:'审核Q2财报数据的合规性，确认数据来源和计算方法的准确性', projectId:'p2', stage:'review', status:'todo', priority:'P0', assignee:'赵明', reward:0, deadline:'2026-06-28', backlog:'项目验收', delivery:'无需交付' },
-  { id:'t25', title:'API接口文档知识贡献奖励审核', desc:'审核API接口文档V2.1的知识贡献，确认贡献者名单及奖励分配方案', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:500, deadline:'2026-06-30', backlog:'项目验收', delivery:'无需交付', ccUsers:['李晓华', '王思远'] },
+  { id:'t23', title:'API接口规范V2.1技术评审', desc:'组织技术评审会议，审核API接口规范文档的技术可行性和规范性', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:0, deadline:'2026-06-25', backlog:'项目验收', delivery:'' },
+  { id:'t24', title:'Q2财报数据合规审核', desc:'审核Q2财报数据的合规性，确认数据来源和计算方法的准确性', projectId:'p2', stage:'review', status:'todo', priority:'P0', assignee:'赵明', reward:0, deadline:'2026-06-28', backlog:'项目验收', delivery:'' },
+  { id:'t25', title:'API接口文档知识贡献奖励审核', desc:'审核API接口文档V2.1的知识贡献，确认贡献者名单及奖励分配方案', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:500, deadline:'2026-06-30', backlog:'项目验收', delivery:'', ccUsers:['李晓华', '王思远'] },
   { id:'t26', title:'用户反馈收集机制设计', desc:'设计用户反馈收集流程与分类标签体系，提升产品迭代效率', projectId:'p1', stage:'initiation', status:'draft', priority:'P2', assignee:'王思远', reward:400, deadline:'2026-07-05', backlog:'立项阶段', delivery:'文档链接' },
   { id:'t27', title:'跨平台数据同步方案', desc:'调研并设计多端数据同步的技术方案，支持离线编辑与冲突合并', projectId:'p4', stage:'research', status:'draft', priority:'P1', assignee:'张明远', reward:800, deadline:'2026-07-15', backlog:'调研阶段', delivery:'文档链接' },
-  { id:'t28', title:'权限粒度配置优化', desc:'优化RBAC权限模型，支持更细粒度的资源级权限配置', projectId:'p1', stage:'initiation', status:'draft', priority:'P0', assignee:'赵明', reward:600, deadline:'2026-07-10', backlog:'立项阶段', delivery:'无需交付' },
+  { id:'t28', title:'权限粒度配置优化', desc:'优化RBAC权限模型，支持更细粒度的资源级权限配置', projectId:'p1', stage:'initiation', status:'draft', priority:'P0', assignee:'赵明', reward:600, deadline:'2026-07-10', backlog:'立项阶段', delivery:'' },
   { id:'t29', title:'Q3预算规划草案', desc:'起草Q3季度项目预算分配方案，含人力、资源、风险预留', projectId:'p2', stage:'initiation', status:'draft', priority:'P1', assignee:'李晓华', reward:500, deadline:'2026-07-08', backlog:'立项阶段', delivery:'附件' },
   { id:'t30', title:'前端组件库文档补充', desc:'补充前端组件库的使用文档和示例代码', projectId:'p1', stage:'execution', status:'rejected', priority:'P2', assignee:'王思远', reward:400, deadline:'2026-06-25', backlog:'项目执行', delivery:'文档链接', auditor:'张明远', rejectTime:'2026-06-19 09:30', rejectReason:'文档缺少API参数说明和异常处理章节', ccUsers:['张明远'] },
   { id:'t31', title:'知识库标签体系重构', desc:'重构知识库标签分类体系，支持多级标签和智能推荐', projectId:'p1', stage:'execution', status:'rejected', priority:'P1', assignee:'陈雨桐', reward:550, deadline:'2026-06-28', backlog:'项目执行', delivery:'附件', auditor:'赵明', rejectTime:'2026-06-20 15:00', rejectReason:'标签层级设计不合理，需与产品确认后再提交', ccUsers:['李晓华'] },
@@ -3951,7 +3943,7 @@ function filterUserList() {
           '<td style="font-size:12px;">' + u.role + '</td>' +
           '<td style="font-size:12px;">' + (u.phone || '-') + '</td>' +
           '<td style="font-size:12px;color:var(--text-muted);">' + u.active + '</td>' +
-          '<td><button class="btn btn-xs btn-ghost" onclick="alert(\'编辑用户：' + u.name + '\')">编辑</button><button class="btn btn-xs btn-ghost" style="color:var(--accent-rose);" onclick="alert(\'已禁用' + u.name + '\')">禁用</button><button class="btn btn-xs btn-ghost" onclick="alert(\'重置密码链接已发送至 ' + u.email + '\')">重置密码</button></td>' +
+          '<td><button class="btn btn-xs btn-ghost" onclick="alert(\'编辑用户：' + u.name + '\')">编辑</button><button class="btn btn-xs btn-ghost" style="color:var(--accent-rose);" onclick="alert(\'已禁用' + u.name + '\')">禁用</button><button class="btn btn-xs btn-ghost" onclick="if(confirm(\'密码重置后原密码不可用，是否确认重置？\'))alert(\'密码已重置为：Remi123321#！，首次登陆需修改密码\')">重置密码</button></td>' +
         '</tr>';
       }
     });
@@ -5495,9 +5487,11 @@ function _taskDetailHtml(t) {
     '</div>' +
     '<div style="padding:8px;border-radius:3px;background:var(--bg);margin-bottom:12px;">' +
       '<div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">交付形式</div>' +
-      '<div style="font-size:13px;font-weight:500;">' + (t.delivery || '无需交付') + '</div>' +
+      '<div style="font-size:13px;font-weight:500;">' + (t.delivery || '-') + '</div>' +
     '</div>' +
     (t.desc ? '<div style="padding:8px;border-radius:3px;background:var(--bg);margin-bottom:12px;"><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">任务描述</div><div style="font-size:13px;color:var(--text-secondary);line-height:1.6;">' + t.desc + '</div></div>' : '') +
+    (t.acceptance ? '<div style="padding:8px;border-radius:3px;background:var(--bg);margin-bottom:12px;"><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">验收标准</div><div style="font-size:13px;color:var(--text-secondary);">' + t.acceptance + '</div></div>' : '') +
+    (t.attachment ? '<div style="padding:8px;border-radius:3px;background:var(--bg);margin-bottom:12px;"><div style="font-size:10px;color:var(--text-muted);margin-bottom:4px;">附件文档/链接</div><a href="' + t.attachment + '" target="_blank" style="font-size:13px;color:var(--primary);text-decoration:none;word-break:break-all;">' + t.attachment + '</a></div>' : '') +
     (t.reward && t.reward > 0 && t.status === 'done' ? '<div style="margin-bottom:12px;"><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">奖励审批</label><a href="javascript:void(0)" onclick="openRewardAuditDetail(\'' + t.id + '\')" style="font-size:13px;color:var(--primary);text-decoration:none;">查看奖励审批详情 →</a></div>' : '') +
     _taskAuditFlowHtml(t) +
     (t.completedAt ? '<div style="font-size:12px;color:var(--accent-emerald);padding:8px;background:rgba(16,185,129,0.1);border-radius:3px;margin-top:12px;">✅ 完成时间：' + t.completedAt + '</div>' : '') +
@@ -5560,7 +5554,7 @@ function _deliveryUploadHtml(t) {
   } else if (delivery === '附件') {
     return '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">上传附件</label><input type="file" id="deliveryFile" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>';
   }
-  return '<div style="font-size:12px;color:var(--text-muted);padding:8px;background:var(--bg);border-radius:3px;">无需交付物上传</div>';
+  return '<div style="font-size:12px;color:var(--text-muted);padding:8px;background:var(--bg);border-radius:3px;">暂无交付物</div>';
 }
 
 // ===== TASK ACTIONS =====
@@ -5619,13 +5613,14 @@ function editTask(id) {
       '</div>' +
       '<div class="form-row">' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预计奖励 (RP)</label><input id="editReward" type="number" value="' + t.reward + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"></div>' +
-        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (!t.delivery||t.delivery==='无需交付'?' selected':'') + '>无需交付</option><option' + (t.delivery==='附件'?' selected':'') + '>附件</option><option' + (t.delivery==='文档链接'?' selected':'') + '>文档链接</option></select></div>' +
+        '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">交付形式</label><select id="editDelivery" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;"><option' + (t.delivery==='附件'?' selected':'') + '>附件</option><option' + (t.delivery==='文档链接'?' selected':'') + '>文档链接</option></select></div>' +
       '</div>' +
       '<div class="form-row">' +
         '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">预期工作量 (人天)</label><input id="editEffort" value="' + (t.effort||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;" placeholder="如 3"></div>' +
         '<div style="flex:1;"></div>' +
       '</div>' +
       '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">验收标准 *</label><textarea id="editAcceptance" rows="2" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;resize:vertical;box-sizing:border-box;" placeholder="任务完成时对照验收的标准描述">' + (t.acceptance||'') + '</textarea></div>' +
+      '<div><label style="font-size:12px;font-weight:600;color:var(--text-muted);display:block;margin-bottom:4px;">附件文档/链接</label><input id="editTaskAttachment" value="' + (t.attachment||'') + '" style="width:100%;padding:8px;border:1px solid var(--border-light);border-radius:3px;font-size:13px;box-sizing:border-box;" placeholder="输入文档链接，如 https://..."></div>' +
       '<div style="display:flex;gap:8px;justify-content:flex-end;border-top:1px solid var(--border-light);padding-top:12px;"><button class="btn btn-ghost" onclick="closeProjectDetail()">取消</button><button class="btn btn-primary" onclick="saveEditTask()">保存修改</button></div>' +
     '</div>'
   );
@@ -5646,6 +5641,7 @@ function saveEditTask() {
   t.delivery = document.getElementById('editDelivery').value || '';
   t.effort = document.getElementById('editEffort').value;
   t.acceptance = document.getElementById('editAcceptance').value;
+  t.attachment = document.getElementById('editTaskAttachment').value || '';
   refreshAllTaskViews();
   closeProjectDetail();
 }
@@ -6110,11 +6106,56 @@ function switchPTConfigTab(el, tab) {
   document.getElementById('ptc-knowledge').style.display = tab === 'knowledge' ? '' : 'none';
   document.getElementById('ptc-source').style.display = tab === 'source' ? '' : 'none';
   document.getElementById('ptc-rules').style.display = tab === 'rules' ? '' : 'none';
+  document.getElementById('ptc-approval').style.display = tab === 'approval' ? '' : 'none';
   if (tab === 'knowledge' && !document.getElementById('kbTypeTableBody').innerHTML) renderKnowledgeTypes();
   if (tab === 'source' && !document.getElementById('kbSourceTableBody').innerHTML) renderKnowledgeSources();
   if (tab === 'rules') renderPointsRules();
+  if (tab === 'approval') renderApprovalConfigs();
 }
 
+var _approvalConfigs = [
+  { dept: '技术部', reviewer: '张明远' },
+  { dept: '产品部', reviewer: '李晓华' },
+  { dept: '市场部', reviewer: '陈雨桐' },
+  { dept: '合规部', reviewer: '赵明' },
+  { dept: '财务部', reviewer: '刘思琪' }
+];
+
+function addApprovalConfig() {
+  _approvalConfigs.push({ dept: '', reviewer: '' });
+  renderApprovalConfigs();
+}
+
+function removeApprovalConfig(idx) {
+  _approvalConfigs.splice(idx, 1);
+  renderApprovalConfigs();
+}
+
+function renderApprovalConfigs() {
+  var tbody = document.getElementById('approvalConfigTbody');
+  if (!tbody) return;
+  if (_approvalConfigs.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--text-muted);font-size:12px;padding:20px;">暂无配置，点击"+ 添加配置"新增</td></tr>';
+    return;
+  }
+  var html = '';
+  _approvalConfigs.forEach(function(c, i) {
+    var deptOpts = ['技术部', '产品部', '市场部', '合规部', '财务部'].map(function(d) {
+      return '<option value="' + d + '"' + (c.dept === d ? ' selected' : '') + '>' + d + '</option>';
+    }).join('');
+    var allUsers = [];
+    _deptUsers.forEach(function(g) { g.users.forEach(function(u) { allUsers.push(u); }); });
+    var reviewerOpts = allUsers.map(function(u) {
+      return '<option value="' + u + '"' + (c.reviewer === u ? ' selected' : '') + '>' + u + '</option>';
+    }).join('');
+    html += '<tr>' +
+      '<td><select style="width:100%;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);" onchange="_approvalConfigs[' + i + '].dept=this.value">' + deptOpts + '</select></td>' +
+      '<td><select style="width:100%;padding:4px 6px;border:1px solid var(--border);border-radius:3px;font-size:12px;background:var(--card);" onchange="_approvalConfigs[' + i + '].reviewer=this.value">' + reviewerOpts + '</select></td>' +
+      '<td style="text-align:center;"><button class="btn btn-xs btn-danger" onclick="removeApprovalConfig(' + i + ')" style="font-size:11px;">删除</button></td>' +
+    '</tr>';
+  });
+  tbody.innerHTML = html;
+}
 
 function openTaskModal() {
   document.getElementById('createDrawerTitle').textContent = '创建任务';
@@ -6149,12 +6190,13 @@ function openTaskModal() {
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">预计奖励 (RP)</label><input class="form-input" type="number" placeholder="≤ 项目预算余额"></div>
-        <div class="form-group"><label class="form-label">交付形式</label><select class="form-select"><option>附件</option><option>文档链接</option><option>无需交付</option></select></div>
+        <div class="form-group"><label class="form-label">交付形式</label><select class="form-select"><option>附件</option><option>文档链接</option></select></div>
       </div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">预期工作量</label><input class="form-input" type="number" placeholder="单位：人天"></div>
       </div>
       <div class="form-group"><label class="form-label">验收标准 <span style="color:var(--accent-rose);">*</span></label><textarea class="form-textarea" placeholder="任务完成时对照验收的标准描述" style="min-height:60px;"></textarea></div>
+      <div class="form-group"><label class="form-label">附件文档/链接</label><input class="form-input" placeholder="输入文档链接，如 https://..."></div>
     </div>
     <div id="taskFormKnowledge" style="display:none;flex-direction:column;gap:14px;"></div>
     <div id="taskFormActions" style="display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border-light);">
