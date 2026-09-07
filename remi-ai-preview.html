@@ -1520,6 +1520,26 @@
       margin-top: 6px;
       transition: border-color 0.15s;
     }
+    .notif-text-en {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+    .notif-input-en {
+      width: 100%;
+      padding: 8px 10px;
+      font-size: 13px;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--card);
+      color: var(--text);
+      resize: vertical;
+      box-sizing: border-box;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .notif-input-en:focus { border-color: var(--primary); }
     .notif-en-input:focus { border-color: var(--primary); }
     .sw-word { font-weight: 600; font-family: monospace; }
 
@@ -2118,12 +2138,12 @@
           <div style="margin-bottom:24px;">
             <div style="min-width:0">
               <div class="wb-tabs">
-                <button class="wb-tab active" onclick="switchWbTab('backlog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>待办任务</button>
+                <button class="wb-tab active" onclick="switchWbTab('backlog')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z"/></svg>我的</button>
                 <button class="wb-tab" onclick="switchWbTab('task')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>项目任务</button>
                 <button class="wb-tab" onclick="switchWbTab('project')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>项目</button>
                 <button class="wb-tab" onclick="switchWbTab('timeline')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><polyline points="8 5 3 12 8 19"/></svg>时间线</button>
               </div>
-              <div class="wb-panel active" id="wb-panel-backlog"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="blFilterAll" onclick="switchBlFilter('all')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">全部</button><button class="tab-bar-item" id="blFilterTask" onclick="switchBlFilter('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务</button><button class="tab-bar-item" id="blFilterReview" onclick="switchBlFilter('review')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">审核</button></div></div><div class="card wb-panel-scroll" style="padding:0;"><div id="backlogItemsContainer"></div></div></div>
+              <div class="wb-panel active" id="wb-panel-backlog"><div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;"><div style="display:flex;background:var(--bg);border-radius:3px;padding:2px;"><button class="tab-bar-item active" id="blFilterAll" onclick="switchBlFilter('all')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:var(--card);color:var(--text);border:none;cursor:pointer;">全部待办</button><button class="tab-bar-item" id="blFilterTask" onclick="switchBlFilter('task')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">任务处理</button><button class="tab-bar-item" id="blFilterReview" onclick="switchBlFilter('review')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">审核处理</button><button class="tab-bar-item" id="blFilterSubmitted" onclick="switchBlFilter('submitted')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">已提交</button><button class="tab-bar-item" id="blFilterProcessed" onclick="switchBlFilter('processed')" style="font-size:12px;padding:4px 12px;border-radius:3px;background:transparent;color:var(--text-muted);border:none;cursor:pointer;">已处理</button></div></div><div class="card wb-panel-scroll" style="padding:0;"><div id="backlogItemsContainer"></div></div></div>
               <div class="wb-panel" id="wb-panel-task">
                 <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px;padding:0 4px;">
                   <div class="select-wrap"><select id="wbTaskProjectFilter" onchange="renderWbKanban()" style="padding:3px 8px;font-size:11px;"><option value="all">全部项目</option></select></div>
@@ -2898,41 +2918,46 @@
             </div>
             <div class="table-wrap">
               <table>
-                <thead><tr><th style="min-width:120px;">通知类型</th><th style="min-width:100px;">英文名称</th><th>触发条件</th><th style="min-width:300px;">消息内容</th><th style="width:80px;text-align:center;">操作</th></tr></thead>
+                <thead><tr><th style="min-width:120px;">通知类型</th><th style="min-width:100px;">英文名称</th><th>触发条件</th><th style="min-width:300px;">消息内容</th><th style="min-width:300px;">消息内容-英文</th><th style="width:80px;text-align:center;">操作</th></tr></thead>
                 <tbody id="notifTableBody">
                   <tr class="notif-row" data-type="assign">
                     <td style="font-size:12px;font-weight:500;">任务分配通知</td>
                     <td style="font-size:12px;color:var(--text-muted);"><span class="notif-row-en" data-en="Task Assignment Notice">Task Assignment Notice</span><input class="notif-en-input" style="display:none;font-size:12px;width:100%;" data-en="Task Assignment Notice" value="Task Assignment Notice"></td>
                     <td style="font-size:12px;color:var(--text-muted);">通知接收人在任务被分配时触发</td>
-                    <td style="font-size:12px;"><div class="notif-text">您已被分配任务「{task_name}」，请及时处理。</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">您已被分配任务「{task_name}」，请及时处理。</textarea><div class="notif-actions" style="display:none;margin-top:6px;gap:6px;"><button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button><button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button></div></td>
+                    <td style="font-size:12px;"><div class="notif-text">您已被分配任务「{task_name}」，请及时处理。</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">您已被分配任务「{task_name}」，请及时处理。</textarea></td>
+                    <td style="font-size:12px;"><div class="notif-text-en">You have been assigned task "{task_name}", please handle it promptly.</div><textarea class="notif-input-en" style="display:none;font-size:12px;width:100%;" rows="2">You have been assigned task "{task_name}", please handle it promptly.</textarea></td>
                     <td style="text-align:center;"><button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button></td>
                   </tr>
                   <tr class="notif-row" data-type="review">
                     <td style="font-size:12px;font-weight:500;">审核通知</td>
                     <td style="font-size:12px;color:var(--text-muted);"><span class="notif-row-en" data-en="Review Notice">Review Notice</span><input class="notif-en-input" style="display:none;font-size:12px;width:100%;" data-en="Review Notice" value="Review Notice"></td>
                     <td style="font-size:12px;color:var(--text-muted);">通知审核人有任务待审核时触发</td>
-                    <td style="font-size:12px;"><div class="notif-text">任务「{task_name}」待审核，请前往查看。</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">任务「{task_name}」待审核，请前往查看。</textarea><div class="notif-actions" style="display:none;margin-top:6px;gap:6px;"><button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button><button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button></div></td>
+                    <td style="font-size:12px;"><div class="notif-text">任务「{task_name}」待审核，请前往查看。</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">任务「{task_name}」待审核，请前往查看。</textarea></td>
+                    <td style="font-size:12px;"><div class="notif-text-en">Task "{task_name}" is pending review, please check.</div><textarea class="notif-input-en" style="display:none;font-size:12px;width:100%;" rows="2">Task "{task_name}" is pending review, please check.</textarea></td>
                     <td style="text-align:center;"><button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button></td>
                   </tr>
                   <tr class="notif-row" data-type="accept">
                     <td style="font-size:12px;font-weight:500;">验收通知</td>
                     <td style="font-size:12px;color:var(--text-muted);"><span class="notif-row-en" data-en="Acceptance Notice">Acceptance Notice</span><input class="notif-en-input" style="display:none;font-size:12px;width:100%;" data-en="Acceptance Notice" value="Acceptance Notice"></td>
                     <td style="font-size:12px;color:var(--text-muted);">通知验收人任务已完成待验收时触发</td>
-                    <td style="font-size:12px;"><div class="notif-text">任务「{task_name}」已完成，请验收。</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">任务「{task_name}」已完成，请验收。</textarea><div class="notif-actions" style="display:none;margin-top:6px;gap:6px;"><button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button><button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button></div></td>
+                    <td style="font-size:12px;"><div class="notif-text">任务「{task_name}」已完成，请验收。</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">任务「{task_name}」已完成，请验收。</textarea></td>
+                    <td style="font-size:12px;"><div class="notif-text-en">Task "{task_name}" has been completed, please accept.</div><textarea class="notif-input-en" style="display:none;font-size:12px;width:100%;" rows="2">Task "{task_name}" has been completed, please accept.</textarea></td>
                     <td style="text-align:center;"><button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button></td>
                   </tr>
                   <tr class="notif-row" data-type="result">
                     <td style="font-size:12px;font-weight:500;">审核结果通知</td>
                     <td style="font-size:12px;color:var(--text-muted);"><span class="notif-row-en" data-en="Review Result Notice">Review Result Notice</span><input class="notif-en-input" style="display:none;font-size:12px;width:100%;" data-en="Review Result Notice" value="Review Result Notice"></td>
                     <td style="font-size:12px;color:var(--text-muted);">任务提交人审核出结果时触发</td>
-                    <td style="font-size:12px;"><div class="notif-text">任务「{task_name}」审核{result}</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">任务「{task_name}」审核{result}</textarea><div class="notif-actions" style="display:none;margin-top:6px;gap:6px;"><button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button><button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button></div></td>
+                    <td style="font-size:12px;"><div class="notif-text">任务「{task_name}」审核{result}</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">任务「{task_name}」审核{result}</textarea></td>
+                    <td style="font-size:12px;"><div class="notif-text-en">Task "{task_name}" review {result}</div><textarea class="notif-input-en" style="display:none;font-size:12px;width:100%;" rows="2">Task "{task_name}" review {result}</textarea></td>
                     <td style="text-align:center;"><button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button></td>
                   </tr>
                   <tr class="notif-row" data-type="reward">
                     <td style="font-size:12px;font-weight:500;">奖励到账通知</td>
                     <td style="font-size:12px;color:var(--text-muted);"><span class="notif-row-en" data-en="Reward Notice">Reward Notice</span><input class="notif-en-input" style="display:none;font-size:12px;width:100%;" data-en="Reward Notice" value="Reward Notice"></td>
                     <td style="font-size:12px;color:var(--text-muted);">用户获得积分奖励时触发</td>
-                    <td style="font-size:12px;"><div class="notif-text">您获得奖励 {points} 积分，当前余额 {balance} 积分。</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">您获得奖励 {points} 积分，当前余额 {balance} 积分。</textarea><div class="notif-actions" style="display:none;margin-top:6px;gap:6px;"><button class="btn btn-sm btn-primary" onclick="saveNotifTemplate(this)">保存</button><button class="btn btn-sm" onclick="cancelEditNotif(this)">取消</button></div></td>
+                    <td style="font-size:12px;"><div class="notif-text">您获得奖励 {points} 积分，当前余额 {balance} 积分。</div><textarea class="notif-input" style="display:none;font-size:12px;width:100%;" rows="2">您获得奖励 {points} 积分，当前余额 {balance} 积分。</textarea></td>
+                    <td style="font-size:12px;"><div class="notif-text-en">You have received {points} points, current balance {balance} points.</div><textarea class="notif-input-en" style="display:none;font-size:12px;width:100%;" rows="2">You have received {points} points, current balance {balance} points.</textarea></td>
                     <td style="text-align:center;"><button class="btn btn-sm" onclick="editNotifTemplate(this)">编辑</button></td>
                   </tr>
                 </tbody>
@@ -6202,6 +6227,7 @@ function openTaskModal() {
         <div class="form-group" style="flex:0 0 180px;"><label class="form-label">任务编号</label><input class="form-input" value="创建任务后生成" disabled style="background:var(--bg);color:var(--text-muted);font-size:12px;"></div>
         <div class="form-group"><label class="form-label">任务标题 <span style="color:var(--accent-rose);">*</span></label><input class="form-input" placeholder="输入任务标题（≤100字符）"></div>
       </div>
+      <div class="form-group"><label class="form-label">任务类型 <span style="color:var(--accent-rose);">*</span></label><select class="form-select"><option value="">请选择任务类型</option>${adminTaskTypes.map(function(t) { return '<option value="' + t.cn + '">' + t.cn + '</option>'; }).join('')}</select></div>
       <div class="form-group"><label class="form-label">任务描述 <span style="color:var(--accent-rose);">*</span></label><textarea class="form-textarea" placeholder="详细描述任务内容"></textarea></div>
       <div class="form-row">
         <div class="form-group"><label class="form-label">所属项目 <span style="color:var(--accent-rose);">*</span></label><select class="form-select" id="createTaskProject" onchange="updateProjectLead()">${projects.map(p => `<option value="${p.id}" data-lead="${p.lead}">${p.name}</option>`).join('')}</select></div>
@@ -7431,48 +7457,51 @@ function switchAdminTab(tab) {
 
 function editNotifTemplate(btn) {
   const row = btn.closest('.notif-row');
-  row.querySelector('.notif-text').style.display = 'none';
-  const textarea = row.querySelector('.notif-input');
-  textarea.style.display = 'block';
-  textarea.value = row.querySelector('.notif-text').textContent;
-  const enSpan = row.querySelector('.notif-row-en');
-  const enInput = row.querySelector('.notif-en-input');
-  enSpan.style.display = 'none';
-  enInput.style.display = 'block';
-  enInput.value = enSpan.dataset.en;
-  row.querySelector('.notif-actions').style.display = 'flex';
+  const isEditing = btn.textContent === '保存';
+  if (isEditing) {
+    // ==== SAVE MODE ====
+    const textarea = row.querySelector('.notif-input');
+    const textDiv = row.querySelector('.notif-text');
+    textDiv.textContent = textarea.value;
+    textDiv.style.display = 'block';
+    textarea.style.display = 'none';
+    const enSpan = row.querySelector('.notif-row-en');
+    const enInput = row.querySelector('.notif-en-input');
+    enSpan.textContent = enInput.value;
+    enSpan.dataset.en = enInput.value;
+    enSpan.style.display = 'block';
+    enInput.style.display = 'none';
+    const enText = row.querySelector('.notif-text-en');
+    const enInputText = row.querySelector('.notif-input-en');
+    if (enText && enInputText) {
+      enText.textContent = enInputText.value;
+      enText.style.display = 'block';
+      enInputText.style.display = 'none';
+    }
+    btn.textContent = '编辑';
+  } else {
+    // ==== EDIT MODE ====
+    row.querySelector('.notif-text').style.display = 'none';
+    const textarea = row.querySelector('.notif-input');
+    textarea.style.display = 'block';
+    textarea.value = row.querySelector('.notif-text').textContent;
+    const enSpan = row.querySelector('.notif-row-en');
+    const enInput = row.querySelector('.notif-en-input');
+    enSpan.style.display = 'none';
+    enInput.style.display = 'block';
+    enInput.value = enSpan.dataset.en;
+    const enText = row.querySelector('.notif-text-en');
+    const enInputText = row.querySelector('.notif-input-en');
+    if (enText && enInputText) {
+      enText.style.display = 'none';
+      enInputText.style.display = 'block';
+      enInputText.value = enText.textContent;
+    }
+    btn.textContent = '保存';
+  }
 }
 
-function saveNotifTemplate(btn) {
-  const row = btn.closest('.notif-row');
-  const textarea = row.querySelector('.notif-input');
-  const textDiv = row.querySelector('.notif-text');
-  textDiv.textContent = textarea.value;
-  textDiv.style.display = 'block';
-  textarea.style.display = 'none';
-  const enSpan = row.querySelector('.notif-row-en');
-  const enInput = row.querySelector('.notif-en-input');
-  enSpan.textContent = enInput.value;
-  enSpan.dataset.en = enInput.value;
-  enSpan.style.display = 'block';
-  enInput.style.display = 'none';
-  row.querySelector('.notif-actions').style.display = 'none';
-}
 
-function cancelEditNotif(btn) {
-  const row = btn.closest('.notif-row');
-  const textarea = row.querySelector('.notif-input');
-  const textDiv = row.querySelector('.notif-text');
-  textarea.value = textDiv.textContent;
-  textDiv.style.display = 'block';
-  textarea.style.display = 'none';
-  const enSpan = row.querySelector('.notif-row-en');
-  const enInput = row.querySelector('.notif-en-input');
-  enInput.value = enSpan.dataset.en;
-  enSpan.style.display = 'block';
-  enInput.style.display = 'none';
-  row.querySelector('.notif-actions').style.display = 'none';
-}
 
 function toggleSkill(btn) {
   const row = btn.closest('tr');
@@ -8575,6 +8604,8 @@ function switchBlFilter(mode) {
   var allBtn = document.getElementById('blFilterAll');
   var taskBtn = document.getElementById('blFilterTask');
   var reviewBtn = document.getElementById('blFilterReview');
+  var submittedBtn = document.getElementById('blFilterSubmitted');
+  var processedBtn = document.getElementById('blFilterProcessed');
   if (!allBtn || !taskBtn || !reviewBtn) return;
   allBtn.style.background = mode === 'all' ? 'var(--card)' : 'transparent';
   allBtn.style.color = mode === 'all' ? 'var(--text)' : 'var(--text-muted)';
@@ -8582,6 +8613,14 @@ function switchBlFilter(mode) {
   taskBtn.style.color = mode === 'task' ? 'var(--text)' : 'var(--text-muted)';
   reviewBtn.style.background = mode === 'review' ? 'var(--card)' : 'transparent';
   reviewBtn.style.color = mode === 'review' ? 'var(--text)' : 'var(--text-muted)';
+  if (submittedBtn) {
+    submittedBtn.style.background = mode === 'submitted' ? 'var(--card)' : 'transparent';
+    submittedBtn.style.color = mode === 'submitted' ? 'var(--text)' : 'var(--text-muted)';
+  }
+  if (processedBtn) {
+    processedBtn.style.background = mode === 'processed' ? 'var(--card)' : 'transparent';
+    processedBtn.style.color = mode === 'processed' ? 'var(--text)' : 'var(--text-muted)';
+  }
   renderWbBacklog();
 }
 
@@ -8692,7 +8731,7 @@ function renderOverview() {
   document.getElementById('ovTodoCount').textContent = leaderTodos.length + ' 项';
   var todoHtml = '';
   if (leaderTodos.length === 0) {
-    todoHtml = '<div style="text-align:center;padding:40px 0;color:#4b5563;font-size:13px;">暂无待办</div>';
+    todoHtml = '<div style="text-align:center;padding:40px 0;color:#4b5563;font-size:13px;">暂无待办事项</div>';
   } else {
     leaderTodos.forEach(function(t) {
       var proj = projects.find(function(p) { return p.id === t.projectId; });
@@ -8735,7 +8774,7 @@ function renderWbStats() {
   var monthlyUploads = 3;
   var doneTasks = tasks.filter(function(t) { return t.status === 'done'; }).length;
   var stats = [
-    { label: '待办任务', value: pendingTasks },
+    { label: '我的', value: pendingTasks },
     { label: '在途项目', value: activeProjects },
     { label: '在途任务', value: activeTasks },
     { label: '本月上传知识数', value: monthlyUploads },
@@ -8790,12 +8829,14 @@ function renderWbBacklog() {
   });
   if (blFilterMode === 'task') allItems = tasks.filter(t => t.status !== 'done' && t.status !== 'closed');
   else if (blFilterMode === 'review') allItems = tasks.filter(t => t.status === 'pending_review').concat(reviewItems).concat(bonusReviewItems);
+  else if (blFilterMode === 'submitted') allItems = tasks.filter(t => t.status === 'pending_review').concat(reviewItems);
+  else if (blFilterMode === 'processed') allItems = tasks.filter(t => t.status === 'done' || t.status === 'closed');
   else allItems = tasks.concat(reviewItems).concat(bonusReviewItems);
   const priorityOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
   allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
   const statusLabels = { todo: '待开始', in_progress: '进行中', pending_review: '待审核', rejected: '驳回' };
   const today = '2026-07-23';
-  let html = '<div class="backlog-count">待办任务 <strong>(' + allItems.length + ' 个任务)</strong></div>';
+  let html = '<div class="backlog-count">我的 <strong>(' + allItems.length + ' 个任务)</strong></div>';
   html += '<div><div class="backlog-header"><div class="backlog-header-col col-key">编号</div><div class="backlog-header-col col-title">标题</div><div class="backlog-header-col col-priority">优先级</div><div class="backlog-header-col col-project">项目</div><div class="backlog-header-col col-status">状态</div><div class="backlog-header-col col-start">开始时间</div><div class="backlog-header-col col-deadline">截止时间</div><div class="backlog-header-col col-updated">更新时间</div><div class="backlog-header-col col-assignee">负责人</div></div>';
   html += '<div class="backlog-list">';
   allItems.forEach(function(item) {
