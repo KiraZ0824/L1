@@ -3289,6 +3289,7 @@ const tasks = [
   { id:'t21', title:'审批流程设计文档', desc:'设计任务验收审批流程的完整文档', projectId:'p1', stage:'execution', status:'pending_review', priority:'P1', assignee:'张明远', reward:450, deadline:'2026-06-22', backlog:'项目执行', delivery:'文档链接', ccUsers:['李晓华', '王思远'] },
   { id:'t22', title:'结算模块代码审查', desc:'审查结算模块的代码质量和安全漏洞', projectId:'p2', stage:'execution', status:'rejected', priority:'P0', assignee:'李晓华', reward:600, deadline:'2026-06-18', backlog:'项目执行', delivery:'附件', auditor:'张明远', rejectTime:'2026-06-16 14:00', rejectReason:'审查报告缺少关键漏洞的修复建议和影响范围分析', ccUsers:['张明远'] },
   { id:'t23', title:'API接口规范V2.1技术评审', desc:'组织技术评审会议，审核API接口规范文档的技术可行性和规范性', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:0, deadline:'2026-06-25', backlog:'项目验收', delivery:'' },
+  { id:'t33', title:'API接口规范V2.1技术评审01', desc:'组织技术评审会议，审核API接口规范文档的技术可行性和规范性', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:0, deadline:'2026-06-25', backlog:'项目验收', delivery:'' },
   { id:'t24', title:'Q2财报数据合规审核', desc:'审核Q2财报数据的合规性，确认数据来源和计算方法的准确性', projectId:'p2', stage:'review', status:'todo', priority:'P0', assignee:'赵明', reward:0, deadline:'2026-06-28', backlog:'项目验收', delivery:'' },
   { id:'t25', title:'API接口文档知识贡献奖励审核', desc:'审核API接口文档V2.1的知识贡献，确认贡献者名单及奖励分配方案', projectId:'p1', stage:'review', status:'pending_review', priority:'P1', assignee:'张明远', reward:500, deadline:'2026-06-30', backlog:'项目验收', delivery:'', ccUsers:['李晓华', '王思远'] },
   { id:'t26', title:'用户反馈收集机制设计', desc:'设计用户反馈收集流程与分类标签体系，提升产品迭代效率', projectId:'p1', stage:'initiation', status:'draft', priority:'P2', assignee:'王思远', reward:400, deadline:'2026-07-05', backlog:'立项阶段', delivery:'文档链接' },
@@ -4503,41 +4504,6 @@ var _knowledgeReviews = [
     keyId: 'K00TC01001001',
     auditNo: 'TS-K00TC01001001',
     title: 'API接口文档V2.1-知识贡献奖励审核',
-    status: 'pending_review',
-    priority: 'P1',
-    project: '技术文档平台',
-    projectLead: '张明远',
-    uploader: '张明远',
-    dept: '技术部',
-    contributor: '李晓华, 王思远',
-    ccUsers: ['李晓华', '王思远'],
-    files: [
-      { name: 'API接口文档V2.1.pdf', size: '3.1MB', type: 'pdf' },
-      { name: '接口示例代码.zip', size: '1.2MB', type: 'zip' }
-    ],
-    source: '员工创作',
-    primaryType: '技术规范',
-    subTag: 'API规范',
-    baseValue: 8,
-    difficulty: 4,
-    reward: 500,
-    uploadTime: '2026-06-20 10:15',
-    desc: 'API接口规范文档V2.1版本，涵盖RESTful接口设计规范、认证机制、错误处理标准及示例代码，由技术部与产品部联合编写。',
-    auditFlow: [
-      { type: 'initiate', name: '发起', status: 'done', operator: '张明远', time: '2026-06-20 10:15', comment: '' },
-      { type: 'review', name: '审核', status: 'pending', operators: [
-        { name: '王思远', status: 'done', time: '2026-06-21 09:00', comment: '文档详实，规范完整，建议通过' },
-        { name: '赵明', status: 'pending', time: '', comment: '' }
-      ]},
-      { type: 'cc', name: '自动抄送', status: 'pending', targets: ['李晓华', '王思远'] },
-      { type: 'end', name: '结束', status: 'pending' }
-    ]
-  },
-  {
-    id: 'kr7',
-    keyId: 'K00TC01001002',
-    auditNo: 'TS-K00TC01001002',
-    title: 'API接口规范V2.1技术评审01',
     status: 'pending_review',
     priority: 'P1',
     project: '技术文档平台',
@@ -8927,7 +8893,7 @@ function renderWbBacklog() {
       projName = item.projectName;
       displayKey = item.keyId || '';
       var kr = _knowledgeReviews.find(function(r) { return r.id === item.id; });
-      displayTitle = item.title;
+      displayTitle = '【知识审核】' + (kr ? (kr.subTag || '') + (kr.keyId || '') : item.title);
       html += '<div class="backlog-item" onclick="openKnowledgeReviewDetail(\'' + item.id + '\')">';
     } else {
       projName = wbGetProjectName(item.projectId);
