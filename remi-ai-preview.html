@@ -1816,7 +1816,7 @@
     .backlog-item:hover { background: var(--bg); }
     .backlog-item:last-child { border-bottom: none; }
     .backlog-col { min-width: 0; display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 400; }
-    .backlog-col.col-key { flex: 1 1 85px; color: var(--text-muted); white-space: nowrap; }
+    .backlog-col.col-key { flex: 1 1 85px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .backlog-col.col-title { flex: 2 1 200px; min-width: 100px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .backlog-col.col-priority { flex: 1 1 55px; justify-content: center; }
     .backlog-col.col-priority.p0 { color: var(--accent-rose); }
@@ -4503,6 +4503,41 @@ var _knowledgeReviews = [
     keyId: 'K00TC01001001',
     auditNo: 'TS-K00TC01001001',
     title: 'API接口文档V2.1-知识贡献奖励审核',
+    status: 'pending_review',
+    priority: 'P1',
+    project: '技术文档平台',
+    projectLead: '张明远',
+    uploader: '张明远',
+    dept: '技术部',
+    contributor: '李晓华, 王思远',
+    ccUsers: ['李晓华', '王思远'],
+    files: [
+      { name: 'API接口文档V2.1.pdf', size: '3.1MB', type: 'pdf' },
+      { name: '接口示例代码.zip', size: '1.2MB', type: 'zip' }
+    ],
+    source: '员工创作',
+    primaryType: '技术规范',
+    subTag: 'API规范',
+    baseValue: 8,
+    difficulty: 4,
+    reward: 500,
+    uploadTime: '2026-06-20 10:15',
+    desc: 'API接口规范文档V2.1版本，涵盖RESTful接口设计规范、认证机制、错误处理标准及示例代码，由技术部与产品部联合编写。',
+    auditFlow: [
+      { type: 'initiate', name: '发起', status: 'done', operator: '张明远', time: '2026-06-20 10:15', comment: '' },
+      { type: 'review', name: '审核', status: 'pending', operators: [
+        { name: '王思远', status: 'done', time: '2026-06-21 09:00', comment: '文档详实，规范完整，建议通过' },
+        { name: '赵明', status: 'pending', time: '', comment: '' }
+      ]},
+      { type: 'cc', name: '自动抄送', status: 'pending', targets: ['李晓华', '王思远'] },
+      { type: 'end', name: '结束', status: 'pending' }
+    ]
+  },
+  {
+    id: 'kr7',
+    keyId: 'K00TC01001002',
+    auditNo: 'TS-K00TC01001002',
+    title: 'API接口规范V2.1技术评审01',
     status: 'pending_review',
     priority: 'P1',
     project: '技术文档平台',
@@ -8792,6 +8827,7 @@ function renderWbStats() {
 function renderWbBacklog() {
   const container = document.getElementById('backlogItemsContainer');
   if (!container) return;
+  const currentUser = '张明远';
   var allItems = tasks;
   var reviewItems = _knowledgeReviews.map(function(r) {
     return {
@@ -8830,7 +8866,53 @@ function renderWbBacklog() {
   if (blFilterMode === 'task') allItems = tasks.filter(t => t.status !== 'done' && t.status !== 'closed');
   else if (blFilterMode === 'review') allItems = tasks.filter(t => t.status === 'pending_review').concat(reviewItems).concat(bonusReviewItems);
   else if (blFilterMode === 'submitted') allItems = tasks.filter(t => t.status === 'pending_review').concat(reviewItems);
-  else if (blFilterMode === 'processed') allItems = tasks.filter(t => t.status === 'done' || t.status === 'closed');
+  else if (blFilterMode === 'processed') {
+    allItems = tasks.filter(t => t.status === 'done' || t.status === 'closed');
+    // 包含当前用户已审核的知识审核
+    var processedReviews = _knowledgeReviews.filter(function(r) {
+      if (r.status !== 'done' && r.status !== 'rejected') return false;
+      var reviewStep = r.auditFlow && r.auditFlow.find(function(s) { return s.type === 'review'; });
+      if (!reviewStep || !reviewStep.operators) return false;
+      return reviewStep.operators.some(function(op) { return op.name === currentUser && op.status === 'done'; });
+    }).map(function(r) {
+      return {
+        id: r.id,
+        keyId: r.keyId,
+        title: r.title,
+        status: r.status,
+        priority: r.priority,
+        projectId: '',
+        projectName: r.project,
+        reward: 0,
+        assignee: r.uploader,
+        createdAt: r.uploadTime,
+        deadline: '-',
+        updatedAt: r.uploadTime,
+        isKnowledgeReview: true
+      };
+    });
+    // 包含当前用户已处理的追加奖励
+    var processedBonus = bonusRequests.filter(function(r) {
+      return r.status !== 'pending' && r.reviewer === currentUser;
+    }).map(function(r) {
+      var p = projects.find(function(x) { return x.id === r.projectId; });
+      return {
+        id: r.id,
+        title: '【追加奖励】' + (p ? p.name : '未知项目'),
+        status: r.status === 'approved' ? 'done' : 'rejected',
+        priority: 'P1',
+        projectId: r.projectId,
+        reward: 0,
+        assignee: r.requester,
+        createdAt: r.createdAt,
+        deadline: '-',
+        updatedAt: r.createdAt,
+        isBonusReview: true,
+        reviewCode: r.reviewCode
+      };
+    });
+    allItems = allItems.concat(processedReviews).concat(processedBonus);
+  }
   else allItems = tasks.concat(reviewItems).concat(bonusReviewItems);
   const priorityOrder = { P0: 0, P1: 1, P2: 2, P3: 3 };
   allItems.sort((a, b) => (priorityOrder[a.priority] || 9) - (priorityOrder[b.priority] || 9));
@@ -8845,7 +8927,7 @@ function renderWbBacklog() {
       projName = item.projectName;
       displayKey = item.keyId || '';
       var kr = _knowledgeReviews.find(function(r) { return r.id === item.id; });
-      displayTitle = '【知识审核】' + (kr ? (kr.subTag || '') + (kr.keyId || '') : item.title);
+      displayTitle = item.title;
       html += '<div class="backlog-item" onclick="openKnowledgeReviewDetail(\'' + item.id + '\')">';
     } else {
       projName = wbGetProjectName(item.projectId);
