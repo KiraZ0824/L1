@@ -2664,6 +2664,7 @@
                   <thead>
                     <tr>
                       <th>任务标题</th>
+                      <th>原文档名称</th>
                       <th>所属项目</th>
                       <th>任务负责人</th>
                       <th>更新时间</th>
@@ -3506,9 +3507,9 @@ const documentCenterKnowledgeData = [
 ];
 
 const documentCenterProjectTaskData = [
-  { title:'API接口文档编写', project:'技术文档平台', owner:'张明远', updatedAt:'2026-07-22 18:05', link:'https://example.com/files/task-api-doc' },
-  { title:'Q2财报数据分析', project:'Q2 财务分析', owner:'李晓华', updatedAt:'2026-07-21 12:40', link:'https://example.com/files/task-finance' },
-  { title:'安全漏洞扫描报告', project:'合规风控升级', owner:'赵明', updatedAt:'2026-07-20 09:15', link:'https://example.com/files/task-security' }
+  { title:'API接口文档编写', originalName:'API接口文档编写.docx', project:'技术文档平台', owner:'张明远', updatedAt:'2026-07-22 18:05', link:'https://example.com/files/task-api-doc' },
+  { title:'Q2财报数据分析', originalName:'Q2财报数据分析.xlsx', project:'Q2 财务分析', owner:'李晓华', updatedAt:'2026-07-21 12:40', link:'https://example.com/files/task-finance' },
+  { title:'安全漏洞扫描报告', originalName:'安全漏洞扫描报告.pdf', project:'合规风控升级', owner:'赵明', updatedAt:'2026-07-20 09:15', link:'https://example.com/files/task-security' }
 ];
 
 function switchDocumentCenterTab(el, tab) {
@@ -3536,6 +3537,7 @@ function renderDocumentCenter() {
     taskBody.innerHTML = documentCenterProjectTaskData.map(function(item) {
       return '<tr>' +
         '<td style="font-weight:600;">' + item.title + '</td>' +
+        '<td>' + item.originalName + '</td>' +
         '<td>' + item.project + '</td>' +
         '<td>' + item.owner + '</td>' +
         '<td>' + item.updatedAt + '</td>' +
