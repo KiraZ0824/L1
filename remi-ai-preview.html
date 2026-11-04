@@ -1945,6 +1945,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.5L10.5 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>
         <span class="sidebar-tooltip">知识库管理</span>
       </button>
+      <button class="sidebar-btn" data-page="document-center">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+        <span class="sidebar-tooltip">资料中心</span>
+      </button>
       <div class="sidebar-divider"></div>
       <button class="sidebar-btn" data-page="users">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -2620,7 +2624,61 @@
             </div>
           </div>
         </div>
-      </div><!-- ===== PROJECT MANAGEMENT ===== -->
+      </div>
+
+      <!-- ===== DOCUMENT CENTER ===== -->
+      <div class="page" id="page-document-center">
+        <div class="page-inner">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <div>
+              <h1 style="font-size:20px;font-weight:700;">资料中心</h1>
+              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">知识资料 · 项目任务资料</p>
+            </div>
+          </div>
+          <div class="tabs" style="margin-bottom:20px;">
+            <button class="tab active" onclick="switchDocumentCenterTab(this, 'knowledge')">知识</button>
+            <button class="tab" onclick="switchDocumentCenterTab(this, 'project-task')">项目任务资料</button>
+          </div>
+          <div id="document-center-knowledge">
+            <div class="card">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>知识名称</th>
+                      <th>所属部门</th>
+                      <th>上传人原文件名称</th>
+                      <th>更新时间</th>
+                      <th>知识地址链接</th>
+                    </tr>
+                  </thead>
+                  <tbody id="documentCenterKnowledgeBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div id="document-center-project-task" style="display:none;">
+            <div class="card">
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>任务标题</th>
+                      <th>所属项目</th>
+                      <th>任务负责人</th>
+                      <th>更新时间</th>
+                      <th>资料链接</th>
+                    </tr>
+                  </thead>
+                  <tbody id="documentCenterProjectTaskBody"></tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PROJECT MANAGEMENT ===== -->
       <div class="page" id="page-projects">
         <div class="page-inner">
           <div class="tabs" style="margin-bottom:20px;">
@@ -3381,6 +3439,7 @@ function navigateTo(page) {
   if (target) target.classList.add('active');
   if (page === 'remi-ai') renderChat();
   if (page === 'knowledge') { vmCurrentPage = 1; vmRenderList(); }
+  if (page === 'document-center') { renderDocumentCenter(); }
   if (page === 'overview') renderOverview();
   if (page === 'projects') { renderProjects(); }
   if (page === 'knowledge-tasks') { renderKnowledgeTasks(); }
@@ -3438,6 +3497,52 @@ function renderKnowledgeTasks() {
 
   var tbody = document.getElementById('ktTableBody');
   if (tbody) tbody.innerHTML = html;
+}
+
+const documentCenterKnowledgeData = [
+  { name:'API接口规范V2.1', dept:'技术部', uploader:'张明远', originalFile:'API接口规范V2.1.docx', updatedAt:'2026-07-22 14:20', link:'https://example.com/docs/api-spec-v2-1' },
+  { name:'产品需求文档PRD', dept:'产品部', uploader:'李晓华', originalFile:'产品需求文档PRD.pdf', updatedAt:'2026-07-21 10:35', link:'https://example.com/docs/prd' },
+  { name:'合规检查清单', dept:'合规部', uploader:'赵明', originalFile:'合规检查清单.xlsx', updatedAt:'2026-07-20 16:10', link:'https://example.com/docs/compliance-checklist' }
+];
+
+const documentCenterProjectTaskData = [
+  { title:'API接口文档编写', project:'技术文档平台', owner:'张明远', updatedAt:'2026-07-22 18:05', link:'https://example.com/files/task-api-doc' },
+  { title:'Q2财报数据分析', project:'Q2 财务分析', owner:'李晓华', updatedAt:'2026-07-21 12:40', link:'https://example.com/files/task-finance' },
+  { title:'安全漏洞扫描报告', project:'合规风控升级', owner:'赵明', updatedAt:'2026-07-20 09:15', link:'https://example.com/files/task-security' }
+];
+
+function switchDocumentCenterTab(el, tab) {
+  document.querySelectorAll('#page-document-center .tabs .tab').forEach(function(btn) { btn.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  document.getElementById('document-center-knowledge').style.display = tab === 'knowledge' ? '' : 'none';
+  document.getElementById('document-center-project-task').style.display = tab === 'project-task' ? '' : 'none';
+}
+
+function renderDocumentCenter() {
+  var knowledgeBody = document.getElementById('documentCenterKnowledgeBody');
+  var taskBody = document.getElementById('documentCenterProjectTaskBody');
+  if (knowledgeBody) {
+    knowledgeBody.innerHTML = documentCenterKnowledgeData.map(function(item) {
+      return '<tr>' +
+        '<td style="font-weight:600;">' + item.name + '</td>' +
+        '<td>' + item.dept + '</td>' +
+        '<td>' + item.originalFile + '</td>' +
+        '<td>' + item.updatedAt + '</td>' +
+        '<td><a href="' + item.link + '" target="_blank" rel="noreferrer" style="color:var(--primary);text-decoration:none;">查看链接</a></td>' +
+      '</tr>';
+    }).join('');
+  }
+  if (taskBody) {
+    taskBody.innerHTML = documentCenterProjectTaskData.map(function(item) {
+      return '<tr>' +
+        '<td style="font-weight:600;">' + item.title + '</td>' +
+        '<td>' + item.project + '</td>' +
+        '<td>' + item.owner + '</td>' +
+        '<td>' + item.updatedAt + '</td>' +
+        '<td><a href="' + item.link + '" target="_blank" rel="noreferrer" style="color:var(--primary);text-decoration:none;">查看链接</a></td>' +
+      '</tr>';
+    }).join('');
+  }
 }
 
 // ===== CHAT =====
