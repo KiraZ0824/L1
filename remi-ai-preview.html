@@ -2632,12 +2632,18 @@
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
             <div>
               <h1 style="font-size:20px;font-weight:700;">资料中心</h1>
-              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">知识资料 · 项目任务资料</p>
+              <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">知识文档 · 项目任务资料</p>
             </div>
           </div>
           <div class="tabs" style="margin-bottom:20px;">
-            <button class="tab active" onclick="switchDocumentCenterTab(this, 'knowledge')">知识</button>
+            <button class="tab active" onclick="switchDocumentCenterTab(this, 'knowledge')">知识文档</button>
             <button class="tab" onclick="switchDocumentCenterTab(this, 'project-task')">项目任务资料</button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+            <div class="conv-search" style="margin-top:0;flex:1;max-width:320px;">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              <input type="text" id="documentCenterSearch" placeholder="搜索知识名称/原文档名称/项目/人员..." oninput="renderDocumentCenter()">
+            </div>
           </div>
           <div id="document-center-knowledge">
             <div class="card">
@@ -2646,8 +2652,9 @@
                   <thead>
                     <tr>
                       <th>知识名称</th>
+                      <th>上传人</th>
                       <th>所属部门</th>
-                      <th>上传人原文件名称</th>
+                      <th>上传原文件名称</th>
                       <th>更新时间</th>
                       <th>知识地址链接</th>
                     </tr>
@@ -2765,57 +2772,100 @@
       <!-- ===== POINTS CENTER ===== -->
       <div class="page" id="page-points">
         <div class="page-inner">
+          <div style="margin-bottom:20px;">
+            <h1 style="font-size:20px;font-weight:700;">积分中心</h1>
+            <p style="font-size:13px;color:var(--text-muted);margin-top:4px;">系统积分发放管理 · 发放明细 · 项目预算管控（1 RP ≈ 1 元）</p>
+          </div>
+
+          <!-- 发放 + 预算 双视角概览 -->
           <div class="points-hero">
-            <div>
-              <div class="points-balance" id="pointsBalance">12,580</div>
-              <div class="points-label">Remi 积分 (RP) · 1 RP ≈ 1 元</div>
+            <div style="flex:1;">
+              <div style="font-size:12px;opacity:0.85;letter-spacing:0.5px;">系统累计发放</div>
+              <div class="points-balance" id="ptsTotalIssued">0</div>
+              <div class="points-label">Remi 积分 (RP) · 全平台统一发放</div>
+              <div style="display:flex;gap:28px;margin-top:18px;">
+                <div>
+                  <div style="font-size:11px;opacity:0.8;">本月发放</div>
+                  <div style="font-size:20px;font-weight:700;margin-top:2px;" id="ptsMonthIssued">0</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;opacity:0.8;">待发放（审批中）</div>
+                  <div style="font-size:20px;font-weight:700;margin-top:2px;" id="ptsPendingIssued">0</div>
+                </div>
+                <div>
+                  <div style="font-size:11px;opacity:0.8;">覆盖项目</div>
+                  <div style="font-size:20px;font-weight:700;margin-top:2px;" id="ptsProjectCount">0</div>
+                </div>
+              </div>
             </div>
-            <div style="text-align:right;font-size:13px;opacity:0.9;">
-              <div>本月获得 <strong style="font-size:18px;">+3,200</strong></div>
-              <div style="margin-top:4px;">累计任务 <strong>47</strong> 个</div>
+            <div style="width:1px;align-self:stretch;background:rgba(255,255,255,0.25);margin:0 32px;"></div>
+            <div style="min-width:230px;">
+              <div style="font-size:12px;opacity:0.85;letter-spacing:0.5px;margin-bottom:14px;">项目预算管控</div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;opacity:0.9;"><span>预算总额</span><strong style="font-size:14px;" id="ptsBudgetTotal">0 RP</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;opacity:0.9;margin-top:9px;"><span>已发放</span><strong style="font-size:14px;" id="ptsBudgetIssued">0 RP</strong></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;opacity:0.9;margin-top:9px;"><span>剩余预算</span><strong style="font-size:14px;" id="ptsBudgetRemaining">0 RP</strong></div>
+              <div style="margin-top:16px;">
+                <div style="display:flex;justify-content:space-between;font-size:11px;opacity:0.85;margin-bottom:6px;"><span>预算使用率</span><span id="ptsBudgetUsage">0%</span></div>
+                <div style="height:8px;background:rgba(255,255,255,0.25);border-radius:4px;overflow:hidden;">
+                  <div id="ptsBudgetBar" style="width:0%;height:100%;background:#fff;border-radius:4px;transition:width 0.3s;"></div>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="card" style="margin-bottom:16px;padding:0;overflow:hidden;">
             <div style="padding:12px 16px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--border-light);">
-              <div style="font-size:13px;font-weight:600;">积分资产</div>
+              <div style="font-size:13px;font-weight:600;">发放概览</div>
               <div style="flex:1;"></div>
               <div style="display:flex;gap:10px;align-items:center;">
                 <div style="display:flex;gap:4px;">
-                  <div style="font-size:11px;color:var(--text-muted);">累计已结算</div>
-                  <div style="font-size:12px;font-weight:700;color:var(--accent-emerald);">58,320 RP</div>
+                  <div style="font-size:11px;color:var(--text-muted);">累计已发放</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--accent-emerald);" id="ptsHeaderIssued">0 RP</div>
                 </div>
                 <div style="width:1px;height:16px;background:var(--border-light);"></div>
                 <div style="display:flex;gap:4px;">
-                  <div style="font-size:11px;color:var(--text-muted);">本月待结算</div>
-                  <div style="font-size:12px;font-weight:700;color:var(--accent-amber);">4,600 RP</div>
+                  <div style="font-size:11px;color:var(--text-muted);">待发放（审批中）</div>
+                  <div style="font-size:12px;font-weight:700;color:var(--accent-amber);" id="ptsHeaderPending">0 RP</div>
                 </div>
               </div>
             </div>
             <div style="padding:0 16px;">
               <div class="tab-bar" id="pointsTabBar" style="margin-bottom:0;">
-                <button class="tab-bar-item active" onclick="switchPointsTab(this, 'history')">积分明细</button>
+                <button class="tab-bar-item active" onclick="switchPointsTab(this, 'history')">发放明细</button>
                 <button class="tab-bar-item" onclick="switchPointsTab(this, 'budget')">项目预算概览</button>
               </div>
             </div>
-            <!-- 积分明细 -->
-            <div id="points-history" class="table-wrap" style="border:none;border-radius:0;">
-              <table>
-                <thead><tr><th>时间</th><th>类型</th><th>来源</th><th>变动</th><th>余额</th></tr></thead>
-                <tbody>
-                  <tr><td>2026-06-08 14:30</td><td style="font-size:12px;">任务奖励</td><td>API接口文档编写 · 技术文档项目</td><td style="color:var(--accent-emerald);font-weight:700;">+800</td><td>12,580</td></tr>
-                  <tr><td>2026-06-07 10:15</td><td style="font-size:12px;">额外奖励</td><td>Q2财报分析优秀贡献 · 财务分析项目</td><td style="color:var(--accent-emerald);font-weight:700;">+500</td><td>11,780</td></tr>
-                  <tr><td>2026-06-06 16:00</td><td style="font-size:12px;">任务奖励</td><td>前端页面优化 · 技术文档项目</td><td style="color:var(--accent-emerald);font-weight:700;">+600</td><td>11,280</td></tr>
-                  <tr><td>2026-06-05 09:45</td><td style="font-size:12px;">任务奖励</td><td>数据安全合规审查 · 合规风控项目</td><td style="color:var(--accent-emerald);font-weight:700;">+1,000</td><td>10,680</td></tr>
-                  <tr><td>2026-06-03 11:20</td><td style="font-size:12px;">任务奖励</td><td>多语言翻译模块开发 · 产品设计项目</td><td style="color:var(--accent-emerald);font-weight:700;">+300</td><td>9,680</td></tr>
-                </tbody>
-              </table>
+            <!-- 发放明细 -->
+            <div id="points-history" style="border:none;border-radius:0;">
+              <div style="padding:12px 16px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--border-light);">
+                <input type="text" id="ptsKeyword" oninput="renderPointsIssuance()" placeholder="搜索接收人 / 来源项目 / 发放事由" style="width:240px;padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:12px;background:var(--card);">
+                <select id="ptsStatusFilter" onchange="renderPointsIssuance()" style="padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:12px;background:var(--card);color:var(--text-secondary);">
+                  <option value="">全部状态</option>
+                  <option value="issued">已发放</option>
+                  <option value="pending">待发放（审批中）</option>
+                  <option value="rejected">已驳回</option>
+                </select>
+                <select id="ptsTypeFilter" onchange="renderPointsIssuance()" style="padding:6px 10px;border:1px solid var(--border);border-radius:4px;font-size:12px;background:var(--card);color:var(--text-secondary);">
+                  <option value="">全部类型</option>
+                  <option value="任务奖励">任务奖励</option>
+                  <option value="知识贡献奖励">知识贡献奖励</option>
+                  <option value="项目里程碑奖励">项目里程碑奖励</option>
+                </select>
+                <div style="flex:1;"></div>
+                <div style="font-size:11px;color:var(--text-muted);" id="ptsListSummary"></div>
+              </div>
+              <div class="table-wrap" style="border:none;border-radius:0;">
+                <table>
+                  <thead><tr><th>发放时间</th><th>接收人</th><th>类型</th><th>来源</th><th style="text-align:right;">发放积分</th><th>状态</th></tr></thead>
+                  <tbody id="pointsIssuanceBody"></tbody>
+                </table>
+              </div>
             </div>
             <!-- 项目预算概览 -->
             <div id="points-budget" style="display:none;padding:20px;">
               <div class="table-wrap">
                 <table>
-                  <thead><tr><th>项目名称</th><th>总预算</th><th>冻结中（预计发放）</th><th>已发放</th><th>剩余</th><th>使用率</th></tr></thead>
+                  <thead><tr><th>项目名称</th><th>总预算</th><th>待发放（冻结中）</th><th>已发放</th><th>剩余</th><th>使用率</th></tr></thead>
                   <tbody id="projectBudgetBody"></tbody>
                 </table>
               </div>
@@ -3501,9 +3551,9 @@ function renderKnowledgeTasks() {
 }
 
 const documentCenterKnowledgeData = [
-  { name:'API接口规范V2.1', dept:'技术部', uploader:'张明远', originalFile:'API接口规范V2.1.docx', updatedAt:'2026-07-22 14:20', link:'https://example.com/docs/api-spec-v2-1' },
-  { name:'产品需求文档PRD', dept:'产品部', uploader:'李晓华', originalFile:'产品需求文档PRD.pdf', updatedAt:'2026-07-21 10:35', link:'https://example.com/docs/prd' },
-  { name:'合规检查清单', dept:'合规部', uploader:'赵明', originalFile:'合规检查清单.xlsx', updatedAt:'2026-07-20 16:10', link:'https://example.com/docs/compliance-checklist' }
+  { name:'API接口规范V2.1', uploader:'张明远', dept:'技术部', originalFile:'API接口规范V2.1.docx', updatedAt:'2026-07-22 14:20', link:'https://example.com/docs/api-spec-v2-1' },
+  { name:'产品需求文档PRD', uploader:'李晓华', dept:'产品部', originalFile:'产品需求文档PRD.pdf', updatedAt:'2026-07-21 10:35', link:'https://example.com/docs/prd' },
+  { name:'合规检查清单', uploader:'赵明', dept:'合规部', originalFile:'合规检查清单.xlsx', updatedAt:'2026-07-20 16:10', link:'https://example.com/docs/compliance-checklist' }
 ];
 
 const documentCenterProjectTaskData = [
@@ -3522,28 +3572,39 @@ function switchDocumentCenterTab(el, tab) {
 function renderDocumentCenter() {
   var knowledgeBody = document.getElementById('documentCenterKnowledgeBody');
   var taskBody = document.getElementById('documentCenterProjectTaskBody');
+  var searchInput = document.getElementById('documentCenterSearch');
+  var searchVal = searchInput ? searchInput.value.trim().toLowerCase() : '';
+  var knowledgeFiltered = documentCenterKnowledgeData.filter(function(item) {
+    if (!searchVal) return true;
+    return [item.name, item.dept, item.uploader, item.originalFile, item.updatedAt, item.link].join(' ').toLowerCase().indexOf(searchVal) !== -1;
+  });
+  var taskFiltered = documentCenterProjectTaskData.filter(function(item) {
+    if (!searchVal) return true;
+    return [item.title, item.originalName, item.project, item.owner, item.updatedAt, item.link].join(' ').toLowerCase().indexOf(searchVal) !== -1;
+  });
   if (knowledgeBody) {
-    knowledgeBody.innerHTML = documentCenterKnowledgeData.map(function(item) {
+    knowledgeBody.innerHTML = knowledgeFiltered.map(function(item) {
       return '<tr>' +
         '<td style="font-weight:600;">' + item.name + '</td>' +
+        '<td>' + item.uploader + '</td>' +
         '<td>' + item.dept + '</td>' +
         '<td>' + item.originalFile + '</td>' +
         '<td>' + item.updatedAt + '</td>' +
-        '<td><a href="' + item.link + '" target="_blank" rel="noreferrer" style="color:var(--primary);text-decoration:none;">查看链接</a></td>' +
+        '<td><a href="' + item.link + '" target="_blank" rel="noreferrer" style="color:var(--primary);text-decoration:none;">打开链接</a></td>' +
       '</tr>';
-    }).join('');
+    }).join('') || '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);">暂无匹配结果</td></tr>';
   }
   if (taskBody) {
-    taskBody.innerHTML = documentCenterProjectTaskData.map(function(item) {
+    taskBody.innerHTML = taskFiltered.map(function(item) {
       return '<tr>' +
         '<td style="font-weight:600;">' + item.title + '</td>' +
         '<td>' + item.originalName + '</td>' +
         '<td>' + item.project + '</td>' +
         '<td>' + item.owner + '</td>' +
         '<td>' + item.updatedAt + '</td>' +
-        '<td><a href="' + item.link + '" target="_blank" rel="noreferrer" style="color:var(--primary);text-decoration:none;">查看链接</a></td>' +
+        '<td><a href="' + item.link + '" target="_blank" rel="noreferrer" style="color:var(--primary);text-decoration:none;">打开链接</a></td>' +
       '</tr>';
-    }).join('');
+    }).join('') || '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);">暂无匹配结果</td></tr>';
   }
 }
 
@@ -6503,22 +6564,129 @@ function renderKnowledgeUploadForm(container) {
 }
 
 // ===== POINTS =====
-function renderProjectBudgetTable() {
-  const tbody = document.getElementById('projectBudgetTable');
+// 系统积分发放台账：仅记录平台对外发放，不含个人积分账户视角
+const pointsIssuanceRecords = [
+  { no:'IS20260617001', issuedAt:'2026-06-17', receiver:'张明远', dept:'技术部', type:'任务奖励', project:'技术文档平台', item:'API接口文档编写', amount:800, status:'issued' },
+  { no:'IS20260615002', issuedAt:'2026-06-15', receiver:'王思远', dept:'技术部', type:'任务奖励', project:'技术文档平台', item:'RAG引用溯源优化', amount:550, status:'issued' },
+  { no:'IS20260612003', issuedAt:'2026-06-12', receiver:'张明远', dept:'技术部', type:'任务奖励', project:'技术文档平台', item:'后端架构评审', amount:500, status:'issued' },
+  { no:'IS20260608004', issuedAt:'2026-06-08', receiver:'王思远', dept:'技术部', type:'任务奖励', project:'技术文档平台', item:'前端页面性能优化', amount:600, status:'issued' },
+  { no:'IS20260528005', issuedAt:'2026-05-28', receiver:'陈雨桐', dept:'市场部', type:'知识贡献奖励', project:'技术文档平台', item:'知识库标签体系V1.0', amount:750, status:'issued' },
+  { no:'IS20260516006', issuedAt:'2026-05-16', receiver:'李晓华', dept:'产品部', type:'项目里程碑奖励', project:'技术文档平台', item:'文档平台一期上线', amount:1000, status:'issued' },
+  { no:'IS20260616007', issuedAt:'2026-06-16', receiver:'李晓华', dept:'产品部', type:'任务奖励', project:'Q2 财务分析', item:'Q2财报数据清洗', amount:600, status:'issued' },
+  { no:'IS20260610008', issuedAt:'2026-06-10', receiver:'李晓华', dept:'产品部', type:'知识贡献奖励', project:'Q2 财务分析', item:'财务指标口径说明', amount:400, status:'issued' },
+  { no:'IS20260530009', issuedAt:'2026-05-30', receiver:'周子涵', dept:'财务部', type:'任务奖励', project:'Q2 财务分析', item:'财务数据交叉核对', amount:900, status:'issued' },
+  { no:'IS20260512010', issuedAt:'2026-05-12', receiver:'周子涵', dept:'财务部', type:'项目里程碑奖励', project:'Q2 财务分析', item:'财务分析模型交付', amount:900, status:'issued' },
+  { no:'IS20260616011', issuedAt:'2026-06-16', receiver:'赵明', dept:'合规部', type:'任务奖励', project:'合规风控升级', item:'安全漏洞扫描报告', amount:900, status:'issued' },
+  { no:'IS20260605012', issuedAt:'2026-06-05', receiver:'赵明', dept:'合规部', type:'任务奖励', project:'合规风控升级', item:'数据安全合规审查', amount:1000, status:'issued' },
+  { no:'IS20260522013', issuedAt:'2026-05-22', receiver:'孙立群', dept:'合规部', type:'知识贡献奖励', project:'合规风控升级', item:'合规检查清单V3.0', amount:600, status:'issued' },
+  { no:'IS20260508014', issuedAt:'2026-05-08', receiver:'孙立群', dept:'合规部', type:'项目里程碑奖励', project:'合规风控升级', item:'风控体系一期验收', amount:1000, status:'issued' },
+  { no:'IS20260518015', issuedAt:'2026-05-18', receiver:'陈雨桐', dept:'市场部', type:'任务奖励', project:'市场调研报告', item:'H1竞品分析报告', amount:500, status:'issued' },
+  { no:'IS20260428016', issuedAt:'2026-04-28', receiver:'陈雨桐', dept:'市场部', type:'知识贡献奖励', project:'市场调研报告', item:'H1市场调研数据集', amount:800, status:'issued' },
+  { no:'IS20260415017', issuedAt:'2026-04-15', receiver:'林嘉怡', dept:'市场部', type:'任务奖励', project:'市场调研报告', item:'用户需求访谈汇总', amount:700, status:'issued' },
+  { no:'IS20260402018', issuedAt:'2026-04-02', receiver:'林嘉怡', dept:'市场部', type:'项目里程碑奖励', project:'市场调研报告', item:'调研项目结项交付', amount:1000, status:'issued' },
+  { no:'IS20260624019', issuedAt:'2026-06-24', receiver:'赵明', dept:'合规部', type:'任务奖励', project:'合规风控升级', item:'知识审核流程优化', amount:700, status:'pending' },
+  { no:'IS20260623020', issuedAt:'2026-06-23', receiver:'孙立群', dept:'合规部', type:'知识贡献奖励', project:'合规风控升级', item:'数据隐私合规清单', amount:500, status:'pending' },
+  { no:'IS20260622021', issuedAt:'2026-06-22', receiver:'张明远', dept:'技术部', type:'任务奖励', project:'技术文档平台', item:'审批流程设计文档', amount:450, status:'pending' },
+  { no:'IS20260621022', issuedAt:'2026-06-21', receiver:'周子涵', dept:'财务部', type:'任务奖励', project:'Q2 财务分析', item:'Q2财报数据复核', amount:500, status:'pending' },
+  { no:'IS20260620023', issuedAt:'2026-06-20', receiver:'王思远', dept:'技术部', type:'知识贡献奖励', project:'技术文档平台', item:'API接口规范V2.1', amount:350, status:'pending' },
+  { no:'IS20260622024', issuedAt:'2026-06-22', receiver:'赵明', dept:'合规部', type:'任务奖励', project:'合规风控升级', item:'安全审计报告V2', amount:800, status:'rejected' },
+  { no:'IS20260620025', issuedAt:'2026-06-20', receiver:'陈雨桐', dept:'市场部', type:'任务奖励', project:'技术文档平台', item:'知识库标签体系重构', amount:550, status:'rejected' },
+  { no:'IS20260619026', issuedAt:'2026-06-19', receiver:'王思远', dept:'技术部', type:'任务奖励', project:'技术文档平台', item:'前端组件库文档补充', amount:400, status:'rejected' }
+];
+
+var pointsStatusMeta = {
+  issued: { text: '已发放', cls: 'status-done' },
+  pending: { text: '待发放', cls: 'status-pending_review' },
+  rejected: { text: '已驳回', cls: 'status-rejected' }
+};
+
+function renderPointsCenter() {
+  var budgetTotal = 0, issuedTotal = 0, frozenTotal = 0;
+  (projects || []).forEach(function(p) {
+    budgetTotal += p.budget || 0;
+    issuedTotal += p.spent || 0;
+    frozenTotal += p.frozen || 0;
+  });
+  var remaining = budgetTotal - issuedTotal - frozenTotal;
+  var usage = budgetTotal > 0 ? Math.round((issuedTotal + frozenTotal) / budgetTotal * 100) : 0;
+
+  // 本月发放：以台账中最近一个发放月份为口径
+  var months = pointsIssuanceRecords.filter(function(r) { return r.status === 'issued'; })
+    .map(function(r) { return r.issuedAt.substring(0, 7); }).sort();
+  var latestMonth = months.length ? months[months.length - 1] : '';
+  var monthIssued = pointsIssuanceRecords.reduce(function(sum, r) {
+    return (r.status === 'issued' && r.issuedAt.substring(0, 7) === latestMonth) ? sum + r.amount : sum;
+  }, 0);
+  var coveredProjects = {};
+  pointsIssuanceRecords.forEach(function(r) { coveredProjects[r.project] = true; });
+
+  var setText = function(id, val) { var el = document.getElementById(id); if (el) el.textContent = val; };
+  var setHtml = function(id, val) { var el = document.getElementById(id); if (el) el.innerHTML = val; };
+  var unit = '<span style="font-size:18px;font-weight:700;opacity:0.8;margin-left:4px;">RP</span>';
+
+  setHtml('ptsTotalIssued', issuedTotal.toLocaleString() + unit);
+  setHtml('ptsMonthIssued', monthIssued.toLocaleString() + unit);
+  setHtml('ptsPendingIssued', frozenTotal.toLocaleString() + unit);
+  setText('ptsProjectCount', Object.keys(coveredProjects).length + ' / ' + (projects || []).length);
+  setText('ptsBudgetTotal', budgetTotal.toLocaleString() + ' RP');
+  setText('ptsBudgetIssued', issuedTotal.toLocaleString() + ' RP');
+  setText('ptsBudgetRemaining', remaining.toLocaleString() + ' RP');
+  setText('ptsBudgetUsage', usage + '%');
+  var bar = document.getElementById('ptsBudgetBar');
+  if (bar) bar.style.width = usage + '%';
+  setText('ptsHeaderIssued', issuedTotal.toLocaleString() + ' RP');
+  setText('ptsHeaderPending', frozenTotal.toLocaleString() + ' RP');
+
+  renderPointsIssuance();
+  renderProjectBudget();
+}
+
+function renderPointsIssuance() {
+  var tbody = document.getElementById('pointsIssuanceBody');
   if (!tbody) return;
-  tbody.innerHTML = projects.map(p => {
-    const remaining = p.budget - p.spent - p.frozen;
-    const pct = Math.round((p.spent + p.frozen) / p.budget * 100);
-    return `
-    <tr>
-      <td style="font-weight:600;">${p.name}</td>
-      <td>${p.budget.toLocaleString()}</td>
-      <td>${p.spent.toLocaleString()}</td>
-      <td>${p.frozen.toLocaleString()}</td>
-      <td style="color:${remaining < 0 ? 'var(--accent-rose)' : 'var(--accent-emerald)'};font-weight:600;">${remaining.toLocaleString()}</td>
-      <td><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;height:6px;background:var(--border-light);border-radius:3px;overflow:hidden;"><div style="height:100%;width:${pct}%;background:${pct>80?'var(--accent-rose)':pct>50?'var(--accent-amber)':'var(--accent-emerald)'};border-radius:3px;"></div></div><span style="font-size:12px;font-weight:600;">${pct}%</span></div></td>
-    </tr>`;
-  }).join('');
+  var kwEl = document.getElementById('ptsKeyword');
+  var stEl = document.getElementById('ptsStatusFilter');
+  var tpEl = document.getElementById('ptsTypeFilter');
+  var kw = (kwEl && kwEl.value || '').trim().toLowerCase();
+  var st = stEl ? stEl.value : '';
+  var tp = tpEl ? tpEl.value : '';
+
+  var list = pointsIssuanceRecords.filter(function(r) {
+    if (st && r.status !== st) return false;
+    if (tp && r.type !== tp) return false;
+    if (kw) {
+      var hay = (r.receiver + r.dept + r.project + r.item + r.no).toLowerCase();
+      if (hay.indexOf(kw) === -1) return false;
+    }
+    return true;
+  }).sort(function(a, b) { return a.issuedAt < b.issuedAt ? 1 : -1; });
+
+  if (list.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:32px;">暂无符合条件的发放记录</td></tr>';
+  } else {
+    tbody.innerHTML = list.map(function(r) {
+      var meta = pointsStatusMeta[r.status] || pointsStatusMeta.issued;
+      var amountColor = r.status === 'issued' ? 'var(--accent-emerald)' : (r.status === 'pending' ? 'var(--accent-amber)' : 'var(--text-muted)');
+      return '<tr>' +
+        '<td style="white-space:nowrap;color:var(--text-secondary);">' + r.issuedAt + '</td>' +
+        '<td><div style="font-weight:600;">' + r.receiver + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">' + r.dept + '</div></td>' +
+        '<td><span style="font-size:11px;padding:2px 8px;background:var(--bg);border-radius:3px;color:var(--text-secondary);white-space:nowrap;">' + r.type + '</span></td>' +
+        '<td><div>' + r.project + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px;">' + r.item + '</div></td>' +
+        '<td style="text-align:right;font-weight:700;color:' + amountColor + ';white-space:nowrap;">' + (r.status === 'rejected' ? '' : '+') + r.amount.toLocaleString() + ' RP</td>' +
+        '<td><span class="bl-status ' + meta.cls + '"><span class="bl-status-dot ' + meta.cls + '"></span>' + meta.text + '</span></td>' +
+      '</tr>';
+    }).join('');
+  }
+
+  var issuedSum = 0, pendingSum = 0;
+  list.forEach(function(r) {
+    if (r.status === 'issued') issuedSum += r.amount;
+    else if (r.status === 'pending') pendingSum += r.amount;
+  });
+  var summary = document.getElementById('ptsListSummary');
+  if (summary) {
+    summary.textContent = '共 ' + list.length + ' 条 · 已发放 ' + issuedSum.toLocaleString() + ' RP · 待发放 ' + pendingSum.toLocaleString() + ' RP';
+  }
 }
 
 // ===== MODAL =====
@@ -6532,7 +6700,7 @@ navigateTo = function(page) {
   origNavigateTo(page);
   if (page === 'projects') renderProjects();
   if (page === 'tasks') { renderKanban(); }
-  if (page === 'points') renderProjectBudgetTable();
+  if (page === 'points') renderPointsCenter();
   if (page === 'dashboard') { renderWbBacklog(); renderWbStats(); renderPointsLineChart(); renderNotificationMessages(); }
   if (page === 'project-task-config') renderAdminData();
 };
